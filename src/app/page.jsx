@@ -164,19 +164,23 @@ export default function Home() {
                 certificados y instalación profesional.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  label="Ver Productos"
-                  size="large"
-                  severity="primary"
-                  className="text-lg px-8 py-4 shadow-lg hover:shadow-xl"
-                />
-                <Button
-                  label="Contactar"
-                  size="large"
-                  severity="secondary"
-                  outlined
-                  className="text-lg px-8 py-4 border-2"
-                />
+                <Link href="/productos">
+                  <Button
+                    label="Ver Productos"
+                    size="large"
+                    severity="primary"
+                    className="text-lg px-8 py-4 shadow-lg hover:shadow-xl"
+                  />
+                </Link>
+                <Link href="/contacto">
+                  <Button
+                    label="Contactar"
+                    size="large"
+                    severity="secondary"
+                    outlined
+                    className="text-lg px-8 py-4 border-2"
+                  />
+                </Link>
               </div>
             </div>
             <div className="hidden lg:block slide-in-right">

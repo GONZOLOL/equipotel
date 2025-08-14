@@ -237,18 +237,36 @@ export default function Contacto() {
 
         {/* Mapa */}
         <Card title="Nuestra Ubicación" className="mb-8">
-          <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <i className="pi pi-map text-6xl text-gray-400 mb-4 block"></i>
-              <p className="text-gray-600 text-lg">Mapa interactivo</p>
-              <p className="text-gray-500">Málaga, España</p>
+          <div className="relative h-96 rounded-lg overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d102625.123456789!2d-4.4311!3d36.7213!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd72f762715d85ff%3A0x442ca611cd68b2f1!2sM%C3%A1laga%2C%20Spain!5e0!3m2!1sen!2ses!4v1234567890"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Ubicación de Equipotel en Málaga"
+              className="absolute inset-0"
+            ></iframe>
+            <div className="absolute top-4 right-4">
               <Button 
                 label="Ver en Google Maps" 
                 severity="secondary" 
                 outlined 
-                className="mt-4"
+                size="small"
                 onClick={() => window.open('https://maps.google.com/?q=Malaga,Spain', '_blank')}
               />
+            </div>
+          </div>
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <i className="pi pi-map-marker text-blue-600 text-xl"></i>
+              <div>
+                <p className="font-semibold text-gray-800">Equipotel - Málaga</p>
+                <p className="text-gray-600">Servicio en toda la provincia de Málaga</p>
+                <p className="text-sm text-gray-500">Horario: Lun - Vie 9:00 - 18:00, Sáb 9:00 - 14:00</p>
+              </div>
             </div>
           </div>
         </Card>
