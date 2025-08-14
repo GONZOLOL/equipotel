@@ -16,6 +16,50 @@ export default function ProductDetail() {
     const [loading, setLoading] = useState(true);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [allImages, setAllImages] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [currentX, setCurrentX] = useState(0);
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (allImages.length <= 1) return;
+
+            switch (event.key) {
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    setSelectedImageIndex((prev) =>
+                        prev === 0 ? allImages.length - 1 : prev - 1
+                    );
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    setSelectedImageIndex((prev) =>
+                        prev === allImages.length - 1 ? 0 : prev + 1
+                    );
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [allImages.length]);
+
+    // Global mouse event listeners for drag
+    useEffect(() => {
+        if (isDragging) {
+            const handleGlobalMouseMove = handleMouseMove;
+            const handleGlobalMouseUp = handleMouseUp;
+
+            document.addEventListener('mousemove', handleGlobalMouseMove);
+            document.addEventListener('mouseup', handleGlobalMouseUp);
+
+            return () => {
+                document.removeEventListener('mousemove', handleGlobalMouseMove);
+                document.removeEventListener('mouseup', handleGlobalMouseUp);
+            };
+        }
+    }, [isDragging]);
 
     useEffect(() => {
         loadProduct();
@@ -66,6 +110,59 @@ export default function ProductDetail() {
             default:
                 return 'info';
         }
+    };
+
+    // Touch/Drag handlers for swipe navigation
+    const handleTouchStart = (e) => {
+        setIsDragging(true);
+        const touch = e.touches ? e.touches[0] : e;
+        setStartX(touch.clientX);
+        setCurrentX(touch.clientX);
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        const touch = e.touches ? e.touches[0] : e;
+        setCurrentX(touch.clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (!isDragging) return;
+        
+        const diffX = startX - currentX;
+        const threshold = 50; // Minimum distance to trigger swipe
+        
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0) {
+                // Swipe left - next image
+                setSelectedImageIndex(prev => 
+                    prev === allImages.length - 1 ? 0 : prev + 1
+                );
+            } else {
+                // Swipe right - previous image
+                setSelectedImageIndex(prev => 
+                    prev === 0 ? allImages.length - 1 : prev - 1
+                );
+            }
+        }
+        
+        setIsDragging(false);
+        setStartX(0);
+        setCurrentX(0);
+    };
+
+    const handleMouseDown = (e) => {
+        if (e.button !== 0) return; // Only left mouse button
+        handleTouchStart(e);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        handleTouchMove(e);
+    };
+
+    const handleMouseUp = () => {
+        handleTouchEnd();
     };
 
     if (loading) {
@@ -130,17 +227,80 @@ export default function ProductDetail() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Image Gallery */}
                     <div className="space-y-4">
-                        {/* Main Image */}
-                        <div className="relative">
+                        {/* Main Image with Carousel Controls */}
+                        <div className="relative group">
                             {allImages.length > 0 ? (
-                                <div className="aspect-square bg-white rounded-lg shadow-md overflow-hidden">
+                                <div 
+                                    className="aspect-square bg-white rounded-lg shadow-md overflow-hidden relative cursor-grab active:cursor-grabbing select-none"
+                                    onMouseDown={handleMouseDown}
+                                    onTouchStart={handleTouchStart}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={handleTouchEnd}
+                                    style={{
+                                        transform: isDragging ? `translateX(${currentX - startX}px)` : 'none',
+                                        transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+                                    }}
+                                >
                                     <Image
                                         src={allImages[selectedImageIndex]}
                                         alt={product.name}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover pointer-events-none"
                                         width={600}
                                         height={600}
                                     />
+
+                                    {/* Carousel Navigation Controls */}
+                                    {allImages.length > 1 && (
+                                        <>
+                                            {/* Previous Button */}
+                                            <Button
+                                                icon="pi pi-chevron-left"
+                                                size="large"
+                                                severity="secondary"
+                                                className="absolute left-4 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white bg-opacity-80 hover:bg-opacity-100 shadow-lg"
+                                                onClick={() =>
+                                                    setSelectedImageIndex(
+                                                        (prev) =>
+                                                            prev === 0
+                                                                ? allImages.length -
+                                                                  1
+                                                                : prev - 1
+                                                    )
+                                                }
+                                            />
+
+                                            {/* Next Button */}
+                                            <Button
+                                                icon="pi pi-chevron-right"
+                                                size="large"
+                                                severity="secondary"
+                                                className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white bg-opacity-80 hover:bg-opacity-100 shadow-lg"
+                                                onClick={() =>
+                                                    setSelectedImageIndex(
+                                                        (prev) =>
+                                                            prev ===
+                                                            allImages.length - 1
+                                                                ? 0
+                                                                : prev + 1
+                                                    )
+                                                }
+                                            />
+
+                                                                                         {/* Image Counter */}
+                                             <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                 {selectedImageIndex + 1} /{' '}
+                                                 {allImages.length}
+                                             </div>
+                                             
+                                             {/* Drag Indicator */}
+                                             {isDragging && (
+                                                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                     <i className="pi pi-arrows-h mr-1"></i>
+                                                     Arrastrando...
+                                                 </div>
+                                             )}
+                                        </>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="aspect-square bg-gray-200 rounded-lg shadow-md flex items-center justify-center">
@@ -150,7 +310,7 @@ export default function ProductDetail() {
 
                             {/* Featured Badge */}
                             {product.featured && (
-                                <div className="absolute top-4 left-4">
+                                <div className="absolute top-4 left-4 z-10">
                                     <Tag
                                         value="Destacado"
                                         severity="success"
@@ -160,30 +320,64 @@ export default function ProductDetail() {
                             )}
                         </div>
 
-                        {/* Thumbnail Gallery */}
+                        {/* Enhanced Thumbnail Gallery */}
                         {allImages.length > 1 && (
-                            <div className="flex gap-2 overflow-x-auto pb-2">
-                                {allImages.map((image, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() =>
-                                            setSelectedImageIndex(index)
-                                        }
-                                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                                            selectedImageIndex === index
-                                                ? 'border-blue-500 shadow-md'
-                                                : 'border-gray-200 hover:border-gray-300'
-                                        }`}
-                                    >
-                                        <Image
-                                            src={image}
-                                            alt={`${product.name} ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                            width={80}
-                                            height={80}
+                            <div className="space-y-3">
+                                {/* Thumbnail Navigation */}
+                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                    {allImages.map((image, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() =>
+                                                setSelectedImageIndex(index)
+                                            }
+                                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
+                                                selectedImageIndex === index
+                                                    ? 'border-blue-500 shadow-lg scale-105'
+                                                    : 'border-gray-200 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            <Image
+                                                src={image}
+                                                alt={`${product.name} ${
+                                                    index + 1
+                                                }`}
+                                                className="w-full h-full object-cover"
+                                                width={80}
+                                                height={80}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Thumbnail Navigation Dots */}
+                                <div className="flex justify-center gap-2">
+                                    {allImages.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() =>
+                                                setSelectedImageIndex(index)
+                                            }
+                                            className={`w-2 h-2 rounded-full transition-all ${
+                                                selectedImageIndex === index
+                                                    ? 'bg-blue-500 scale-125'
+                                                    : 'bg-gray-300 hover:bg-gray-400'
+                                            }`}
                                         />
-                                    </button>
-                                ))}
+                                    ))}
+                                </div>
+
+                                {/* Navigation Hints */}
+                                <div className="text-center text-xs text-gray-500 space-y-1">
+                                    <div>
+                                        <i className="pi pi-keyboard mr-1"></i>
+                                        Flechas del teclado para navegar
+                                    </div>
+                                    <div>
+                                        <i className="pi pi-mouse mr-1"></i>
+                                        Arrastra o desliza para cambiar imagen
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>

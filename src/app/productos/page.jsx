@@ -27,6 +27,7 @@ export default function Productos() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [imageErrors, setImageErrors] = useState(new Set());
+    const [carouselIndex, setCarouselIndex] = useState(0);
 
     const categories = [
         { label: 'Todas las categorías', value: null },
@@ -136,32 +137,87 @@ export default function Productos() {
         const hasError = imageErrors.has(producto.id);
         const mainImage = producto.mainImage || producto.image;
         const hasImage = mainImage && mainImage.trim() !== '';
+        const hasAdditionalImages =
+            producto.additionalImages && producto.additionalImages.length > 0;
 
         console.log(`Renderizando imagen para ${producto.name}:`, {
             hasImage,
             hasError,
+            hasAdditionalImages,
             originalImage: mainImage,
             imageUrl: hasImage ? convertGoogleDriveUrl(mainImage) : null,
         });
 
         if (!hasImage || hasError) {
             return (
-                <div className="bg-gray-200 h-48 mb-4 rounded-lg flex items-center justify-center">
-                    <i className="pi pi-image text-4xl text-gray-400"></i>
+                <div className="bg-gray-200 w-32 h-32 rounded-lg flex items-center justify-center">
+                    <i className="pi pi-image text-2xl text-gray-400"></i>
                 </div>
             );
         }
 
-        // Convertir URL de Google Drive si es necesario
+        // Si hay imágenes adicionales, mostrar carrusel
+        if (hasAdditionalImages) {
+            const allImages = [mainImage, ...producto.additionalImages];
+            const currentImage = allImages[carouselIndex % allImages.length];
+            const imageUrl = convertGoogleDriveUrl(currentImage);
+
+            return (
+                <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto group">
+                    <Image
+                        src={imageUrl}
+                        alt={producto.name}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-300"
+                    />
+
+                    {/* Carrusel Navigation */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-between p-1 opacity-0 group-hover:opacity-100">
+                        <Button
+                            icon="pi pi-chevron-left"
+                            size="small"
+                            severity="secondary"
+                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCarouselIndex((prev) =>
+                                    Math.max(0, prev - 1)
+                                );
+                            }}
+                        />
+                        <Button
+                            icon="pi pi-chevron-right"
+                            size="small"
+                            severity="secondary"
+                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCarouselIndex((prev) =>
+                                    Math.min(allImages.length - 1, prev + 1)
+                                );
+                            }}
+                        />
+                    </div>
+
+                    {/* Image Counter */}
+                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {(carouselIndex % allImages.length) + 1}/
+                        {allImages.length}
+                    </div>
+                </div>
+            );
+        }
+
+        // Imagen única (sin carrusel)
         const imageUrl = convertGoogleDriveUrl(mainImage);
 
         return (
-            <div className="h-48 mb-4 rounded-lg overflow-hidden relative">
+            <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto">
                 <Image
                     src={imageUrl}
                     alt={producto.name}
                     fill
-                    className="object-cover"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                 />
             </div>
         );
@@ -175,62 +231,67 @@ export default function Productos() {
         if (layout === 'list') {
             return (
                 <div className="col-12 mb-4">
-                    <Card>
-                        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-6">
                             <div className="flex-shrink-0">
-                                {renderProductImage(producto)}
+                                <div className="w-32 h-32">
+                                    {renderProductImage(producto)}
+                                </div>
                             </div>
                             <div className="flex-1">
-                                <div className="flex flex-column sm:flex-row justify-content-between align-items-start xl:align-items-start gap-2 mb-3">
-                                    <div>
-                                        <h3 className="text-xl font-semibold mb-2">
+                                <div className="flex flex-column lg:flex-row justify-content-between align-items-start gap-4">
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-semibold mb-2 text-gray-900">
                                             {producto.name}
                                         </h3>
                                         <Tag
                                             value={producto.categoryLabel}
                                             severity="info"
-                                            className="mb-2"
+                                            className="mb-3"
                                         />
-                                        <p className="text-gray-600 mb-3">
+                                        <p className="text-gray-600 mb-3 line-clamp-3">
                                             {producto.description}
                                         </p>
+                                        {producto.features &&
+                                            producto.features.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mb-3">
+                                                    {producto.features.map(
+                                                        (feature, index) => (
+                                                            <Tag
+                                                                key={index}
+                                                                value={feature}
+                                                                severity="secondary"
+                                                                className="text-xs"
+                                                            />
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
                                     </div>
-                                    <div className="text-right">
-                                        <span className="text-2xl font-bold text-blue-600">
+                                    <div className="text-right lg:text-left">
+                                        <span className="text-2xl font-bold text-blue-600 block mb-3">
                                             {producto.priceFormatted}
                                         </span>
-                                        <div className="flex gap-1 mt-2">
-                                            {producto.features &&
-                                                producto.features.map(
-                                                    (feature, index) => (
-                                                        <Tag
-                                                            key={index}
-                                                            value={feature}
-                                                            severity="secondary"
-                                                        />
-                                                    )
-                                                )}
+                                        <div className="flex gap-2">
+                                            <Button
+                                                label="Ver Detalles"
+                                                severity="primary"
+                                                size="small"
+                                                onClick={() =>
+                                                    (window.location.href = `/productos/${producto.id}`)
+                                                }
+                                            />
+                                            <Button
+                                                label="Contactar"
+                                                severity="secondary"
+                                                size="small"
+                                                outlined
+                                                onClick={() =>
+                                                    (window.location.href = `mailto:info@equipotel.com?subject=Consulta sobre ${producto.name}`)
+                                                }
+                                            />
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex gap-2">
-                                    <Button
-                                        label="Ver Detalles"
-                                        severity="primary"
-                                        size="small"
-                                        onClick={() =>
-                                            (window.location.href = `/productos/${producto.id}`)
-                                        }
-                                    />
-                                    <Button
-                                        label="Contactar"
-                                        severity="secondary"
-                                        size="small"
-                                        outlined
-                                        onClick={() =>
-                                            (window.location.href = `mailto:info@equipotel.com?subject=Consulta sobre ${producto.name}`)
-                                        }
-                                    />
                                 </div>
                             </div>
                         </div>
@@ -241,54 +302,81 @@ export default function Productos() {
 
         if (layout === 'grid') {
             return (
-                <div className="col-12 sm:col-6 lg:col-4 xl:col-3 p-2">
-                    <Card className="h-full">
-                        <div className="text-center">
-                            {renderProductImage(producto)}
-                            <h3 className="text-lg font-semibold mb-2">
-                                {producto.name}
-                            </h3>
-                            <Tag
-                                value={producto.categoryLabel}
-                                severity="info"
-                                className="mb-2"
-                            />
-                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                                {producto.description}
-                            </p>
-                            <div className="flex flex-wrap gap-1 mb-3 justify-center">
-                                {producto.features &&
-                                    producto.features
-                                        .slice(0, 2)
-                                        .map((feature, index) => (
-                                            <Tag
-                                                key={index}
-                                                value={feature}
-                                                severity="secondary"
-                                            />
-                                        ))}
+                <div className="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2">
+                    <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                        <div className="p-3">
+                            {/* Imagen */}
+                            <div className="mb-3">
+                                {renderProductImage(producto)}
                             </div>
-                            <p className="text-xl font-bold text-blue-600 mb-3">
-                                {producto.priceFormatted}
-                            </p>
-                            <div className="flex gap-2 justify-center">
-                                <Button
-                                    label="Ver Detalles"
-                                    severity="primary"
-                                    size="small"
-                                    onClick={() =>
-                                        (window.location.href = `/productos/${producto.id}`)
-                                    }
-                                />
-                                <Button
-                                    label="Contactar"
-                                    severity="secondary"
-                                    size="small"
-                                    outlined
-                                    onClick={() =>
-                                        (window.location.href = `mailto:info@equipotel.com?subject=Consulta sobre ${producto.name}`)
-                                    }
-                                />
+
+                            {/* Contenido */}
+                            <div className="space-y-2">
+                                {/* Título */}
+                                <h3 className="text-base font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] text-center">
+                                    {producto.name}
+                                </h3>
+
+                                {/* Categoría */}
+                                <div className="flex justify-center">
+                                    <Tag
+                                        value={producto.categoryLabel}
+                                        severity="info"
+                                        className="text-xs"
+                                    />
+                                </div>
+
+                                {/* Descripción */}
+                                <p className="text-xs text-gray-600 line-clamp-2 min-h-[2rem] text-center">
+                                    {producto.description}
+                                </p>
+
+                                {/* Características */}
+                                {producto.features &&
+                                    producto.features.length > 0 && (
+                                        <div className="flex flex-wrap gap-1 justify-center">
+                                            {producto.features
+                                                .slice(0, 2)
+                                                .map((feature, index) => (
+                                                    <Tag
+                                                        key={index}
+                                                        value={feature}
+                                                        severity="secondary"
+                                                        className="text-xs"
+                                                    />
+                                                ))}
+                                        </div>
+                                    )}
+
+                                {/* Precio */}
+                                <div className="text-center">
+                                    <p className="text-lg font-bold text-blue-600">
+                                        {producto.priceFormatted}
+                                    </p>
+                                </div>
+
+                                {/* Botones */}
+                                <div className="flex gap-1 justify-center pt-1">
+                                    <Button
+                                        label="Ver"
+                                        severity="primary"
+                                        size="small"
+                                        className="flex-1 text-xs"
+                                        onClick={() =>
+                                            (window.location.href = `/productos/${producto.id}`)
+                                        }
+                                    />
+                                    <Button
+                                        label="Contactar"
+                                        severity="secondary"
+                                        size="small"
+                                        outlined
+                                        className="flex-1 text-xs"
+                                        onClick={() =>
+                                            (window.location.href = `mailto:info@equipotel.com?subject=Consulta sobre ${producto.name}`)
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </Card>
