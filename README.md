@@ -4,21 +4,21 @@ Landing page moderna para Equipotel, empresa especializada en cajas fuertes y si
 
 ## 🚀 Tecnologías Utilizadas
 
-- **Next.js 15.0** - Framework de React
-- **PrimeReact** - Biblioteca de componentes UI
-- **Tailwind CSS** - Framework de CSS
-- **Firebase** - Base de datos y almacenamiento
-- **Vercel** - Plataforma de despliegue
+-   **Next.js 15.0** - Framework de React
+-   **PrimeReact** - Biblioteca de componentes UI
+-   **Tailwind CSS** - Framework de CSS
+-   **Firebase** - Base de datos y almacenamiento
+-   **Vercel** - Plataforma de despliegue
 
 ## 📋 Características
 
-- ✅ Diseño responsive y moderno
-- ✅ Navbar fijo con scroll dinámico
-- ✅ Catálogo de productos con Firebase
-- ✅ Formulario de contacto funcional
-- ✅ SEO optimizado
-- ✅ Analytics integrado
-- ✅ PWA ready
+-   ✅ Diseño responsive y moderno
+-   ✅ Navbar fijo con scroll dinámico
+-   ✅ Catálogo de productos con Firebase
+-   ✅ Formulario de contacto funcional
+-   ✅ SEO optimizado
+-   ✅ Analytics integrado
+-   ✅ PWA ready
 
 ## 🛠️ Instalación
 
@@ -161,24 +161,27 @@ equipotel-landing/
 ## 🔥 Funcionalidades de Firebase
 
 ### Productos
-- ✅ Cargar productos desde Firestore
-- ✅ Filtrar por categoría
-- ✅ Búsqueda en tiempo real
-- ✅ Ordenamiento dinámico
-- ✅ Paginación
+
+-   ✅ Cargar productos desde Firestore
+-   ✅ Filtrar por categoría
+-   ✅ Búsqueda en tiempo real
+-   ✅ Ordenamiento dinámico
+-   ✅ Paginación
 
 ### Imágenes
-- ✅ Subir imágenes a Firebase Storage
-- ✅ URLs de descarga automáticas
-- ✅ Optimización de imágenes
+
+-   ✅ Subir imágenes a Firebase Storage
+-   ✅ URLs de descarga automáticas
+-   ✅ Optimización de imágenes
 
 ### Panel de Administración
-- ✅ Autenticación con Google
-- ✅ Dashboard con métricas
-- ✅ Gestión completa de productos (CRUD)
-- ✅ Analytics integrado
-- ✅ DataGrid con filtros y ordenamiento
-- ✅ Protección de rutas
+
+-   ✅ Autenticación con Google
+-   ✅ Dashboard con métricas
+-   ✅ Gestión completa de productos (CRUD)
+-   ✅ Analytics integrado
+-   ✅ DataGrid con filtros y ordenamiento
+-   ✅ Protección de rutas
 
 ## 🚀 Despliegue
 
@@ -191,38 +194,43 @@ equipotel-landing/
 ### Otros proveedores
 
 El proyecto es compatible con:
-- Netlify
-- AWS Amplify
-- Railway
-- Render
+
+-   Netlify
+-   AWS Amplify
+-   Railway
+-   Render
 
 ## 📊 Analytics y SEO
 
 ### Google Analytics
-- Configurado para GA4
-- Tracking de eventos personalizados
-- Web Vitals integrados
+
+-   Configurado para GA4
+-   Tracking de eventos personalizados
+-   Web Vitals integrados
 
 ### SEO
-- Meta tags optimizados
-- Sitemap automático
-- Robots.txt configurado
-- Open Graph tags
+
+-   Meta tags optimizados
+-   Sitemap automático
+-   Robots.txt configurado
+-   Open Graph tags
 
 ## 🎨 Personalización
 
 ### Colores
+
 Los colores principales están definidos en `src/app/globals.css`:
 
 ```css
 :root {
-  --primary-color: #3b82f6;
-  --secondary-color: #6b7280;
-  --accent-color: #10b981;
+    --primary-color: #3b82f6;
+    --secondary-color: #6b7280;
+    --accent-color: #10b981;
 }
 ```
 
 ### Componentes
+
 Todos los componentes de PrimeReact están personalizados en `src/app/globals.css`.
 
 ## 🔧 Scripts Disponibles
@@ -238,8 +246,9 @@ npm run setup        # Configuración inicial
 ## 📞 Soporte
 
 Para soporte técnico o preguntas:
-- Email: info@equipotel.es
-- Teléfono: +34 951 234 567
+
+-   Email: info@equipotel.es
+-   Teléfono: +34 951 234 567
 
 ## 📄 Licencia
 
