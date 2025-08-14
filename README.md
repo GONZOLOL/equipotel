@@ -1,193 +1,229 @@
-# Equipotel - Landing Page
+# 🏦 Equipotel - Landing Page
 
-Landing page moderna para Equipotel, empresa especializada en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.
+Landing page moderna para Equipotel, empresa especializada en cajas fuertes y sistemas de seguridad en Málaga.
 
 ## 🚀 Tecnologías Utilizadas
 
--   **Next.js 15.0** - Framework de React
--   **PrimeReact** - Biblioteca de componentes UI
--   **Firebase** - Base de datos y almacenamiento
--   **Tailwind CSS** - Framework de estilos
--   **JavaScript** - Lenguaje de programación
+- **Next.js 15.0** - Framework de React
+- **PrimeReact** - Biblioteca de componentes UI
+- **Tailwind CSS** - Framework de CSS
+- **Firebase** - Base de datos y almacenamiento
+- **Vercel** - Plataforma de despliegue
 
 ## 📋 Características
 
--   ✅ Diseño responsive y moderno
--   ✅ Catálogo de productos con filtros
--   ✅ Formulario de contacto funcional
--   ✅ Integración con Firebase
--   ✅ Optimización SEO
--   ✅ Componentes reutilizables
--   ✅ Navegación intuitiva
+- ✅ Diseño responsive y moderno
+- ✅ Navbar fijo con scroll dinámico
+- ✅ Catálogo de productos con Firebase
+- ✅ Formulario de contacto funcional
+- ✅ SEO optimizado
+- ✅ Analytics integrado
+- ✅ PWA ready
 
 ## 🛠️ Instalación
 
-1. **Clonar el repositorio**
+### 1. Clonar el repositorio
 
-    ```bash
-    git clone <url-del-repositorio>
-    cd equipotel-landing
-    ```
+```bash
+git clone https://github.com/tu-usuario/equipotel-landing.git
+cd equipotel-landing
+```
 
-2. **Instalar dependencias**
+### 2. Instalar dependencias
 
-    ```bash
-    npm install
-    ```
+```bash
+npm install
+```
 
-3. **Configurar variables de entorno**
-   Crear un archivo `.env.local` en la raíz del proyecto:
+### 3. Configurar Firebase
 
-    ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY=tu_api_key
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=tu_auth_domain
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=tu_project_id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=tu_storage_bucket
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=tu_messaging_sender_id
-    NEXT_PUBLIC_FIREBASE_APP_ID=tu_app_id
-    ```
-
-4. **Ejecutar en desarrollo**
-
-    ```bash
-    npm run dev
-    ```
-
-5. **Abrir en el navegador**
-    ```
-    http://localhost:3000
-    ```
-
-## 🔥 Configuración de Firebase
-
-### 1. Crear proyecto en Firebase
+#### 3.1 Crear proyecto en Firebase
 
 1. Ve a [Firebase Console](https://console.firebase.google.com/)
-2. Crea un nuevo proyecto
-3. Habilita Firestore Database
-4. Habilita Storage
-5. Configura las reglas de seguridad
+2. Crea un nuevo proyecto llamado "equipotel-landing"
+3. Habilita **Firestore Database** y **Storage**
 
-### 2. Configurar Firestore
+#### 3.2 Configurar Firestore
 
-Crea las siguientes colecciones:
+1. En Firebase Console, ve a **Firestore Database**
+2. Crea una base de datos en modo de prueba
+3. Crea la colección `products` con la siguiente estructura:
 
 ```javascript
-// Colección: productos
 {
-  id: "auto-generated",
   name: "Caja Fuerte Serie RA",
   category: "cajas-fuertes",
   categoryLabel: "Cajas Fuertes",
   price: 299,
   priceFormatted: "299€",
-  description: "Caja fuerte atérmica con certificación europea...",
-  image: "url_de_la_imagen",
+  description: "Caja fuerte atérmica con certificación europea",
+  image: "https://tu-url-de-imagen.jpg",
   features: ["Atérmico", "Certificado", "Electrónico"],
   stock: "Disponible",
-  createdAt: "timestamp",
-  updatedAt: "timestamp"
+  featured: true,
+  createdAt: Timestamp,
+  updatedAt: Timestamp
 }
 ```
 
-### 3. Configurar Storage
+#### 3.3 Configurar Storage
 
--   Crea una carpeta `productos` en Storage
--   Sube las imágenes de los productos
--   Configura las reglas de acceso público para las imágenes
+1. En Firebase Console, ve a **Storage**
+2. Crea las reglas de seguridad:
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true; // Para desarrollo
+    }
+  }
+}
+```
+
+#### 3.4 Obtener configuración
+
+1. En Firebase Console, ve a **Project Settings**
+2. En la sección "Your apps", crea una nueva app web
+3. Copia la configuración
+
+#### 3.5 Configurar Autenticación
+
+1. En Firebase Console, ve a **Authentication**
+2. Habilita el proveedor **Google**
+3. Configura los dominios autorizados (localhost para desarrollo)
+4. Añade las cuentas de email autorizadas para el admin
+
+### 4. Configurar variables de entorno
+
+Crea el archivo `.env.local` en la raíz del proyecto:
+
+```env
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=tu_api_key_aqui
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=tu_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=tu_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=tu_project_id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=tu_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=tu_app_id
+
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_COMPANY_NAME=Equipotel
+NEXT_PUBLIC_COMPANY_PHONE=+34 951 234 567
+NEXT_PUBLIC_COMPANY_EMAIL=info@equipotel.es
+
+# Analytics (Opcional)
+NEXT_PUBLIC_GA_TRACKING_ID=tu_ga_tracking_id
+NEXT_PUBLIC_FB_PIXEL_ID=tu_fb_pixel_id
+```
+
+### 5. Ejecutar el proyecto
+
+```bash
+npm run dev
+```
+
+El proyecto estará disponible en `http://localhost:3000`
+
+### 6. Acceder al Panel de Administración
+
+1. Ve a `http://localhost:3000/admin`
+2. Inicia sesión con tu cuenta de Google
+3. Accede al dashboard en `http://localhost:3000/admin/dashboard`
+4. Gestiona productos en `http://localhost:3000/admin/products`
+5. Revisa analytics en `http://localhost:3000/admin/analytics`
 
 ## 📁 Estructura del Proyecto
 
 ```
 equipotel-landing/
 ├── src/
-│   ├── app/
-│   │   ├── contacto/
-│   │   │   └── page.jsx
-│   │   ├── productos/
-│   │   │   └── page.jsx
-│   │   ├── sobre-nosotros/
-│   │   │   └── page.jsx
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.jsx
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   └── Footer.jsx
-│   └── lib/
-│       └── firebase.js
-├── public/
-│   └── images/
-├── package.json
-└── README.md
+│   ├── app/                 # Páginas de Next.js
+│   │   ├── page.jsx         # Página principal
+│   │   ├── productos/       # Catálogo de productos
+│   │   ├── contacto/        # Página de contacto
+│   │   └── sobre-nosotros/  # Página sobre nosotros
+│   ├── components/          # Componentes reutilizables
+│   │   ├── Navbar.jsx       # Barra de navegación
+│   │   └── Footer.jsx       # Pie de página
+│   ├── lib/                 # Configuraciones
+│   │   ├── firebase.js      # Configuración de Firebase
+│   │   ├── analytics.js     # Configuración de analytics
+│   │   └── performance.js   # Monitoreo de performance
+│   └── services/            # Servicios
+│       └── productService.js # Servicios de productos
+├── public/                  # Archivos estáticos
+└── scripts/                 # Scripts de utilidad
 ```
 
-## 🎨 Personalización
+## 🔥 Funcionalidades de Firebase
 
-### Colores y Estilos
+### Productos
+- ✅ Cargar productos desde Firestore
+- ✅ Filtrar por categoría
+- ✅ Búsqueda en tiempo real
+- ✅ Ordenamiento dinámico
+- ✅ Paginación
 
-Los colores principales están definidos en `src/app/globals.css`:
+### Imágenes
+- ✅ Subir imágenes a Firebase Storage
+- ✅ URLs de descarga automáticas
+- ✅ Optimización de imágenes
 
--   **Azul principal**: `#3b82f6`
--   **Azul oscuro**: `#2563eb`
--   **Gris**: `#6b7280`
--   **Verde**: `#10b981`
--   **Amarillo**: `#f59e0b`
-
-### Componentes
-
-Los componentes principales están en `src/components/`:
-
--   `Navbar.jsx` - Navegación principal
--   `Footer.jsx` - Pie de página
-
-### Páginas
-
-Las páginas están en `src/app/`:
-
--   `page.jsx` - Página principal
--   `productos/page.jsx` - Catálogo de productos
--   `contacto/page.jsx` - Formulario de contacto
--   `sobre-nosotros/page.jsx` - Información de la empresa
-
-## 📱 Responsive Design
-
-La aplicación está optimizada para:
-
--   📱 Móviles (320px - 768px)
--   💻 Tablets (768px - 1024px)
--   🖥️ Desktop (1024px+)
+### Panel de Administración
+- ✅ Autenticación con Google
+- ✅ Dashboard con métricas
+- ✅ Gestión completa de productos (CRUD)
+- ✅ Analytics integrado
+- ✅ DataGrid con filtros y ordenamiento
+- ✅ Protección de rutas
 
 ## 🚀 Despliegue
 
 ### Vercel (Recomendado)
 
-1. Conecta tu repositorio a Vercel
-2. Configura las variables de entorno
+1. Conecta tu repositorio de GitHub a Vercel
+2. Configura las variables de entorno en Vercel
 3. Despliega automáticamente
 
-### Netlify
+### Otros proveedores
 
-1. Conecta tu repositorio a Netlify
-2. Configura las variables de entorno
-3. Despliega automáticamente
+El proyecto es compatible con:
+- Netlify
+- AWS Amplify
+- Railway
+- Render
 
-### Otros
+## 📊 Analytics y SEO
 
-```bash
-npm run build
-npm start
+### Google Analytics
+- Configurado para GA4
+- Tracking de eventos personalizados
+- Web Vitals integrados
+
+### SEO
+- Meta tags optimizados
+- Sitemap automático
+- Robots.txt configurado
+- Open Graph tags
+
+## 🎨 Personalización
+
+### Colores
+Los colores principales están definidos en `src/app/globals.css`:
+
+```css
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #6b7280;
+  --accent-color: #10b981;
+}
 ```
 
-## 📊 SEO
-
-La aplicación incluye:
-
--   Meta tags optimizados
--   Open Graph tags
--   Schema markup
--   URLs amigables
--   Sitemap automático
+### Componentes
+Todos los componentes de PrimeReact están personalizados en `src/app/globals.css`.
 
 ## 🔧 Scripts Disponibles
 
@@ -196,28 +232,19 @@ npm run dev          # Desarrollo
 npm run build        # Construcción
 npm run start        # Producción
 npm run lint         # Linting
+npm run setup        # Configuración inicial
 ```
 
 ## 📞 Soporte
 
-Para soporte técnico o consultas:
-
--   📧 Email: info@equipotel.es
--   📱 Teléfono: +555 136 997 334
--   🌐 Web: https://equipotel.es
+Para soporte técnico o preguntas:
+- Email: info@equipotel.es
+- Teléfono: +34 951 234 567
 
 ## 📄 Licencia
 
-Este proyecto está bajo la licencia MIT.
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+Este proyecto está bajo la Licencia MIT.
 
 ---
 
-**Equipotel** - Tu seguridad es nuestra prioridad 🔒
+**Desarrollado con ❤️ para Equipotel**

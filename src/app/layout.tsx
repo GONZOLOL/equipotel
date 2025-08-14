@@ -1,33 +1,19 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
-
-// PrimeReact CSS
 import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 
-// Analytics
-import { GA_TRACKING_ID, FB_PIXEL_ID } from '@/lib/analytics';
-import { initPerformanceMonitoring } from '@/lib/performance';
-import { reportWebVitalsToAnalytics } from './web-vitals';
+const inter = Inter({ subsets: ['latin'] });
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin'],
-});
-
-export const metadata: Metadata = {
-    title: 'Equipotel - Cajas Fuertes y Armarios Acorazados en Málaga',
+export const metadata = {
+    title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
     description:
-        'Especialistas en cajas fuertes, armarios acorazados, sistemas de anclaje y compartimentos de seguridad en Málaga. Productos certificados con instalación profesional.',
+        'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga. Protegemos lo que más importa desde 2010.',
     keywords:
-        'cajas fuertes, armarios acorazados, seguridad, Málaga, sistemas anclaje, compartimentos seguridad',
+        'cajas fuertes, armarios acorazados, seguridad, Málaga, equipotel, sistemas de anclaje',
     authors: [{ name: 'Equipotel' }],
     creator: 'Equipotel',
     publisher: 'Equipotel',
@@ -36,21 +22,19 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL(
-        process.env.NEXT_PUBLIC_SITE_URL || 'https://equipotel.es'
-    ),
+    metadataBase: new URL('https://equipotel.es'),
     alternates: {
         canonical: '/',
     },
     openGraph: {
-        title: 'Equipotel - Cajas Fuertes y Armarios Acorazados',
+        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados, sistemas de anclaje y compartimentos de seguridad en Málaga',
-        url: process.env.NEXT_PUBLIC_SITE_URL || 'https://equipotel.es',
+            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+        url: 'https://equipotel.es',
         siteName: 'Equipotel',
         images: [
             {
-                url: '/images/og-image.jpg',
+                url: '/og-image.jpg',
                 width: 1200,
                 height: 630,
                 alt: 'Equipotel - Cajas Fuertes y Seguridad',
@@ -61,10 +45,10 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Equipotel - Cajas Fuertes y Armarios Acorazados',
+        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados, sistemas de anclaje y compartimentos de seguridad en Málaga',
-        images: ['/images/og-image.jpg'],
+            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+        images: ['/og-image.jpg'],
     },
     robots: {
         index: true,
@@ -78,15 +62,15 @@ export const metadata: Metadata = {
         },
     },
     verification: {
-        google: 'tu-google-verification-code',
+        google: 'your-google-verification-code',
     },
 };
 
 export default function RootLayout({
     children,
-}: Readonly<{
+}: {
     children: React.ReactNode;
-}>) {
+}) {
     return (
         <html lang="es">
             <head>
@@ -101,30 +85,23 @@ export default function RootLayout({
                 />
 
                 {/* Google Analytics */}
-                {GA_TRACKING_ID && (
-                    <>
-                        <script
-                            async
-                            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-                        />
-                        <script
-                            dangerouslySetInnerHTML={{
-                                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_TRACKING_ID}', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                  });
-                `,
-                            }}
-                        />
-                    </>
-                )}
+                <script
+                    async
+                    src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+                />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}');
+            `,
+                    }}
+                />
 
                 {/* Facebook Pixel */}
-                {FB_PIXEL_ID && (
+                {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
                     <script
                         dangerouslySetInnerHTML={{
                             __html: `
@@ -136,7 +113,7 @@ export default function RootLayout({
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '${FB_PIXEL_ID}');
+                fbq('init', '${process.env.NEXT_PUBLIC_FB_PIXEL_ID}');
                 fbq('track', 'PageView');
               `,
                         }}
@@ -147,28 +124,27 @@ export default function RootLayout({
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `
-              (function() {
-                ${initPerformanceMonitoring.toString()}
-                initPerformanceMonitoring();
-              })();
+              // Performance monitoring
+              window.addEventListener('load', function() {
+                if ('performance' in window) {
+                  const perfData = performance.getEntriesByType('navigation')[0];
+                  const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
+                  
+                  // Send to analytics
+                  if (typeof gtag !== 'undefined') {
+                    gtag('event', 'timing_complete', {
+                      name: 'load',
+                      value: Math.round(loadTime)
+                    });
+                  }
+                }
+              });
             `,
                     }}
                 />
             </head>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                {children}
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              (function() {
-                ${reportWebVitalsToAnalytics.toString()}
-                reportWebVitalsToAnalytics();
-              })();
-            `,
-                    }}
-                />
+            <body className={inter.className}>
+                <AuthProvider>{children}</AuthProvider>
             </body>
         </html>
     );

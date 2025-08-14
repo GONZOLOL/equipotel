@@ -27,6 +27,7 @@
     "primereact": "^10.9.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-firebase-hooks": "^5.1.1",
     "web-vitals": "^5.1.0"
   },
   "devDependencies": {
