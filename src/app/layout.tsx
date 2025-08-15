@@ -5,6 +5,7 @@ import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/contexts/ToastContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -72,7 +73,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="es">
+        <html lang="es" className="h-full w-full">
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
                 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
@@ -81,7 +82,7 @@ export default function RootLayout({
                 <meta name="theme-color" content="#3b82f6" />
                 <meta
                     name="viewport"
-                    content="width=device-width, initial-scale=1"
+                    content="width=device-width, initial-scale=1, maximum-scale=5"
                 />
 
                 {/* Google Analytics */}
@@ -143,8 +144,14 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body className={inter.className}>
-                <AuthProvider>{children}</AuthProvider>
+            <body
+                className={`${inter.className} h-full w-full min-h-screen overflow-x-hidden`}
+            >
+                <div className="min-h-screen w-full flex flex-col">
+                    <AuthProvider>
+                        <ToastProvider>{children}</ToastProvider>
+                    </AuthProvider>
+                </div>
             </body>
         </html>
     );

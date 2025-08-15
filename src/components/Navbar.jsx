@@ -6,108 +6,105 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-  const items = [
-    {
-      label: 'Inicio',
-      icon: 'pi pi-home',
-      url: '/',
-    },
-    {
-      label: 'Productos',
-      icon: 'pi pi-box',
-      items: [
+    const items = [
         {
-          label: 'Cajas Fuertes',
-          icon: 'pi pi-shield',
-          url: '/productos?categoria=cajas-fuertes',
+            label: 'Inicio',
+            icon: 'pi pi-home',
+            url: '/',
         },
         {
-          label: 'Armarios Acorazados',
-          icon: 'pi pi-building',
-          url: '/productos?categoria=armarios-acorazados',
+            label: 'Productos',
+            icon: 'pi pi-box',
+            items: [
+                {
+                    label: 'Cajas Fuertes',
+                    icon: 'pi pi-shield',
+                    url: '/productos?categoria=cajas-fuertes',
+                },
+                {
+                    label: 'Armarios Acorazados',
+                    icon: 'pi pi-building',
+                    url: '/productos?categoria=armarios-acorazados',
+                },
+                {
+                    label: 'Sistemas de Anclaje',
+                    icon: 'pi pi-link',
+                    url: '/productos?categoria=sistemas-anclaje',
+                },
+                {
+                    label: 'Compartimentos de Seguridad',
+                    icon: 'pi pi-lock',
+                    url: '/productos?categoria=compartimentos-seguridad',
+                },
+            ],
         },
         {
-          label: 'Sistemas de Anclaje',
-          icon: 'pi pi-link',
-          url: '/productos?categoria=sistemas-anclaje',
+            label: 'Contacto',
+            icon: 'pi pi-envelope',
+            url: '/contacto',
         },
         {
-          label: 'Compartimentos de Seguridad',
-          icon: 'pi pi-lock',
-          url: '/productos?categoria=compartimentos-seguridad',
+            label: 'Sobre Nosotros',
+            icon: 'pi pi-users',
+            url: '/sobre-nosotros',
         },
-      ],
-    },
-    {
-      label: 'Contacto',
-      icon: 'pi pi-envelope',
-      url: '/contacto',
-    },
-    {
-      label: 'Sobre Nosotros',
-      icon: 'pi pi-users',
-      url: '/sobre-nosotros',
-    },
-  ];
+    ];
 
-  const start = (
-    <Link href="/" className="flex items-center space-x-2 no-underline">
-      <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
-        <i className="pi pi-shield text-white text-xl"></i>
-      </div>
-      <span className="text-xl font-bold text-gray-800 hidden sm:block">
-        Equipotel
-      </span>
-    </Link>
-  );
+    const start = (
+        <Link href="/" className="flex items-center space-x-2 no-underline">
+            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
+                <i className="pi pi-shield text-white text-xl"></i>
+            </div>
+            <span className="text-xl font-bold text-gray-800 hidden sm:block">
+                Equipotel
+            </span>
+        </Link>
+    );
 
-  const end = (
-    <div className="flex items-center space-x-3">
-      <Button
-        label="Llamar"
-        icon="pi pi-phone"
-        severity="success"
-        size="small"
-        className="hidden sm:flex"
-        onClick={() => (window.location.href = 'tel:+34951234567')}
-      />
-      <Button
-        icon="pi pi-phone"
-        severity="success"
-        size="small"
-        className="sm:hidden"
-        onClick={() => (window.location.href = 'tel:+34951234567')}
-      />
-    </div>
-  );
+    const end = (
+        <div className="flex items-center space-x-3">
+            <Button
+                label="Llamar"
+                icon="pi pi-phone"
+                severity="success"
+                size="small"
+                className="hidden sm:flex"
+                onClick={() => (window.location.href = 'tel:+34951234567')}
+            />
+        </div>
+    );
 
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' 
-        : 'bg-transparent'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4">
-        <Menubar
-          model={items}
-          start={start}
-          end={end}
-          className={`border-none transition-all duration-300 ${
-            isScrolled ? 'bg-transparent' : 'bg-white/90 backdrop-blur-sm shadow-sm'
-          }`}
-        />
-      </div>
-    </nav>
-  );
+    return (
+        <nav
+            className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${
+                isScrolled
+                    ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200'
+                    : 'bg-transparent'
+            }`}
+        >
+            <div className="w-full max-w-none px-4 sm:px-6 lg:px-8">
+                <Menubar
+                    model={items}
+                    start={start}
+                    end={end}
+                    className={`border-none transition-all duration-300 w-full ${
+                        isScrolled
+                            ? 'bg-transparent'
+                            : 'bg-white/90 backdrop-blur-sm shadow-sm'
+                    }`}
+                />
+            </div>
+        </nav>
+    );
 }

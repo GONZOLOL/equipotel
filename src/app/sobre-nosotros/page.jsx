@@ -121,7 +121,7 @@ export default function SobreNosotros() {
 
             {/* Hero Section */}
             <section className="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 text-gray-800 py-20 pt-32">
-                <div className="max-w-7xl mx-auto px-4 text-center">
+                <div className="max-w-7xl mx-auto text-center">
                     <h1 className="text-4xl lg:text-6xl font-bold mb-6">
                         Sobre{' '}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
@@ -136,7 +136,7 @@ export default function SobreNosotros() {
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="max-w-7xl mx-auto py-12">
                 {/* Historia */}
                 <section className="mb-16">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -283,42 +283,44 @@ export default function SobreNosotros() {
 
                 {/* Estadísticas */}
                 <section className="mb-16">
-                    <Card className="bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-xl">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-                            <div className="p-4 rounded-lg bg-white/10 backdrop-blur-sm">
-                                <div className="text-5xl font-bold mb-2 text-white">
-                                    14+
+                    <div className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                                <div className="fade-in">
+                                    <div className="text-4xl md:text-5xl font-bold mb-2">
+                                        14+
+                                    </div>
+                                    <div className="text-blue-100 text-lg">
+                                        Años de Experiencia
+                                    </div>
                                 </div>
-                                <div className="text-white font-medium">
-                                    Años de Experiencia
+                                <div className="fade-in">
+                                    <div className="text-4xl md:text-5xl font-bold mb-2">
+                                        1000+
+                                    </div>
+                                    <div className="text-blue-100 text-lg">
+                                        Clientes Satisfechos
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="p-4 rounded-lg bg-white/10 backdrop-blur-sm">
-                                <div className="text-5xl font-bold mb-2 text-white">
-                                    1000+
+                                <div className="fade-in">
+                                    <div className="text-4xl md:text-5xl font-bold mb-2">
+                                        500+
+                                    </div>
+                                    <div className="text-blue-100 text-lg">
+                                        Instalaciones Realizadas
+                                    </div>
                                 </div>
-                                <div className="text-white font-medium">
-                                    Clientes Satisfechos
-                                </div>
-                            </div>
-                            <div className="p-4 rounded-lg bg-white/10 backdrop-blur-sm">
-                                <div className="text-5xl font-bold mb-2 text-white">
-                                    500+
-                                </div>
-                                <div className="text-white font-medium">
-                                    Instalaciones Realizadas
-                                </div>
-                            </div>
-                            <div className="p-4 rounded-lg bg-white/10 backdrop-blur-sm">
-                                <div className="text-5xl font-bold mb-2 text-white">
-                                    24/7
-                                </div>
-                                <div className="text-white font-medium">
-                                    Soporte Técnico
+                                <div className="fade-in">
+                                    <div className="text-4xl md:text-5xl font-bold mb-2">
+                                        24/7
+                                    </div>
+                                    <div className="text-blue-100 text-lg">
+                                        Soporte Técnico
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </Card>
+                    </div>
                 </section>
 
                 {/* CTA */}
