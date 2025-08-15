@@ -137,82 +137,27 @@ export default function Productos() {
         const hasError = imageErrors.has(producto.id);
         const mainImage = producto.mainImage || producto.image;
         const hasImage = mainImage && mainImage.trim() !== '';
-        const hasAdditionalImages =
-            producto.additionalImages && producto.additionalImages.length > 0;
 
         console.log(`Renderizando imagen para ${producto.name}:`, {
             hasImage,
             hasError,
-            hasAdditionalImages,
             originalImage: mainImage,
             imageUrl: hasImage ? convertGoogleDriveUrl(mainImage) : null,
         });
 
         if (!hasImage || hasError) {
             return (
-                <div className="bg-gray-200 w-32 h-32 rounded-lg flex items-center justify-center">
-                    <i className="pi pi-image text-2xl text-gray-400"></i>
+                <div className="bg-gray-200 w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center">
+                    <i className="pi pi-image text-xl text-gray-400"></i>
                 </div>
             );
         }
 
-        // Si hay imágenes adicionales, mostrar carrusel
-        if (hasAdditionalImages) {
-            const allImages = [mainImage, ...producto.additionalImages];
-            const currentImage = allImages[carouselIndex % allImages.length];
-            const imageUrl = convertGoogleDriveUrl(currentImage);
-
-            return (
-                <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto group">
-                    <Image
-                        src={imageUrl}
-                        alt={producto.name}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-300"
-                    />
-
-                    {/* Carrusel Navigation */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-between p-1 opacity-0 group-hover:opacity-100">
-                        <Button
-                            icon="pi pi-chevron-left"
-                            size="small"
-                            severity="secondary"
-                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCarouselIndex((prev) =>
-                                    Math.max(0, prev - 1)
-                                );
-                            }}
-                        />
-                        <Button
-                            icon="pi pi-chevron-right"
-                            size="small"
-                            severity="secondary"
-                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCarouselIndex((prev) =>
-                                    Math.min(allImages.length - 1, prev + 1)
-                                );
-                            }}
-                        />
-                    </div>
-
-                    {/* Image Counter */}
-                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {(carouselIndex % allImages.length) + 1}/
-                        {allImages.length}
-                    </div>
-                </div>
-            );
-        }
-
-        // Imagen única (sin carrusel)
+        // Solo mostrar la imagen principal
         const imageUrl = convertGoogleDriveUrl(mainImage);
 
         return (
-            <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white mx-auto">
                 <Image
                     src={imageUrl}
                     alt={producto.name}
@@ -302,23 +247,23 @@ export default function Productos() {
 
         if (layout === 'grid') {
             return (
-                <div className="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2">
-                    <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-                        <div className="p-3">
-                            {/* Imagen */}
-                            <div className="mb-3">
+                <div className="w-full h-full">
+                    <Card className="h-full hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                        <div className="p-2 flex flex-col h-full">
+                            {/* Imagen - altura fija */}
+                            <div className="mb-2 flex-shrink-0">
                                 {renderProductImage(producto)}
                             </div>
 
                             {/* Contenido */}
-                            <div className="space-y-2">
-                                {/* Título */}
-                                <h3 className="text-base font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] text-center">
+                            <div className="space-y-1 flex flex-col h-full">
+                                {/* Título - altura fija */}
+                                <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2rem] text-center flex-shrink-0">
                                     {producto.name}
                                 </h3>
 
-                                {/* Categoría */}
-                                <div className="flex justify-center">
+                                {/* Categoría - altura fija */}
+                                <div className="flex justify-center flex-shrink-0">
                                     <Tag
                                         value={producto.categoryLabel}
                                         severity="info"
@@ -326,17 +271,18 @@ export default function Productos() {
                                     />
                                 </div>
 
-                                {/* Descripción */}
-                                <p className="text-xs text-gray-600 line-clamp-2 min-h-[2rem] text-center">
+                                {/* Descripción - altura fija */}
+                                <p className="text-xs text-gray-600 line-clamp-2 min-h-[1.5rem] text-center flex-shrink-0">
                                     {producto.description}
                                 </p>
 
-                                {/* Características */}
-                                {producto.features &&
-                                    producto.features.length > 0 && (
+                                {/* Características - altura fija */}
+                                <div className="flex-shrink-0 min-h-[2rem]">
+                                    {producto.features &&
+                                    producto.features.length > 0 ? (
                                         <div className="flex flex-wrap gap-1 justify-center">
                                             {producto.features
-                                                .slice(0, 2)
+                                                .slice(0, 1)
                                                 .map((feature, index) => (
                                                     <Tag
                                                         key={index}
@@ -346,17 +292,22 @@ export default function Productos() {
                                                     />
                                                 ))}
                                         </div>
+                                    ) : (
+                                        <div className="text-xs text-gray-500 text-center min-h-[2rem] flex items-center justify-center">
+                                            Producto de calidad
+                                        </div>
                                     )}
+                                </div>
 
-                                {/* Precio */}
-                                <div className="text-center">
-                                    <p className="text-lg font-bold text-blue-600">
+                                {/* Precio - altura fija */}
+                                <div className="text-center flex-shrink-0">
+                                    <p className="text-base font-bold text-blue-600">
                                         {producto.priceFormatted}
                                     </p>
                                 </div>
 
-                                {/* Botones */}
-                                <div className="flex gap-1 justify-center pt-1">
+                                {/* Botones - siempre al final */}
+                                <div className="flex gap-1 justify-center pt-1 mt-auto">
                                     <Button
                                         label="Ver"
                                         severity="primary"
@@ -387,30 +338,30 @@ export default function Productos() {
 
     const header = () => {
         return (
-            <div className="flex flex-column sm:flex-row justify-content-between align-items-center gap-4 mb-6">
-                <div className="flex flex-column sm:flex-row gap-4 flex-1">
-                    <span className="p-input-icon-left">
-                        <i className="pi pi-search" />
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                    <div className="relative">
+                        <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Buscar productos..."
-                            className="w-full sm:w-80"
+                            className="w-full sm:w-80 search-input"
                         />
-                    </span>
+                    </div>
                     <Dropdown
                         value={selectedCategory}
                         options={categories}
                         onChange={(e) => setSelectedCategory(e.value)}
                         placeholder="Categoría"
-                        className="w-full sm:w-48"
+                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <Dropdown
                         value={sortKey}
                         options={sortOptions}
                         onChange={onSort}
                         placeholder="Ordenar por"
-                        className="w-full sm:w-48"
+                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
                 <div className="flex gap-2">
@@ -419,6 +370,7 @@ export default function Productos() {
                         onClick={() => setLayout('grid')}
                         severity={layout === 'grid' ? 'primary' : 'secondary'}
                         outlined={layout !== 'grid'}
+                        className="px-2"
                     />
                     <Button
                         icon="pi pi-bars"
@@ -435,7 +387,7 @@ export default function Productos() {
         <div className="min-h-screen">
             <Navbar />
 
-            <div className="max-w-7xl mx-auto px-4 py-8 pt-32">
+            <div className="w-full max-w-none py-8 pt-20 px-4">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
                         Nuestros Productos
@@ -446,16 +398,65 @@ export default function Productos() {
                     </p>
                 </div>
 
-                <DataView
-                    value={filteredProductos}
-                    layout={layout}
-                    header={header()}
-                    itemTemplate={itemTemplate}
-                    paginator
-                    rows={12}
-                    loading={loading}
-                    emptyMessage="No se encontraron productos"
-                />
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="text-center">
+                            <i className="pi pi-spin pi-spinner text-4xl text-blue-600 mb-4"></i>
+                            <p className="text-gray-600">
+                                Cargando productos...
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {header()}
+                        {filteredProductos.length > 0 ? (
+                            <>
+                                {layout === 'grid' ? (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                                        {filteredProductos.map(
+                                            (producto, index) => (
+                                                <div
+                                                    key={producto.id || index}
+                                                    className="w-full"
+                                                >
+                                                    {itemTemplate(
+                                                        producto,
+                                                        'grid'
+                                                    )}
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {filteredProductos.map(
+                                            (producto, index) => (
+                                                <div key={producto.id || index}>
+                                                    {itemTemplate(
+                                                        producto,
+                                                        'list'
+                                                    )}
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center py-12">
+                                <i className="pi pi-box text-6xl text-gray-400 mb-4"></i>
+                                <p className="text-gray-600 text-lg mb-4">
+                                    No se encontraron productos
+                                </p>
+                                <p className="text-gray-500 text-sm">
+                                    Intenta cambiar los filtros de búsqueda o
+                                    categoría
+                                </p>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
 
             <Footer />
