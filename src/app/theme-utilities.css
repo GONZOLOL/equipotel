@@ -1,0 +1,171 @@
+/* Theme Utilities - Mejores prácticas de contraste */
+
+/* Texto principal - Alto contraste */
+.text-primary-light {
+    color: #111827; /* gray-900 */
+}
+
+.text-primary-dark {
+    color: #ffffff; /* white */
+}
+
+/* Texto secundario - Contraste medio */
+.text-secondary-light {
+    color: #4b5563; /* gray-600 */
+}
+
+.text-secondary-dark {
+    color: #e5e7eb; /* gray-200 */
+}
+
+/* Texto terciario - Contraste bajo pero legible */
+.text-tertiary-light {
+    color: #6b7280; /* gray-500 */
+}
+
+.text-tertiary-dark {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Enlaces - Contraste alto para accesibilidad */
+.link-light {
+    color: #2563eb; /* blue-600 */
+}
+
+.link-dark {
+    color: #60a5fa; /* blue-400 */
+}
+
+.link-light:hover {
+    color: #1d4ed8; /* blue-700 */
+}
+
+.link-dark:hover {
+    color: #93c5fd; /* blue-300 */
+}
+
+/* Fondos principales */
+.bg-primary-light {
+    background-color: #ffffff; /* white */
+}
+
+.bg-primary-dark {
+    background-color: #111827; /* gray-900 */
+}
+
+/* Fondos secundarios */
+.bg-secondary-light {
+    background-color: #f9fafb; /* gray-50 */
+}
+
+.bg-secondary-dark {
+    background-color: #1f2937; /* gray-800 */
+}
+
+/* Bordes */
+.border-light {
+    border-color: #e5e7eb; /* gray-200 */
+}
+
+.border-dark {
+    border-color: #374151; /* gray-700 */
+}
+
+/* Estados de hover mejorados */
+.hover-bg-light {
+    background-color: #f3f4f6; /* gray-100 */
+}
+
+.hover-bg-dark {
+    background-color: #374151; /* gray-700 */
+}
+
+/* Clases de utilidad para componentes específicos */
+.card-light {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+    color: #111827;
+}
+
+.card-dark {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #ffffff;
+}
+
+.navbar-light {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-color: #e5e7eb;
+}
+
+.navbar-dark {
+    background-color: rgba(17, 24, 39, 0.95);
+    border-color: #374151;
+}
+
+/* Gradientes adaptativos */
+.gradient-primary-light {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.gradient-primary-dark {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+}
+
+/* Estados de carga */
+.loading-light {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+}
+
+.loading-dark {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+}
+
+/* Scrollbar personalizada */
+.scrollbar-light {
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.scrollbar-dark {
+    scrollbar-color: #4b5563 #1f2937;
+}
+
+/* Focus states para accesibilidad */
+.focus-ring-light {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.focus-ring-dark {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+/* Transiciones suaves */
+.theme-transition {
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Estados de error y éxito */
+.error-light {
+    color: #dc2626; /* red-600 */
+}
+
+.error-dark {
+    color: #f87171; /* red-400 */
+}
+
+.success-light {
+    color: #059669; /* emerald-600 */
+}
+
+.success-dark {
+    color: #4ade80; /* emerald-400 */
+}
+
+.warning-light {
+    color: #d97706; /* amber-600 */
+}
+
+.warning-dark {
+    color: #fbbf24; /* amber-400 */
+}

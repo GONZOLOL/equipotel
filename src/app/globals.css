@@ -1,9 +1,16 @@
 @import 'tailwindcss';
+@import './theme-utilities.css';
 
 :root {
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 255, 255, 255;
     --background-end-rgb: 249, 250, 251;
+}
+
+.dark {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 17, 24, 39;
+    --background-end-rgb: 31, 41, 55;
 }
 
 body {
@@ -17,6 +24,301 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
         'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
         'Helvetica Neue', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Asegurar que el body cambie correctamente */
+body:not(.dark) {
+    background: linear-gradient(to bottom, transparent, rgb(249, 250, 251))
+        rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+body.dark {
+    background: linear-gradient(to bottom, transparent, rgb(31, 41, 55))
+        rgb(17, 24, 39);
+    color: rgb(255, 255, 255);
+}
+
+/* Asegurar que html también tenga el fondo correcto */
+html:not(.dark) {
+    background: rgb(255, 255, 255);
+}
+
+html.dark {
+    background: rgb(17, 24, 39);
+}
+
+/* Asegurar padding responsivo en todas las resoluciones */
+@media (max-width: 640px) {
+    .px-4 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .sm\:px-6 {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .lg\:px-8 {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* Asegurar que las secciones tengan siempre espacio lateral */
+section {
+    overflow-x: hidden;
+}
+
+/* Asegurar que los contenedores principales tengan padding mínimo */
+.max-w-7xl {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos específicos para la página de productos */
+.search-input {
+    min-width: 200px;
+}
+
+/* Media queries específicas para resolución 882px */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .search-input {
+        min-width: 250px;
+    }
+
+    /* Asegurar que los dropdowns no se rompan */
+    .p-dropdown {
+        min-width: 150px !important;
+    }
+
+    /* Asegurar que el header de productos se mantenga en una línea */
+    .productos-header {
+        flex-wrap: nowrap !important;
+    }
+
+    .productos-header > div {
+        flex-shrink: 0;
+    }
+}
+
+/* Media query específica para resolución 882px */
+@media (min-width: 880px) and (max-width: 900px) {
+    .search-input {
+        min-width: 200px;
+    }
+
+    .p-dropdown {
+        min-width: 120px !important;
+    }
+
+    /* Asegurar que el header se mantenga en una línea */
+    .productos-header {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .productos-header > div:first-child {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .productos-header > div:last-child {
+        flex-shrink: 0;
+    }
+
+    /* Ajustar el grid para esta resolución */
+    .grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Estilos para Galleria */
+    .p-galleria {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .p-galleria .p-galleria-item-wrapper {
+        border-radius: 0.5rem;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 24rem !important; /* 384px */
+    }
+
+    .p-galleria-thumbnail-wrapper {
+        border-radius: 0.5rem;
+        background-color: #f3f4f6 !important;
+    }
+
+    @media (min-width: 640px) {
+        .p-galleria .p-galleria-item-wrapper {
+            min-height: 31.25rem !important; /* 500px */
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .p-galleria .p-galleria-item-wrapper {
+            min-height: 37.5rem !important; /* 600px */
+        }
+    }
+
+    .p-galleria .p-galleria-item {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .p-galleria .p-galleria-item img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .p-galleria .p-galleria-thumbnail-container {
+        background: transparent !important;
+        padding: 1rem 0 !important;
+        border-top: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+    }
+
+    .dark .p-galleria .p-galleria-thumbnail-container {
+        border-top-color: #374151;
+    }
+
+    .p-galleria .p-galleria-thumbnail-item {
+        margin: 0 0.25rem !important;
+        border-radius: 0.5rem !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .p-galleria .p-galleria-thumbnail-item:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .p-galleria .p-galleria-thumbnail-item.p-galleria-thumbnail-item-current {
+        border: 2px solid #3b82f6 !important;
+        transform: scale(1.05) !important;
+    }
+
+    .p-galleria .p-galleria-thumbnail-item img {
+        border-radius: 0.5rem !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .p-galleria .p-galleria-thumbnail-item {
+        width: 5rem !important; /* 80px */
+        height: 5rem !important; /* 80px */
+        flex-shrink: 0 !important;
+    }
+
+    .p-galleria .p-galleria-item-nav {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 50% !important;
+        width: 3rem !important;
+        height: 3rem !important;
+        color: #374151 !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .dark .p-galleria .p-galleria-item-nav {
+        background: rgba(31, 41, 55, 0.9) !important;
+        color: #ffffff !important;
+    }
+
+    .p-galleria .p-galleria-item-nav:hover {
+        background: rgba(255, 255, 255, 1) !important;
+        transform: scale(1.1) !important;
+    }
+
+    .dark .p-galleria .p-galleria-item-nav:hover {
+        background: rgba(31, 41, 55, 1) !important;
+    }
+}
+
+/* Override media queries para forzar nuestros estilos */
+/* Deshabilitar media queries del navegador */
+@media (prefers-color-scheme: dark) {
+    /* Forzar que no se apliquen estilos automáticos */
+    * {
+        color-scheme: light !important;
+    }
+}
+
+/* Forzar modo claro cuando no hay clase dark */
+/* Forzar modo claro cuando no hay clase dark */
+html:not(.dark) .dark\:text-white {
+    color: #111827 !important; /* gray-900 */
+}
+
+html:not(.dark) .dark\:bg-gray-900 {
+    background-color: #ffffff !important;
+}
+
+html:not(.dark) .dark\:bg-gray-800 {
+    background-color: #f9fafb !important; /* gray-50 */
+}
+
+html:not(.dark) .dark\:bg-gray-700 {
+    background-color: #f3f4f6 !important; /* gray-100 */
+}
+
+html:not(.dark) .dark\:text-gray-300 {
+    color: #374151 !important; /* gray-700 */
+}
+
+html:not(.dark) .dark\:text-gray-200 {
+    color: #1f2937 !important; /* gray-800 */
+}
+
+html:not(.dark) .dark\:border-gray-700 {
+    border-color: #e5e7eb !important; /* gray-200 */
+}
+
+/* Forzar modo oscuro cuando hay clase dark */
+html.dark .dark\:text-white {
+    color: #ffffff !important;
+}
+
+html.dark .dark\:bg-gray-900 {
+    background-color: #111827 !important;
+}
+
+html.dark .dark\:bg-gray-800 {
+    background-color: #1f2937 !important;
+}
+
+html.dark .dark\:bg-gray-700 {
+    background-color: #374151 !important;
+}
+
+html.dark .dark\:text-gray-300 {
+    color: #d1d5db !important;
+}
+
+html.dark .dark\:text-gray-200 {
+    color: #e5e7eb !important;
+}
+
+html.dark .dark\:border-gray-700 {
+    border-color: #374151 !important;
 }
 
 /* Reset y estilos base */
@@ -72,94 +374,475 @@ body {
     gap: 1rem;
 }
 
-/* Estilos para carrusel de imágenes */
-.image-carousel-container {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-.image-carousel-container img {
-    pointer-events: none;
-}
-
-.image-carousel-container.dragging {
-    cursor: grabbing !important;
-}
-
-.image-carousel-container:not(.dragging) {
-    cursor: grab;
-}
-
-/* Estilos para cards */
+/* Estilos para cards - Light mode (por defecto) */
 .p-card {
-    border-radius: 1rem;
+    border-radius: 1rem !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f3f4f6;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    background: white;
+        0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid #f3f4f6 !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+    background: white !important;
+}
+
+/* Override para cards en modo claro */
+html:not(.dark) .p-card {
+    background: white !important;
+    border-color: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+html:not(.dark) .p-card .p-card-title {
+    color: #111827 !important;
+}
+
+html:not(.dark) .p-card .p-card-content {
+    color: #374151 !important;
+}
+
+/* Override para cards en modo oscuro */
+html.dark .p-card {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #ffffff !important;
+}
+
+html.dark .p-card .p-card-title {
+    color: #ffffff !important;
+}
+
+html.dark .p-card .p-card-content {
+    color: #e5e7eb !important;
 }
 
 .p-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
 }
 
 .p-card .p-card-body {
-    padding: 2rem;
+    padding: 2rem !important;
 }
 
 .p-card .p-card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 1rem;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 1rem !important;
 }
 
 .p-card .p-card-content {
-    color: #6b7280;
-    line-height: 1.6;
+    color: #6b7280 !important;
+    line-height: 1.6 !important;
 }
 
-/* Estilos para menú */
+/* Estilos para cards - Dark mode */
+.dark .p-card {
+    border-radius: 1rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid #374151 !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+    background: #1f2937 !important;
+}
+
+.dark .p-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
+        0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .p-card .p-card-body {
+    padding: 2rem !important;
+}
+
+.dark .p-card .p-card-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 1rem !important;
+}
+
+.dark .p-card .p-card-content {
+    color: #d1d5db !important;
+    line-height: 1.6 !important;
+}
+
+/* Estilos para secciones principales */
+section {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Asegurar que las secciones con fondos específicos cambien */
+section.bg-white {
+    background-color: white !important;
+}
+
+.dark section.bg-white {
+    background-color: #111827 !important;
+}
+
+section.bg-gray-50 {
+    background-color: #f9fafb !important;
+}
+
+.dark section.bg-gray-50 {
+    background-color: #1f2937 !important;
+}
+
+section.bg-gray-100 {
+    background-color: #f3f4f6 !important;
+}
+
+.dark section.bg-gray-100 {
+    background-color: #374151 !important;
+}
+
+/* Estilos para gradientes */
+.bg-gradient-to-br {
+    transition: background 0.3s ease;
+}
+
+/* Forzar transiciones en todos los elementos */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* Estilos para secciones principales - asegurar cambio de fondo */
+section {
+    transition: background-color 0.3s ease, background-image 0.3s ease;
+}
+
+/* Navbar - asegurar cambio de fondo */
+nav {
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Forzar cambio de fondo en secciones específicas */
+.bg-gradient-to-br.from-blue-50.via-blue-100.to-blue-200 {
+    background: linear-gradient(
+        to bottom right,
+        #eff6ff,
+        #dbeafe,
+        #bfdbfe
+    ) !important;
+}
+
+.dark .bg-gradient-to-br.from-blue-50.via-blue-100.to-blue-200 {
+    background: linear-gradient(
+        to bottom right,
+        #111827,
+        #1f2937,
+        #374151
+    ) !important;
+}
+
+.bg-gradient-to-br.from-gray-50.to-gray-100 {
+    background: linear-gradient(to bottom right, #f9fafb, #f3f4f6) !important;
+}
+
+.dark .bg-gradient-to-br.from-gray-50.to-gray-100 {
+    background: linear-gradient(to bottom right, #1f2937, #111827) !important;
+}
+
+.bg-gradient-to-br.from-gray-100.to-gray-200 {
+    background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb) !important;
+}
+
+.dark .bg-gradient-to-br.from-gray-100.to-gray-200 {
+    background: linear-gradient(to bottom right, #374151, #1f2937) !important;
+}
+
+/* Estilos para componentes de formulario - Light mode (por defecto) */
+.p-inputtext {
+    background-color: #ffffff !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+.p-inputtext:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.p-inputtext::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Estilos para componentes de formulario en modo oscuro */
+.dark .p-inputtext {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+.dark .p-inputtext:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .p-inputtext::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Dropdown - Light mode (por defecto) */
+.p-dropdown {
+    background-color: #ffffff !important;
+    border-color: #d1d5db !important;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+    border-color: #9ca3af !important;
+}
+
+.p-dropdown:not(.p-disabled).p-focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .p-dropdown {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+}
+
+.dark .p-dropdown:not(.p-disabled):hover {
+    border-color: #6b7280 !important;
+}
+
+.dark .p-dropdown:not(.p-disabled).p-focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .p-dropdown-panel {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark .p-dropdown-items .p-dropdown-item {
+    color: #e5e7eb !important;
+}
+
+.dark .p-dropdown-items .p-dropdown-item:hover {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+}
+
+.dark .p-dropdown-items .p-dropdown-item.p-highlight {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+/* Textarea - Light mode (por defecto) */
+.p-inputtextarea {
+    background-color: #ffffff !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+.p-inputtextarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.p-inputtextarea::placeholder {
+    color: #9ca3af !important;
+}
+
+.dark .p-inputtextarea {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+.dark .p-inputtextarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .p-inputtextarea::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Estilos para mensajes en modo oscuro */
+.dark .p-message {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #e5e7eb !important;
+}
+
+.dark .p-message.p-message-success {
+    background-color: #064e3b !important;
+    border-color: #065f46 !important;
+    color: #d1fae5 !important;
+}
+
+.dark .p-message.p-message-error {
+    background-color: #7f1d1d !important;
+    border-color: #991b1b !important;
+    color: #fecaca !important;
+}
+
+.dark .p-message.p-message-warn {
+    background-color: #78350f !important;
+    border-color: #92400e !important;
+    color: #fed7aa !important;
+}
+
+.dark .p-message.p-message-info {
+    background-color: #1e3a8a !important;
+    border-color: #1e40af !important;
+    color: #dbeafe !important;
+}
+
+/* Estilos para el mapa en modo oscuro */
+.dark iframe[title*='Ubicación'] {
+    filter: invert(0.85) hue-rotate(180deg) brightness(0.7) contrast(1.1) !important;
+}
+
+/* Contenedor del mapa con borde adaptativo */
+.map-container {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.dark .map-container {
+    border: 1px solid #374151;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.map-container iframe {
+    transition: all 0.3s ease;
+}
+
+/* Mejorar la transición del mapa */
+.map-container iframe {
+    transition: filter 0.5s ease, opacity 0.3s ease;
+}
+
+.dark .map-container iframe {
+    opacity: 0.95;
+}
+
+/* Estilos para menú - Light mode (por defecto) */
 .p-menubar {
-    background: white;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 0.5rem 1rem;
-    margin: 0;
+    background: white !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important;
+}
+
+/* Override para menubar en modo claro */
+html:not(.dark) .p-menubar {
+    background: white !important;
+}
+
+html:not(.dark) .p-menubar .p-menuitem-link {
+    color: #374151 !important; /* gray-700 */
+}
+
+html:not(.dark) .p-menubar .p-menuitem-link:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+    color: #1f2937 !important; /* gray-900 */
+}
+
+html:not(.dark) .p-menubar .p-menuitem-text {
+    color: #374151 !important; /* gray-700 */
+}
+
+html:not(.dark) .p-menubar .p-menuitem-icon {
+    color: #374151 !important; /* gray-700 */
+}
+
+/* Override para menubar en modo oscuro */
+html.dark .p-menubar {
+    background: transparent !important;
+}
+
+html.dark .p-menubar .p-menuitem-link {
+    color: #ffffff !important;
+}
+
+html.dark .p-menubar .p-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+html.dark .p-menubar .p-menuitem-text {
+    color: #ffffff !important;
+}
+
+html.dark .p-menubar .p-menuitem-icon {
+    color: #ffffff !important;
 }
 
 .p-menubar .p-menuitem-link {
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    color: #374151;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
 }
 
 .p-menubar .p-menuitem-link:hover {
-    background-color: #f3f4f6;
-    color: #1f2937;
-    transform: translateY(-1px);
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+    transform: translateY(-1px) !important;
 }
 
 .p-menubar .p-menuitem-link.p-menuitem-link-active {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
 }
 
 .p-menubar .p-submenu-list {
-    border-radius: 0.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-    background: white;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e5e7eb !important;
+    background: white !important;
+}
+
+/* Estilos para menú - Dark mode */
+.dark .p-menubar {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important;
+}
+
+.dark .p-menubar .p-menuitem-link {
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+    color: #e5e7eb !important;
+}
+
+.dark .p-menubar .p-menuitem-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+.dark .p-menubar .p-menuitem-link.p-menuitem-link-active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
+}
+
+.dark .p-menubar .p-submenu-list {
+    border-radius: 0.5rem !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid #374151 !important;
+    background: #1f2937 !important;
 }
 
 /* Estilos para tags */
@@ -521,30 +1204,6 @@ body {
 /* Smooth transitions for carousel */
 .image-carousel-container {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Thumbnail hover effects */
-.thumbnail-button {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.thumbnail-button:hover {
-    transform: scale(1.05);
-}
-
-.thumbnail-button.selected {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-/* Custom scrollbar for thumbnails */
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
 }
 
 /* Enhanced button styles */
