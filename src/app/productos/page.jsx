@@ -338,15 +338,15 @@ export default function Productos() {
 
     const header = () => {
         return (
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                    <div className="relative">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 productos-header">
+                <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
+                    <div className="relative flex-1">
                         <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Buscar productos..."
-                            className="w-full sm:w-80 search-input"
+                            className="w-full search-input"
                         />
                     </div>
                     <Dropdown
@@ -354,17 +354,17 @@ export default function Productos() {
                         options={categories}
                         onChange={(e) => setSelectedCategory(e.value)}
                         placeholder="Categoría"
-                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full md:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <Dropdown
                         value={sortKey}
                         options={sortOptions}
                         onChange={onSort}
                         placeholder="Ordenar por"
-                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full md:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full md:w-auto justify-center md:justify-end">
                     <Button
                         icon="pi pi-th-large"
                         onClick={() => setLayout('grid')}
@@ -387,7 +387,7 @@ export default function Productos() {
         <div className="min-h-screen">
             <Navbar />
 
-            <div className="w-full max-w-none py-8 pt-20 px-4">
+            <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-800 mb-4">
                         Nuestros Productos

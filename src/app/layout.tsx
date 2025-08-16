@@ -1,11 +1,10 @@
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ToastProvider } from '@/contexts/ToastContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -148,9 +147,11 @@ export default function RootLayout({
                 className={`${inter.className} h-full w-full min-h-screen overflow-x-hidden`}
             >
                 <div className="min-h-screen w-full flex flex-col">
-                    <AuthProvider>
-                        <ToastProvider>{children}</ToastProvider>
-                    </AuthProvider>
+                    <ThemeProvider>
+                        <AuthProvider>
+                            <ToastProvider>{children}</ToastProvider>
+                        </AuthProvider>
+                    </ThemeProvider>
                 </div>
             </body>
         </html>

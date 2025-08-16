@@ -106,7 +106,7 @@ export default function Home() {
                         </div>
 
                         {/* Título - altura fija */}
-                        <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 min-h-[3rem] flex-shrink-0">
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3 line-clamp-2 min-h-[3rem] flex-shrink-0">
                             {product.name}
                         </h3>
 
@@ -124,7 +124,7 @@ export default function Home() {
                                         .map((feature, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-center justify-center text-sm text-gray-600"
+                                                className="flex items-center justify-center text-sm text-gray-600 dark:text-gray-300"
                                             >
                                                 <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                                 {feature}
@@ -132,7 +132,7 @@ export default function Home() {
                                         ))}
                                 </div>
                             ) : (
-                                <div className="text-sm text-gray-500 min-h-[4.5rem] flex items-center justify-center">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 min-h-[4.5rem] flex items-center justify-center">
                                     Producto de alta calidad
                                 </div>
                             )}
@@ -161,9 +161,9 @@ export default function Home() {
             <Navbar />
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 text-gray-800 pt-40">
-                <div className="absolute inset-0 bg-white/50"></div>
-                <div className="relative max-w-7xl mx-auto">
+            <section className="relative bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 pt-40">
+                <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50"></div>
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="fade-in">
                             <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
@@ -172,7 +172,7 @@ export default function Home() {
                                     Prioridad
                                 </span>
                             </h1>
-                            <p className="text-xl mb-10 text-gray-700 leading-relaxed">
+                            <p className="text-xl mb-10 text-gray-700 dark:text-gray-300 leading-relaxed">
                                 Especialistas en cajas fuertes, armarios
                                 acorazados y sistemas de seguridad en Málaga.
                                 Protege lo que más importa con productos
@@ -199,15 +199,15 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="hidden lg:block slide-in-right">
-                            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/50 shadow-xl">
+                            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
                                 <div className="text-center">
                                     <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
                                         <i className="pi pi-shield text-white text-4xl"></i>
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
                                         Seguridad Certificada
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                                         Productos con certificaciones europeas
                                         de máxima seguridad. Más de 14 años
                                         protegiendo a nuestros clientes.
@@ -220,14 +220,14 @@ export default function Home() {
             </section>
 
             {/* Servicios */}
-            <section className="py-20 bg-white">
-                <div className="max-w-7xl mx-auto">
+            <section className="py-20 bg-white dark:bg-gray-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-800 mb-6">
+                        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
                             Nuestros{' '}
                             <span className="text-gradient">Servicios</span>
                         </h2>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                             Ofrecemos soluciones completas de seguridad para
                             hogares y empresas, con productos certificados e
                             instalación profesional.
@@ -238,7 +238,7 @@ export default function Home() {
                         {servicios.map((servicio, index) => (
                             <Card
                                 key={index}
-                                className={`${servicio.bgColor} border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2`}
+                                className={`${servicio.bgColor} dark:bg-gray-800 dark:border-gray-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2`}
                             >
                                 <div className="text-center">
                                     <div
@@ -248,10 +248,10 @@ export default function Home() {
                                             className={`${servicio.icon} text-white text-2xl`}
                                         ></i>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-4">
+                                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
                                         {servicio.title}
                                     </h3>
-                                    <p className="text-gray-600 leading-relaxed">
+                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                                         {servicio.description}
                                     </p>
                                 </div>
@@ -262,14 +262,14 @@ export default function Home() {
             </section>
 
             {/* Productos Destacados */}
-            <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
-                <div className="max-w-7xl mx-auto">
+            <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-800 mb-6">
+                        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
                             Productos{' '}
                             <span className="text-gradient">Destacados</span>
                         </h2>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                             Descubre nuestra selección de productos más
                             populares y solicitados por nuestros clientes.
                         </p>
@@ -279,7 +279,7 @@ export default function Home() {
                         <div className="flex justify-center items-center h-64">
                             <div className="text-center">
                                 <i className="pi pi-spin pi-spinner text-4xl text-blue-600 mb-4"></i>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 dark:text-gray-300">
                                     Cargando productos destacados...
                                 </p>
                             </div>
@@ -296,7 +296,7 @@ export default function Home() {
                     ) : (
                         <div className="text-center py-12">
                             <i className="pi pi-box text-6xl text-gray-400 mb-4"></i>
-                            <p className="text-gray-600 text-lg">
+                            <p className="text-gray-600 dark:text-gray-300 text-lg">
                                 No hay productos destacados disponibles
                             </p>
                         </div>
@@ -317,7 +317,7 @@ export default function Home() {
 
             {/* Estadísticas */}
             <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         <div className="fade-in">
                             <div className="text-4xl md:text-5xl font-bold mb-2">
@@ -356,8 +356,8 @@ export default function Home() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800">
-                <div className="max-w-7xl mx-auto text-center">
+            <section className="py-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-800 dark:text-gray-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-4xl font-bold mb-6">
                         ¿Necesitas{' '}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
@@ -365,7 +365,7 @@ export default function Home() {
                         </span>
                         ?
                     </h2>
-                    <p className="text-xl mb-10 text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-xl mb-10 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
                         Nuestros expertos te ayudarán a elegir la mejor solución
                         para tus necesidades. Ofrecemos asesoramiento gratuito y
                         sin compromiso.
