@@ -14,91 +14,86 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // Load theme from localStorage on mount
+    // Detectar tema inicial desde el DOM (ya aplicado por el script inline)
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia(
-            '(prefers-color-scheme: dark)'
-        ).matches;
+        const detectInitialTheme = () => {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            setIsDarkMode(isDark);
+            setIsInitialized(true);
+        };
 
-        // Use saved theme or system preference
-        const shouldUseDarkMode = savedTheme
-            ? savedTheme === 'dark'
-            : prefersDark;
-        setIsDarkMode(shouldUseDarkMode);
-        setIsLoaded(true);
+        // Si el tema ya está aplicado, detectar inmediatamente
+        if (document.documentElement.classList.contains('theme-applied')) {
+            detectInitialTheme();
+        } else {
+            // Si no, esperar a que se aplique
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (
+                        mutation.type === 'attributes' &&
+                        mutation.attributeName === 'class'
+                    ) {
+                        if (
+                            document.documentElement.classList.contains(
+                                'theme-applied'
+                            )
+                        ) {
+                            observer.disconnect();
+                            detectInitialTheme();
+                        }
+                    }
+                });
+            });
+
+            observer.observe(document.documentElement, { attributes: true });
+
+            // Fallback
+            setTimeout(() => {
+                if (!isInitialized) {
+                    detectInitialTheme();
+                    observer.disconnect();
+                }
+            }, 2000);
+        }
     }, []);
 
-    // Apply theme to document and PrimeReact
+    // Aplicar tema cuando cambie (solo para cambios de usuario)
     useEffect(() => {
-        if (!isLoaded) return;
+        if (!isInitialized) return;
 
         const root = document.documentElement;
         const body = document.body;
 
         if (isDarkMode) {
-            // Apply dark theme
             root.classList.add('dark');
             body.classList.add('dark');
-            document.documentElement.classList.add('dark');
-            document.querySelector('html').classList.add('dark');
-
-            console.log('🌙 Dark mode applied');
-
-            // PrimeReact dark theme
-            const linkElement = document.getElementById('prime-react-theme');
-            if (linkElement) {
-                linkElement.href = '/themes/lara-dark-blue/theme.css';
-            } else {
-                const newLink = document.createElement('link');
-                newLink.id = 'prime-react-theme';
-                newLink.rel = 'stylesheet';
-                newLink.href = '/themes/lara-dark-blue/theme.css';
-                document.head.appendChild(newLink);
-            }
+            root.style.colorScheme = 'dark';
         } else {
-            // Apply light theme
             root.classList.remove('dark');
             body.classList.remove('dark');
-            document.documentElement.classList.remove('dark');
-            document.querySelector('html').classList.remove('dark');
-
-            console.log('☀️ Light mode applied');
-
-            // PrimeReact light theme
-            const linkElement = document.getElementById('prime-react-theme');
-            if (linkElement) {
-                linkElement.href = '/themes/lara-light-blue/theme.css';
-            } else {
-                const newLink = document.createElement('link');
-                newLink.id = 'prime-react-theme';
-                newLink.rel = 'stylesheet';
-                newLink.href = '/themes/lara-light-blue/theme.css';
-                document.head.appendChild(newLink);
-            }
+            root.style.colorScheme = 'light';
         }
 
-        // Save to localStorage
+        // Aplicar PrimeReact theme
+        let linkElement = document.getElementById('prime-react-theme');
+        if (!linkElement) {
+            linkElement = document.createElement('link');
+            linkElement.id = 'prime-react-theme';
+            linkElement.rel = 'stylesheet';
+            document.head.appendChild(linkElement);
+        }
+
+        const themeUrl = isDarkMode
+            ? '/themes/lara-dark-blue/theme.css'
+            : '/themes/lara-light-blue/theme.css';
+        linkElement.href = themeUrl;
+
+        // Guardar en localStorage
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    }, [isDarkMode, isLoaded]);
-
-    // Listen for system theme changes
-    useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-        const handleChange = (e) => {
-            // Only auto-switch if user hasn't manually set a preference
-            const savedTheme = localStorage.getItem('theme');
-            if (!savedTheme) {
-                setIsDarkMode(e.matches);
-            }
-        };
-
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, []);
+    }, [isDarkMode, isInitialized]);
 
     const toggleTheme = () => {
         setIsDarkMode((prev) => !prev);
@@ -110,7 +105,7 @@ export const ThemeProvider = ({ children }) => {
 
     const value = {
         isDarkMode,
-        isLoaded,
+        isInitialized,
         toggleTheme,
         setTheme,
         theme: isDarkMode ? 'dark' : 'light',

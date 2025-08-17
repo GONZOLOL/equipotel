@@ -5,7 +5,7 @@ export const useThemeToggle = () => {
 
     return {
         isDarkMode: theme.isDarkMode,
-        isLoaded: theme.isLoaded,
+        isLoaded: theme.isInitialized, // Cambiar isLoaded por isInitialized
         toggleTheme: theme.toggleTheme,
         setTheme: theme.setTheme,
         theme: theme.theme,

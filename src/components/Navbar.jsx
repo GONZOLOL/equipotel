@@ -5,13 +5,16 @@ import { Button } from 'primereact/button';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const { isDarkMode, isInitialized } = useTheme();
 
     useEffect(() => {
         setIsMounted(true);
+
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
         };
@@ -95,14 +98,40 @@ export default function Navbar() {
         </div>
     );
 
+    // Mostrar skeleton simple mientras no esté montado o inicializado
+    if (!isMounted || !isInitialized) {
+        return (
+            <nav
+                className="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200"
+                suppressHydrationWarning
+            >
+                <div className="w-full">
+                    <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg"></div>
+                            <div className="w-24 h-6 rounded bg-gray-200 hidden sm:block"></div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <div className="w-8 h-8 rounded bg-gray-200"></div>
+                            <div className="w-16 h-8 bg-green-500 rounded hidden sm:block"></div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        );
+    }
+
     return (
-        <nav className="fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700">
-            <div className="w-full ">
+        <nav
+            className="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700"
+            suppressHydrationWarning
+        >
+            <div className="w-full">
                 <Menubar
                     model={items}
                     start={start}
                     end={end}
-                    className="border-none transition-all duration-300 w-full bg-transparent px-10 sm:px-6 lg:px-8"
+                    className="border-none w-full bg-transparent px-10 sm:px-6 lg:px-8"
                 />
             </div>
         </nav>
