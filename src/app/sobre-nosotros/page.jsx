@@ -197,7 +197,7 @@ export default function SobreNosotros() {
                         {valores.map((valor, index) => (
                             <Card
                                 key={index}
-                                className="text-center border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100"
+                                className="text-center border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 mb-6"
                             >
                                 <div className="bg-blue-100 p-4 rounded-lg inline-block mb-4">
                                     <i
@@ -253,7 +253,7 @@ export default function SobreNosotros() {
                         <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
                             Nuestros Servicios
                         </h2>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                        <p className="text-lg text-white dark:text-gray-300 max-w-2xl mx-auto">
                             Ofrecemos servicios completos para todas tus
                             necesidades de seguridad
                         </p>
@@ -352,8 +352,6 @@ export default function SobreNosotros() {
                     </Card>
                 </section>
             </div>
-
-            <Footer />
         </div>
     );
 }

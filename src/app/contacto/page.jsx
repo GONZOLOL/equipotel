@@ -109,7 +109,7 @@ export default function Contacto() {
         <div className="min-h-screen">
             <Navbar />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-22">
                 <div className="mb-8 text-center">
                     <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
                         Contacto
@@ -367,8 +367,6 @@ export default function Contacto() {
                     </div>
                 </Card>
             </div>
-
-            <Footer />
         </div>
     );
 }

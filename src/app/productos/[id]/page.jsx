@@ -126,7 +126,7 @@ export default function ProductDetail() {
             <Navbar />
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-26">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Image Gallery */}
                     <div className="space-y-4">
@@ -327,8 +327,6 @@ export default function ProductDetail() {
                     </div>
                 </div>
             </div>
-
-            <Footer />
         </div>
     );
 }
