@@ -283,8 +283,10 @@ export default function ProductDetail() {
                                 size="medium"
                                 className="w-full"
                                 onClick={() => {
-                                    window.location.href =
-                                        process.env.NEXT_PUBLIC_PHONE_NUMBER;
+                                    const phoneNumber =
+                                        process.env.NEXT_PUBLIC_PHONE_NUMBER ||
+                                        '+34 676 20 80 24';
+                                    window.location.href = `tel:${phoneNumber}`;
                                 }}
                             />
                         </div>

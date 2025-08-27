@@ -370,10 +370,12 @@ export default function Home() {
                             size="large"
                             severity="primary"
                             className="text-lg px-10 py-4 shadow-lg hover:shadow-xl"
-                            onClick={() =>
-                                (window.location.href =
-                                    process.env.NEXT_PUBLIC_PHONE_NUMBER)
-                            }
+                            onClick={() => {
+                                const phoneNumber =
+                                    process.env.NEXT_PUBLIC_PHONE_NUMBER ||
+                                    '+34 676 20 80 24';
+                                window.location.href = `tel:${phoneNumber}`;
+                            }}
                         />
                         <Button
                             label="Solicitar Presupuesto"
