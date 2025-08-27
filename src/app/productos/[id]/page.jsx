@@ -48,15 +48,6 @@ export default function ProductDetail() {
                     ? [convertedMainImage, ...convertedAdditionalImages]
                     : convertedAdditionalImages;
 
-                console.log('URLs de imágenes convertidas:', {
-                    original: { mainImage, additionalImages },
-                    converted: {
-                        convertedMainImage,
-                        convertedAdditionalImages,
-                    },
-                    final: images,
-                });
-
                 setAllImages(images);
             } else {
                 // Producto no encontrado

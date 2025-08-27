@@ -36,7 +36,6 @@ export const getProducts = async () => {
             }
             products.push({ id: doc.id, ...productData });
         });
-        console.log('Productos obtenidos de Firestore:', products);
         return products;
     } catch (error) {
         console.error('Error getting products:', error);
@@ -96,9 +95,6 @@ export const getFeaturedProducts = async () => {
 // Agregar un nuevo producto
 export const addProduct = async (productData) => {
     try {
-        console.log('Agregando producto:', productData);
-        console.log('URL de imagen a guardar:', productData.image);
-
         // Convertir URL de Google Drive si es necesario
         if (productData.image) {
             productData.image = convertGoogleDriveUrl(productData.image);
@@ -110,10 +106,7 @@ export const addProduct = async (productData) => {
             updatedAt: new Date(),
         };
 
-        console.log('Producto final a guardar:', productToSave);
-
         const docRef = await addDoc(collection(db, 'products'), productToSave);
-        console.log('Producto agregado con ID:', docRef.id);
         return docRef.id;
     } catch (error) {
         console.error('Error adding product:', error);
@@ -124,8 +117,6 @@ export const addProduct = async (productData) => {
 // Actualizar un producto
 export const updateProduct = async (productId, productData) => {
     try {
-        console.log('Actualizando producto:', productId, productData);
-
         // Convertir URL de Google Drive si es necesario
         if (productData.image) {
             productData.image = convertGoogleDriveUrl(productData.image);
@@ -136,7 +127,6 @@ export const updateProduct = async (productId, productData) => {
             ...productData,
             updatedAt: new Date(),
         });
-        console.log('Producto actualizado correctamente');
     } catch (error) {
         console.error('Error updating product:', error);
         throw error;
@@ -195,11 +185,9 @@ export const uploadProductImage = async (file, productId = null) => {
 
         // Subir archivo
         const snapshot = await uploadBytes(storageRef, file);
-        console.log('Archivo subido exitosamente:', snapshot.metadata.name);
 
         // Obtener URL de descarga
         const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log('URL de descarga generada:', downloadURL);
 
         return {
             url: downloadURL,
@@ -242,12 +230,7 @@ export const deleteProductImage = async (imageUrl) => {
 
             const imageRef = ref(storage, decodedPath);
             await deleteObject(imageRef);
-            console.log('Imagen eliminada de Firebase Storage:', decodedPath);
         } else {
-            console.log(
-                'No es una URL de Firebase Storage, no se elimina:',
-                imageUrl
-            );
         }
     } catch (error) {
         console.error('Error eliminando imagen:', error);
@@ -346,7 +329,6 @@ export const verifyAllProductImages = async () => {
             }
         }
 
-        console.log('Verificación de imágenes completada:', results);
         return results;
     } catch (error) {
         console.error('Error verificando imágenes:', error);

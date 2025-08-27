@@ -59,14 +59,10 @@ export default function Productos() {
                 // Intentar cargar desde Firebase
                 const firebaseProducts = await getProducts();
                 if (firebaseProducts && firebaseProducts.length > 0) {
-                    console.log(
-                        'Productos cargados desde Firebase:',
-                        firebaseProducts
-                    );
+                    // Ordenar productos por precio ascendente
                     setProductos(firebaseProducts);
                     setFilteredProductos(firebaseProducts);
                 } else {
-                    console.log('No hay productos en Firebase');
                     // Si no hay productos, mostrar array vacío
                     setProductos([]);
                     setFilteredProductos([]);
@@ -141,13 +137,6 @@ export default function Productos() {
         const hasError = imageErrors.has(producto.id);
         const mainImage = producto.mainImage || producto.image;
         const hasImage = mainImage && mainImage.trim() !== '';
-
-        console.log(`Renderizando imagen para ${producto.name}:`, {
-            hasImage,
-            hasError,
-            originalImage: mainImage,
-            imageUrl: hasImage ? convertGoogleDriveUrl(mainImage) : null,
-        });
 
         if (!hasImage || hasError) {
             return (
