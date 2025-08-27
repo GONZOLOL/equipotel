@@ -32,6 +32,11 @@ export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
+// Configurar el nombre de la aplicación para Google Auth
+googleProvider.setCustomParameters({
+    prompt: 'select_account',
+});
+
 // Función para verificar si un usuario está autorizado
 export const checkUserAuthorization = async (email) => {
     try {
