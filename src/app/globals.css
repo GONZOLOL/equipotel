@@ -567,6 +567,19 @@ html.dark .bg-gradient-to-br.from-gray-100.to-gray-200 {
     background: linear-gradient(to bottom right, #374151, #1f2937) !important;
 }
 
+.compact-fileupload .p-fileupload-choose {
+    border: none !important;
+    font-size: 12px !important;
+    padding: 10px 10px !important;
+    min-width: auto !important;
+    height: auto !important;
+    line-height: 1 !important;
+    font-weight: normal !important;
+}
+
+.p-fileupload-buttonbar {
+    padding: 10px !important;
+}
 /* ===== PRODUCT CATALOG SPECIFIC ===== */
 .search-input {
     min-width: 200px;

@@ -7,6 +7,7 @@ import {
     addProduct,
     updateProduct,
     deleteProduct,
+    deleteProductImage,
 } from '@/services/productService';
 
 export const useProducts = () => {
@@ -199,6 +200,39 @@ export const useProducts = () => {
 
     const confirmDelete = async () => {
         try {
+            // Eliminar imágenes de Firebase Storage antes de eliminar el producto
+            if (selectedProduct) {
+                const imagesToDelete = [];
+                
+                // Agregar imagen principal si existe y es de Firebase
+                if (selectedProduct.mainImage && selectedProduct.mainImage.includes('firebase')) {
+                    imagesToDelete.push(selectedProduct.mainImage);
+                }
+                if (selectedProduct.image && selectedProduct.image.includes('firebase')) {
+                    imagesToDelete.push(selectedProduct.image);
+                }
+                
+                // Agregar imágenes adicionales si existen y son de Firebase
+                if (selectedProduct.additionalImages) {
+                    selectedProduct.additionalImages.forEach(img => {
+                        if (img.includes('firebase')) {
+                            imagesToDelete.push(img);
+                        }
+                    });
+                }
+                
+                // Eliminar todas las imágenes de Firebase Storage
+                for (const imageUrl of imagesToDelete) {
+                    try {
+                        await deleteProductImage(imageUrl);
+                    } catch (error) {
+                        console.warn('No se pudo eliminar imagen:', imageUrl, error);
+                        // Continuar con la eliminación aunque falle una imagen
+                    }
+                }
+            }
+            
+            // Eliminar el producto de Firestore
             await deleteProduct(selectedProduct.id);
             showToast('success', 'Producto eliminado correctamente');
             setDeleteDialogVisible(false);

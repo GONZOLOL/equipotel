@@ -158,24 +158,6 @@ export default function AdminDashboard() {
                 title="Panel de Administración"
                 subtitle={`Bienvenido, ${user?.displayName || user?.email}`}
             >
-                {/* Navigation Buttons */}
-                <div className="flex gap-2 mb-6">
-                    <Button
-                        label="Productos"
-                        icon="pi pi-box"
-                        severity="primary"
-                        outlined
-                        onClick={() => router.push('/admin/products')}
-                    />
-                    <Button
-                        label="Analíticas"
-                        icon="pi pi-chart-bar"
-                        severity="secondary"
-                        outlined
-                        onClick={() => router.push('/admin/analytics')}
-                    />
-                </div>
-
                 {message && (
                     <Message
                         severity={message.severity}
