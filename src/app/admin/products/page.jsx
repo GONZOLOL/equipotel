@@ -75,6 +75,7 @@ export default function AdminProducts() {
                     featureOptions={featureOptions}
                     addAdditionalImage={addAdditionalImage}
                     saveProduct={saveProduct}
+                    showToast={showToast}
                 />
 
                 {/* Delete Confirmation Dialog */}

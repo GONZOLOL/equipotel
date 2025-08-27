@@ -27,7 +27,7 @@ export default function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 mt-17">
             {/* Header */}
             <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,33 +52,6 @@ export default function AdminLayout({
                                     </p>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="flex items-center space-x-4 gap-4">
-                            {/* Theme Toggle Button */}
-                            <Button
-                                icon={isDarkMode ? 'pi pi-sun' : 'pi pi-moon'}
-                                severity="secondary"
-                                outlined
-                                onClick={toggleTheme}
-                                className="dark:border-gray-600 dark:text-gray-300 "
-                                tooltip={
-                                    isDarkMode
-                                        ? 'Cambiar a modo claro'
-                                        : 'Cambiar a modo oscuro'
-                                }
-                                tooltipOptions={{ position: 'bottom' }}
-                            />
-
-                            {/* Logout Button */}
-                            <Button
-                                label="Cerrar Sesión"
-                                icon="pi pi-sign-out"
-                                severity="danger"
-                                outlined
-                                onClick={logout}
-                                className="dark:border-red-400 dark:text-red-400"
-                            />
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -11,6 +12,10 @@ export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const { isDarkMode, isInitialized } = useTheme();
+    const pathname = usePathname();
+
+    // Detectar si estamos en la zona admin
+    const isAdminZone = pathname?.startsWith('/admin');
 
     useEffect(() => {
         setIsMounted(true);
@@ -26,60 +31,71 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const items = [
+    const menuItemStyle = 'text-xl font-bold text-gray-800 dark:text-white p-3';
+
+    // Items de navegación para la zona pública
+    const publicItems = [
         {
             label: 'Inicio',
             icon: 'pi pi-home',
             url: '/',
+            className: menuItemStyle,
         },
         {
             label: 'Productos',
             icon: 'pi pi-box',
-            items: [
-                {
-                    label: 'Cajas Fuertes',
-                    icon: 'pi pi-shield',
-                    url: '/productos?categoria=cajas-fuertes',
-                },
-                {
-                    label: 'Armarios Acorazados',
-                    icon: 'pi pi-building',
-                    url: '/productos?categoria=armarios-acorazados',
-                },
-                {
-                    label: 'Sistemas de Anclaje',
-                    icon: 'pi pi-link',
-                    url: '/productos?categoria=sistemas-anclaje',
-                },
-                {
-                    label: 'Compartimentos de Seguridad',
-                    icon: 'pi pi-lock',
-                    url: '/productos?categoria=compartimentos-seguridad',
-                },
-            ],
+            url: '/productos',
+            className: menuItemStyle,
         },
         {
             label: 'Contacto',
             icon: 'pi pi-envelope',
             url: '/contacto',
+            className: menuItemStyle,
         },
         {
             label: 'Sobre Nosotros',
             icon: 'pi pi-users',
             url: '/sobre-nosotros',
+            className: menuItemStyle,
         },
     ];
 
+    // Items de navegación para la zona admin
+    const adminItems = [
+        {
+            label: 'Dashboard',
+            icon: 'pi pi-home',
+            url: '/admin/dashboard',
+            className: menuItemStyle,
+        },
+        {
+            label: 'Productos',
+            icon: 'pi pi-box',
+            url: '/admin/products',
+            className: menuItemStyle,
+        },
+        {
+            label: 'Analíticas',
+            icon: 'pi pi-chart-bar',
+            url: '/admin/analytics',
+            className: menuItemStyle,
+        },
+    ];
+
+    // Usar items según la zona
+    const items = isAdminZone ? adminItems : publicItems;
+
     const start = (
         <Link
-            href="/"
+            href={isAdminZone ? '/admin/dashboard' : '/'}
             className="flex items-center space-x-2 no-underline mr-6"
         >
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
                 <i className="pi pi-shield text-white text-xl"></i>
             </div>
             <span className="text-xl font-bold text-gray-800 dark:text-white hidden sm:block">
-                Equipotel
+                {isAdminZone ? 'Equipotel Admin' : 'Equipotel'}
             </span>
         </Link>
     );
@@ -87,14 +103,26 @@ export default function Navbar() {
     const end = (
         <div className="flex items-center space-x-3 gap-4">
             <ThemeToggle />
-            <Button
-                label="Llamar"
-                icon="pi pi-phone"
-                severity="success"
-                size="small"
-                className="hidden sm:flex"
-                onClick={() => (window.location.href = 'tel:+34951234567')}
-            />
+            {!isAdminZone && (
+                <Button
+                    label="Llamar"
+                    icon="pi pi-phone"
+                    severity="success"
+                    size="small"
+                    className="hidden sm:flex"
+                    onClick={() => (window.location.href = 'tel:+34951234567')}
+                />
+            )}
+            {isAdminZone && (
+                <Button
+                    label="Salir"
+                    icon="pi pi-sign-out"
+                    severity="secondary"
+                    size="small"
+                    className="hidden sm:flex"
+                    onClick={() => (window.location.href = '/')}
+                />
+            )}
         </div>
     );
 
