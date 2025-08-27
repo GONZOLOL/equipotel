@@ -371,7 +371,8 @@ export default function Home() {
                             severity="primary"
                             className="text-lg px-10 py-4 shadow-lg hover:shadow-xl"
                             onClick={() =>
-                                (window.location.href = 'tel:+34951234567')
+                                (window.location.href =
+                                    process.env.NEXT_PUBLIC_PHONE_NUMBER)
                             }
                         />
                         <Button

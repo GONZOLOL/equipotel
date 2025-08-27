@@ -122,7 +122,10 @@ export default function Navbar() {
                     severity="success"
                     size="small"
                     className="hidden sm:flex"
-                    onClick={() => (window.location.href = 'tel:+34951234567')}
+                    onClick={() =>
+                        (window.location.href =
+                            process.env.NEXT_PUBLIC_PHONE_NUMBER)
+                    }
                 />
             )}
             {isAdminZone && (
