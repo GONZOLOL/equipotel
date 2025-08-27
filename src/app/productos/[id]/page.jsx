@@ -283,7 +283,8 @@ export default function ProductDetail() {
                                 size="medium"
                                 className="w-full"
                                 onClick={() => {
-                                    window.location.href = 'tel:+34600000000';
+                                    window.location.href =
+                                        process.env.NEXT_PUBLIC_PHONE_NUMBER;
                                 }}
                             />
                         </div>
