@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -20,6 +18,7 @@ export default function Productos() {
     const [productos, setProductos] = useState([]);
     const [filteredProductos, setFilteredProductos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
@@ -48,6 +47,11 @@ export default function Productos() {
         { label: 'Nombre: Z-A', value: 'name-desc' },
     ];
 
+    // Marcar como montado
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     useEffect(() => {
         const loadProducts = async () => {
             try {
@@ -62,25 +66,25 @@ export default function Productos() {
                     setProductos(firebaseProducts);
                     setFilteredProductos(firebaseProducts);
                 } else {
-                    console.log(
-                        'No hay productos en Firebase, usando datos de ejemplo'
-                    );
-                    // Usar datos de ejemplo si Firebase no tiene datos
-                    setProductos(productosEjemplo);
-                    setFilteredProductos(productosEjemplo);
+                    console.log('No hay productos en Firebase');
+                    // Si no hay productos, mostrar array vacío
+                    setProductos([]);
+                    setFilteredProductos([]);
                 }
             } catch (error) {
                 console.error('Error loading products:', error);
-                // Fallback a datos de ejemplo
-                setProductos(productosEjemplo);
-                setFilteredProductos(productosEjemplo);
+                // Fallback a array vacío
+                setProductos([]);
+                setFilteredProductos([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        loadProducts();
-    }, []);
+        if (mounted) {
+            loadProducts();
+        }
+    }, [mounted]);
 
     useEffect(() => {
         let filtered = [...productos];
@@ -147,8 +151,8 @@ export default function Productos() {
 
         if (!hasImage || hasError) {
             return (
-                <div className="bg-gray-200 w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center">
-                    <i className="pi pi-image text-xl text-gray-400"></i>
+                <div className="bg-gray-200 dark:bg-gray-700 w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center">
+                    <i className="pi pi-image text-xl text-gray-400 dark:text-gray-500"></i>
                 </div>
             );
         }
@@ -157,12 +161,12 @@ export default function Productos() {
         const imageUrl = convertGoogleDriveUrl(mainImage);
 
         return (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white mx-auto">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white dark:bg-gray-800 mx-auto">
                 <Image
                     src={imageUrl}
                     alt={producto.name}
                     fill
-                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    className="object-cover"
                 />
             </div>
         );
@@ -176,7 +180,7 @@ export default function Productos() {
         if (layout === 'list') {
             return (
                 <div className="col-12 mb-4">
-                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700">
                         <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-6">
                             <div className="flex-shrink-0">
                                 <div className="w-32 h-32">
@@ -186,7 +190,7 @@ export default function Productos() {
                             <div className="flex-1">
                                 <div className="flex flex-column lg:flex-row justify-content-between align-items-start gap-4">
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                                        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                                             {producto.name}
                                         </h3>
                                         <Tag
@@ -194,7 +198,7 @@ export default function Productos() {
                                             severity="info"
                                             className="mb-3"
                                         />
-                                        <p className="text-gray-600 mb-3 line-clamp-3">
+                                        <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
                                             {producto.description}
                                         </p>
                                         {producto.features &&
@@ -214,7 +218,7 @@ export default function Productos() {
                                             )}
                                     </div>
                                     <div className="text-right lg:text-left">
-                                        <span className="text-2xl font-bold text-blue-600 block mb-3">
+                                        <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 block mb-3">
                                             {producto.priceFormatted}
                                         </span>
                                         <div className="flex gap-2">
@@ -248,17 +252,17 @@ export default function Productos() {
         if (layout === 'grid') {
             return (
                 <div className="w-full h-full">
-                    <Card className="h-full hover:shadow-lg transition-shadow duration-300 flex flex-col">
-                        <div className="p-2 flex flex-col h-full">
+                    <Card className="h-full hover:shadow-lg transition-shadow duration-300 flex flex-col dark:bg-gray-800 dark:border-gray-700">
+                        <div className="p-1 flex flex-col h-full">
                             {/* Imagen - altura fija */}
-                            <div className="mb-2 flex-shrink-0">
+                            <div className="mb-3 flex-shrink-0">
                                 {renderProductImage(producto)}
                             </div>
 
                             {/* Contenido */}
-                            <div className="space-y-1 flex flex-col h-full">
+                            <div className="space-y-2 flex flex-col h-full">
                                 {/* Título - altura fija */}
-                                <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2rem] text-center flex-shrink-0">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 min-h-[2rem] text-center flex-shrink-0">
                                     {producto.name}
                                 </h3>
 
@@ -272,7 +276,7 @@ export default function Productos() {
                                 </div>
 
                                 {/* Descripción - altura fija */}
-                                <p className="text-xs text-gray-600 line-clamp-2 min-h-[1.5rem] text-center flex-shrink-0">
+                                <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 min-h-[1.5rem] text-center flex-shrink-0">
                                     {producto.description}
                                 </p>
 
@@ -293,7 +297,7 @@ export default function Productos() {
                                                 ))}
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-gray-500 text-center min-h-[2rem] flex items-center justify-center">
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 text-center min-h-[2rem] flex items-center justify-center">
                                             Producto de calidad
                                         </div>
                                     )}
@@ -301,13 +305,13 @@ export default function Productos() {
 
                                 {/* Precio - altura fija */}
                                 <div className="text-center flex-shrink-0">
-                                    <p className="text-base font-bold text-blue-600">
+                                    <p className="text-base font-bold text-blue-600 dark:text-blue-400">
                                         {producto.priceFormatted}
                                     </p>
                                 </div>
 
                                 {/* Botones - siempre al final */}
-                                <div className="flex gap-1 justify-center pt-1 mt-auto">
+                                <div className="flex gap-1 justify-center pt-2 mt-auto">
                                     <Button
                                         label="Ver"
                                         severity="primary"
@@ -338,15 +342,15 @@ export default function Productos() {
 
     const header = () => {
         return (
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                    <div className="relative">
-                        <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 productos-header">
+                <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
+                    <div className="relative flex-1">
+                        <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Buscar productos..."
-                            className="w-full sm:w-80 search-input"
+                            className="w-full search-input"
                         />
                     </div>
                     <Dropdown
@@ -354,17 +358,18 @@ export default function Productos() {
                         options={categories}
                         onChange={(e) => setSelectedCategory(e.value)}
                         placeholder="Categoría"
-                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full md:w-48"
                     />
                     <Dropdown
                         value={sortKey}
                         options={sortOptions}
                         onChange={onSort}
                         placeholder="Ordenar por"
-                        className="w-full sm:w-48 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full md:w-48"
                     />
                 </div>
-                <div className="flex gap-2">
+                {/* Botones de vista solo visibles en tablets y desktop */}
+                <div className="hidden sm:flex gap-2 w-full md:w-auto justify-center md:justify-end">
                     <Button
                         icon="pi pi-th-large"
                         onClick={() => setLayout('grid')}
@@ -383,83 +388,86 @@ export default function Productos() {
         );
     };
 
-    return (
-        <div className="min-h-screen">
-            <Navbar />
-
-            <div className="w-full max-w-none py-8 pt-20 px-4">
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        Nuestros Productos
-                    </h1>
-                    <p className="text-lg text-gray-600">
-                        Descubre nuestra amplia gama de productos de seguridad
-                        para hogar y empresa
-                    </p>
-                </div>
-
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="text-center">
-                            <i className="pi pi-spin pi-spinner text-4xl text-blue-600 mb-4"></i>
-                            <p className="text-gray-600">
-                                Cargando productos...
-                            </p>
-                        </div>
+    if (!mounted) {
+        return (
+            <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-center">
+                        <i className="pi pi-spin pi-spinner text-4xl text-blue-600 dark:text-blue-400 mb-4"></i>
+                        <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            Cargando...
+                        </p>
                     </div>
-                ) : (
-                    <>
-                        {header()}
-                        {filteredProductos.length > 0 ? (
-                            <>
-                                {layout === 'grid' ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                        {filteredProductos.map(
-                                            (producto, index) => (
-                                                <div
-                                                    key={producto.id || index}
-                                                    className="w-full"
-                                                >
-                                                    {itemTemplate(
-                                                        producto,
-                                                        'grid'
-                                                    )}
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {filteredProductos.map(
-                                            (producto, index) => (
-                                                <div key={producto.id || index}>
-                                                    {itemTemplate(
-                                                        producto,
-                                                        'list'
-                                                    )}
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="text-center py-12">
-                                <i className="pi pi-box text-6xl text-gray-400 mb-4"></i>
-                                <p className="text-gray-600 text-lg mb-4">
-                                    No se encontraron productos
-                                </p>
-                                <p className="text-gray-500 text-sm">
-                                    Intenta cambiar los filtros de búsqueda o
-                                    categoría
-                                </p>
-                            </div>
-                        )}
-                    </>
-                )}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
+            <div className="mb-8">
+                <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
+                    Nuestros Productos
+                </h1>
+                <p className="text-lg text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                    Descubre nuestra amplia gama de productos de seguridad para
+                    hogar y empresa
+                </p>
             </div>
 
-            <Footer />
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-center">
+                        <i className="pi pi-spin pi-spinner text-4xl text-blue-600 dark:text-blue-400 mb-4"></i>
+                        <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            Cargando productos...
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {header()}
+                    {filteredProductos.length > 0 ? (
+                        <>
+                            {layout === 'grid' ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                                    {filteredProductos.map(
+                                        (producto, index) => (
+                                            <div
+                                                key={producto.id || index}
+                                                className="w-full"
+                                            >
+                                                {itemTemplate(producto, 'grid')}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {filteredProductos.map(
+                                        (producto, index) => (
+                                            <div key={producto.id || index}>
+                                                {itemTemplate(producto, 'list')}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className="text-center py-12">
+                            <i className="pi pi-box text-6xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                            <p className="text-gray-600 dark:text-gray-400 text-lg mb-4 transition-colors duration-300">
+                                No se encontraron productos
+                            </p>
+                            <p className="text-gray-500 dark:text-gray-500 text-sm transition-colors duration-300">
+                                Intenta cambiar los filtros de búsqueda o
+                                categoría
+                            </p>
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 }
