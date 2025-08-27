@@ -122,10 +122,12 @@ export default function Navbar() {
                     severity="success"
                     size="small"
                     className="hidden sm:flex"
-                    onClick={() =>
-                        (window.location.href =
-                            process.env.NEXT_PUBLIC_PHONE_NUMBER)
-                    }
+                    onClick={() => {
+                        const phoneNumber =
+                            process.env.NEXT_PUBLIC_PHONE_NUMBER ||
+                            '+34 676 20 80 24';
+                        window.location.href = `tel:${phoneNumber}`;
+                    }}
                 />
             )}
             {isAdminZone && (

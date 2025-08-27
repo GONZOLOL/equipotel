@@ -128,7 +128,10 @@ export default function Footer() {
                                     <i className="pi pi-phone text-white text-sm"></i>
                                 </div>
                                 <a
-                                    href={process.env.NEXT_PUBLIC_PHONE_NUMBER}
+                                    href={`tel:${
+                                        process.env.NEXT_PUBLIC_PHONE_NUMBER ||
+                                        '+34 676 20 80 24'
+                                    }`}
                                     className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
                                 >
                                     +34 676 20 80 24
