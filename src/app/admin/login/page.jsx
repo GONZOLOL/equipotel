@@ -12,7 +12,7 @@ export default function AdminLogin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [mounted, setMounted] = useState(false);
-    const { signInWithGoogle } = useAuth();
+    const { signInWithGoogle, isAuthorized } = useAuth();
     const { isDarkMode, toggleTheme } = useThemeToggle();
     const router = useRouter();
 
@@ -20,15 +20,38 @@ export default function AdminLogin() {
         setMounted(true);
     }, []);
 
+    // Redirigir si ya está autorizado
+    useEffect(() => {
+        if (isAuthorized) {
+            router.push('/admin/dashboard');
+        }
+    }, [isAuthorized, router]);
+
     const handleGoogleSignIn = async () => {
         try {
             setLoading(true);
             setError('');
             await signInWithGoogle();
-            router.push('/admin/dashboard');
+            // La redirección se maneja automáticamente en el useEffect
         } catch (error) {
             console.error('Error signing in:', error);
-            setError('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+
+            // Manejar diferentes tipos de errores
+            if (error.message.includes('No tienes permisos')) {
+                setError(
+                    'No tienes permisos para acceder a esta aplicación. Contacta al administrador.'
+                );
+            } else if (error.code === 'auth/popup-closed-by-user') {
+                setError('Inicio de sesión cancelado.');
+            } else if (error.code === 'auth/popup-blocked') {
+                setError(
+                    'El popup fue bloqueado. Permite popups para este sitio.'
+                );
+            } else {
+                setError(
+                    'Error al iniciar sesión. Por favor, inténtalo de nuevo.'
+                );
+            }
         } finally {
             setLoading(false);
         }

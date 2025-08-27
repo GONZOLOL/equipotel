@@ -50,26 +50,96 @@ export default function Contacto() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setMessage(null);
 
-        // Simular envío del formulario
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            // Validar campos requeridos
+            if (
+                !formData.nombre ||
+                !formData.email ||
+                !formData.asunto ||
+                !formData.mensaje
+            ) {
+                setMessage({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Por favor, completa todos los campos obligatorios.',
+                    life: 5000,
+                });
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                setMessage({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Por favor, introduce un email válido.',
+                    life: 5000,
+                });
+                return;
+            }
+
+            // Enviar formulario a la API
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Mostrar mensaje de éxito
+                setMessage({
+                    severity: 'success',
+                    summary: '¡Mensaje enviado!',
+                    detail: data.fallback
+                        ? 'Se abrirá tu cliente de email para completar el envío.'
+                        : 'Gracias por contactar con nosotros. Te responderemos en breve.',
+                    life: 5000,
+                });
+
+                // Limpiar formulario
+                setFormData({
+                    nombre: '',
+                    email: '',
+                    telefono: '',
+                    asunto: '',
+                    mensaje: '',
+                });
+
+                // Si es fallback, abrir el cliente de email
+                if (data.mailtoLink) {
+                    setTimeout(() => {
+                        window.open(data.mailtoLink, '_blank');
+                    }, 1000);
+                }
+            } else {
+                // Mostrar error de la API
+                setMessage({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail:
+                        data.error ||
+                        'Error al enviar el mensaje. Por favor, inténtalo de nuevo.',
+                    life: 5000,
+                });
+            }
+        } catch (error) {
+            console.error('Error al enviar formulario:', error);
             setMessage({
-                severity: 'success',
-                summary: '¡Mensaje enviado!',
-                detail: 'Gracias por contactar con nosotros. Te responderemos en breve.',
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error de conexión. Por favor, inténtalo de nuevo.',
                 life: 5000,
             });
-
-            // Limpiar formulario
-            setFormData({
-                nombre: '',
-                email: '',
-                telefono: '',
-                asunto: '',
-                mensaje: '',
-            });
-        }, 2000);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const contactInfo = [
@@ -82,7 +152,7 @@ export default function Contacto() {
         {
             icon: 'pi pi-phone',
             title: 'Teléfono',
-            content: '+555 136 997 334',
+            content: process.env.NEXT_PUBLIC_COMPANY_PHONE,
             description: 'Lunes a Viernes: 9:00 - 18:00',
         },
         {
@@ -109,7 +179,7 @@ export default function Contacto() {
         <div className="min-h-screen">
             <Navbar />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-22">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-28">
                 <div className="mb-8 text-center">
                     <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
                         Contacto

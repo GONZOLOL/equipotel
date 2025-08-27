@@ -155,6 +155,7 @@ export default function Productos() {
                     src={imageUrl}
                     alt={producto.name}
                     fill
+                    sizes="(max-width: 640px) 96px, 112px"
                     className="object-cover"
                 />
             </div>
@@ -393,7 +394,7 @@ export default function Productos() {
     }
 
     return (
-        <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
                     Nuestros Productos
