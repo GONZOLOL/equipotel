@@ -120,7 +120,7 @@ export default function Navbar() {
                     severity="secondary"
                     size="small"
                     className="hidden sm:flex"
-                    onClick={() => (window.location.href = '/')}
+                    onClick={() => (window.location.href = '/admin/login')}
                 />
             )}
         </div>
