@@ -172,16 +172,6 @@ export const useProducts = () => {
                 image: editingProduct.mainImage || editingProduct.image || '',
             };
 
-            console.log('Guardando producto con datos:', productData);
-            console.log(
-                'URL de imagen principal en productData:',
-                productData.mainImage
-            );
-            console.log(
-                'URLs de imágenes adicionales:',
-                productData.additionalImages
-            );
-
             if (editingProduct.id) {
                 await updateProduct(editingProduct.id, productData);
                 showToast('success', 'Producto actualizado correctamente');
@@ -203,35 +193,45 @@ export const useProducts = () => {
             // Eliminar imágenes de Firebase Storage antes de eliminar el producto
             if (selectedProduct) {
                 const imagesToDelete = [];
-                
+
                 // Agregar imagen principal si existe y es de Firebase
-                if (selectedProduct.mainImage && selectedProduct.mainImage.includes('firebase')) {
+                if (
+                    selectedProduct.mainImage &&
+                    selectedProduct.mainImage.includes('firebase')
+                ) {
                     imagesToDelete.push(selectedProduct.mainImage);
                 }
-                if (selectedProduct.image && selectedProduct.image.includes('firebase')) {
+                if (
+                    selectedProduct.image &&
+                    selectedProduct.image.includes('firebase')
+                ) {
                     imagesToDelete.push(selectedProduct.image);
                 }
-                
+
                 // Agregar imágenes adicionales si existen y son de Firebase
                 if (selectedProduct.additionalImages) {
-                    selectedProduct.additionalImages.forEach(img => {
+                    selectedProduct.additionalImages.forEach((img) => {
                         if (img.includes('firebase')) {
                             imagesToDelete.push(img);
                         }
                     });
                 }
-                
+
                 // Eliminar todas las imágenes de Firebase Storage
                 for (const imageUrl of imagesToDelete) {
                     try {
                         await deleteProductImage(imageUrl);
                     } catch (error) {
-                        console.warn('No se pudo eliminar imagen:', imageUrl, error);
+                        console.warn(
+                            'No se pudo eliminar imagen:',
+                            imageUrl,
+                            error
+                        );
                         // Continuar con la eliminación aunque falle una imagen
                     }
                 }
             }
-            
+
             // Eliminar el producto de Firestore
             await deleteProduct(selectedProduct.id);
             showToast('success', 'Producto eliminado correctamente');
@@ -260,29 +260,16 @@ export const useProducts = () => {
                     'https://drive.google.com/uc?export=view&id=1A7Vd0Zvcfk0TEfMf4bzyrpiRkcOHlsDI',
                     'https://drive.google.com/uc?export=view&id=1A7Vd0Zvcfk0TEfMf4bzyrpiRkcOHlsDI',
                 ],
-                features: [
-                    'Atérmico',
-                    'Certificado',
-                    'Electrónico',
-                ],
+                features: ['Atérmico', 'Certificado', 'Electrónico'],
                 stock: 'Disponible',
                 featured: false,
             };
             await addProduct(testProduct);
-            showToast(
-                'success',
-                'Producto de prueba creado correctamente'
-            );
+            showToast('success', 'Producto de prueba creado correctamente');
             loadProducts();
         } catch (error) {
-            console.error(
-                'Error creating test product:',
-                error
-            );
-            showToast(
-                'error',
-                'Error al crear producto de prueba'
-            );
+            console.error('Error creating test product:', error);
+            showToast('error', 'Error al crear producto de prueba');
         }
     };
 

@@ -1,16 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-console.log('🚀 Configurando Equipotel Landing Page...\n');
-
-// Verificar si existe .env.local
 const envPath = path.join(process.cwd(), '.env.local');
 if (!fs.existsSync(envPath)) {
-  console.log('📝 Creando archivo .env.local...');
-  
-  const envContent = `# Firebase Configuration
+    const envContent = `# Firebase Configuration
 # Obtén estos valores desde la consola de Firebase
 # https://console.firebase.google.com/
 
@@ -28,26 +23,11 @@ NEXT_PUBLIC_COMPANY_PHONE=+555 136 997 334
 NEXT_PUBLIC_COMPANY_EMAIL=info@equipotel.es
 `;
 
-  fs.writeFileSync(envPath, envContent);
-  console.log('✅ Archivo .env.local creado');
-} else {
-  console.log('✅ Archivo .env.local ya existe');
+    fs.writeFileSync(envPath, envContent);
 }
 
 // Crear carpeta de imágenes si no existe
 const imagesPath = path.join(process.cwd(), 'public', 'images');
 if (!fs.existsSync(imagesPath)) {
-  console.log('📁 Creando carpeta public/images...');
-  fs.mkdirSync(imagesPath, { recursive: true });
-  console.log('✅ Carpeta public/images creada');
-} else {
-  console.log('✅ Carpeta public/images ya existe');
+    fs.mkdirSync(imagesPath, { recursive: true });
 }
-
-console.log('\n🎉 Configuración completada!');
-console.log('\n📋 Próximos pasos:');
-console.log('1. Configura Firebase en https://console.firebase.google.com/');
-console.log('2. Actualiza las variables en .env.local con tus credenciales de Firebase');
-console.log('3. Ejecuta: npm run dev');
-console.log('4. Abre http://localhost:3000 en tu navegador');
-console.log('\n📚 Para más información, consulta el README.md');

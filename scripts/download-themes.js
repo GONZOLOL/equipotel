@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
 
 const themes = [
     {
@@ -38,7 +38,6 @@ function downloadFile(url, filepath) {
 
                 file.on('finish', () => {
                     file.close();
-                    console.log(`✅ Downloaded: ${path.basename(filepath)}`);
                     resolve();
                 });
             })
@@ -50,8 +49,6 @@ function downloadFile(url, filepath) {
 }
 
 async function downloadThemes() {
-    console.log('🚀 Downloading PrimeReact themes...');
-
     for (const theme of themes) {
         const themeDir = path.join(themesDir, theme.name);
 
@@ -67,8 +64,6 @@ async function downloadThemes() {
             console.error(`❌ Error downloading ${theme.name}:`, error.message);
         }
     }
-
-    console.log('✨ Theme download completed!');
 }
 
 downloadThemes().catch(console.error);
