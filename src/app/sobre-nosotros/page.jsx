@@ -120,7 +120,7 @@ export default function SobreNosotros() {
             <Navbar />
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 py-20 pt-32">
+            <section className="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 py-20 pt-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h1 className="text-4xl lg:text-6xl font-bold mb-6">
                         Sobre{' '}

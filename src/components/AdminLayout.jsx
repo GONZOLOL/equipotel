@@ -13,7 +13,7 @@ export default function AdminLayout({
     showBackButton = false,
     backUrl = '/admin/dashboard',
 }) {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const router = useRouter();
     const { isDarkMode, toggleTheme } = useThemeToggle();
     const [mounted, setMounted] = useState(false);

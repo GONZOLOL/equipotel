@@ -111,7 +111,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=tu_app_id
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_COMPANY_NAME=Equipotel
-NEXT_PUBLIC_COMPANY_PHONE=+34 951 234 567
+NEXT_PUBLIC_COMPANY_PHONE=+34 676 20 80 24
 NEXT_PUBLIC_COMPANY_EMAIL=info@equipotel.es
 
 # Analytics (Opcional)
@@ -248,7 +248,7 @@ npm run setup        # Configuración inicial
 Para soporte técnico o preguntas:
 
 -   Email: info@equipotel.es
--   Teléfono: +34 951 234 567
+-   Teléfono: +34 676 20 80 24
 
 ## 📄 Licencia
 

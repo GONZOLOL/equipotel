@@ -131,7 +131,7 @@ export default function Footer() {
                                     href="tel:+34951234567"
                                     className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
                                 >
-                                    +34 951 234 567
+                                    +34 676 20 80 24
                                 </a>
                             </div>
 

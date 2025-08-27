@@ -4,18 +4,30 @@ import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const { isDarkMode, isInitialized } = useTheme();
     const pathname = usePathname();
+    const router = useRouter();
+    const { logout } = useAuth();
 
     // Detectar si estamos en la zona admin
     const isAdminZone = pathname?.startsWith('/admin');
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.push('/admin/login');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
 
     useEffect(() => {
         setIsMounted(true);
@@ -31,7 +43,7 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const menuItemStyle = 'text-xl font-bold text-gray-800 dark:text-white p-3';
+    const menuItemStyle = 'text-xl font-bold text-gray-800 dark:text-white p-2';
 
     // Items de navegación para la zona pública
     const publicItems = [
@@ -120,7 +132,7 @@ export default function Navbar() {
                     severity="secondary"
                     size="small"
                     className="hidden sm:flex"
-                    onClick={() => (window.location.href = '/admin/login')}
+                    onClick={handleLogout}
                 />
             )}
         </div>
