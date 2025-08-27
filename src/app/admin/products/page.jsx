@@ -1,6 +1,7 @@
 'use client';
 
 import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminLayout from '@/components/AdminLayout';
 import { Button } from 'primereact/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
@@ -43,49 +44,25 @@ export default function AdminProducts() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-gray-50">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between items-center py-3">
-                            <div className="flex items-center space-x-4 gap-4">
-                                <Button
-                                    icon="pi pi-arrow-left"
-                                    severity="secondary"
-                                    outlined
-                                    onClick={() =>
-                                        router.push('/admin/dashboard')
-                                    }
-                                />
-                                <div>
-                                    <h1 className="text-lg font-semibold text-gray-800">
-                                        Gestión de Productos
-                                    </h1>
-                                    <p className="text-xs text-gray-600">
-                                        Administra el catálogo de productos
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main Content */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <ProductTable
-                        products={products}
-                        loading={loading}
-                        globalFilter={globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                        categoryFilter={categoryFilter}
-                        setCategoryFilter={setCategoryFilter}
-                        categories={categories}
-                        onEditProduct={openEditProductDialog}
-                        onDeleteProduct={openDeleteDialog}
-                        onCreateTestProduct={createTestProduct}
-                        onNewProduct={openNewProductDialog}
-                    />
-                </div>
+            <AdminLayout
+                title="Gestión de Productos"
+                subtitle="Administra el catálogo de productos"
+                showBackButton={true}
+                backUrl="/admin/dashboard"
+            >
+                <ProductTable
+                    products={products}
+                    loading={loading}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                    categoryFilter={categoryFilter}
+                    setCategoryFilter={setCategoryFilter}
+                    categories={categories}
+                    onEditProduct={openEditProductDialog}
+                    onDeleteProduct={openDeleteDialog}
+                    onCreateTestProduct={createTestProduct}
+                    onNewProduct={openNewProductDialog}
+                />
 
                 {/* Product Form Dialog */}
                 <ProductForm
@@ -103,12 +80,12 @@ export default function AdminProducts() {
 
                 {/* Delete Confirmation Dialog */}
                 <DeleteConfirmDialog
-                    deleteDialogVisible={deleteDialogVisible}
-                    setDeleteDialogVisible={setDeleteDialogVisible}
-                    selectedProduct={selectedProduct}
-                    onConfirmDelete={confirmDelete}
+                    visible={deleteDialogVisible}
+                    onHide={() => setDeleteDialogVisible(false)}
+                    onConfirm={confirmDelete}
+                    productName={selectedProduct?.name}
                 />
-            </div>
+            </AdminLayout>
         </ProtectedRoute>
     );
 }

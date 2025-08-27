@@ -18,7 +18,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup": "node scripts/setup.js"
+    "setup": "node scripts/setup.js",
+    "download-themes": "node scripts/download-themes.js"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.0",

@@ -153,21 +153,105 @@ export const deleteProduct = async (productId) => {
     }
 };
 
-// Subir imagen a Firebase Storage (deshabilitado temporalmente)
-export const uploadProductImage = async (file, productId) => {
-    throw new Error(
-        'Subida de imágenes deshabilitada temporalmente. Usa enlaces de Google Drive.'
-    );
+// Subir imagen a Firebase Storage
+export const uploadProductImage = async (file, productId = null) => {
+    try {
+        // Validar el archivo
+        if (!file) {
+            throw new Error('No se proporcionó ningún archivo');
+        }
+
+        // Validar tipo de archivo
+        const allowedTypes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/webp',
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            throw new Error(
+                'Tipo de archivo no permitido. Solo se permiten: JPEG, JPG, PNG, WEBP'
+            );
+        }
+
+        // Validar tamaño (máximo 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            throw new Error(
+                'El archivo es demasiado grande. Máximo 5MB permitido'
+            );
+        }
+
+        // Generar nombre único para el archivo
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(2, 15);
+        const fileExtension = file.name.split('.').pop();
+        const fileName = `products/${
+            productId || 'temp'
+        }/${timestamp}_${randomId}.${fileExtension}`;
+
+        // Crear referencia en Firebase Storage
+        const storageRef = ref(storage, fileName);
+
+        // Subir archivo
+        const snapshot = await uploadBytes(storageRef, file);
+        console.log('Archivo subido exitosamente:', snapshot.metadata.name);
+
+        // Obtener URL de descarga
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        console.log('URL de descarga generada:', downloadURL);
+
+        return {
+            url: downloadURL,
+            path: fileName,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        };
+    } catch (error) {
+        console.error('Error subiendo imagen:', error);
+        throw error;
+    }
+};
+
+// Subir múltiples imágenes
+export const uploadMultipleImages = async (files, productId = null) => {
+    try {
+        const uploadPromises = files.map((file) =>
+            uploadProductImage(file, productId)
+        );
+        const results = await Promise.all(uploadPromises);
+        return results;
+    } catch (error) {
+        console.error('Error subiendo múltiples imágenes:', error);
+        throw error;
+    }
 };
 
 // Eliminar imagen de Firebase Storage
 export const deleteProductImage = async (imageUrl) => {
     try {
-        const imageRef = ref(storage, imageUrl);
-        await deleteObject(imageRef);
+        // Si es una URL de Firebase Storage, extraer la ruta
+        if (imageUrl.includes('firebase')) {
+            // Extraer la ruta del archivo de la URL
+            const urlParts = imageUrl.split('/');
+            const filePath = urlParts
+                .slice(urlParts.indexOf('o') + 1)
+                .join('/');
+            const decodedPath = decodeURIComponent(filePath);
+
+            const imageRef = ref(storage, decodedPath);
+            await deleteObject(imageRef);
+            console.log('Imagen eliminada de Firebase Storage:', decodedPath);
+        } else {
+            console.log(
+                'No es una URL de Firebase Storage, no se elimina:',
+                imageUrl
+            );
+        }
     } catch (error) {
-        console.error('Error deleting image:', error);
-        throw error;
+        console.error('Error eliminando imagen:', error);
+        // No lanzar error para no interrumpir el flujo si la imagen no existe
     }
 };
 
