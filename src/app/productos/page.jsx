@@ -35,8 +35,6 @@ export default function Productos() {
     ];
 
     const sortOptions = [
-        { label: 'Precio: Menor a Mayor', value: 'price-asc' },
-        { label: 'Precio: Mayor a Menor', value: 'price-desc' },
         { label: 'Nombre: A-Z', value: 'name-asc' },
         { label: 'Nombre: Z-A', value: 'name-desc' },
     ];
