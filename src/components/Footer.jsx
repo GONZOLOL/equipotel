@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -13,17 +14,23 @@ export default function Footer() {
                             href="/"
                             className="flex items-center space-x-2 mb-4 no-underline"
                         >
-                            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
-                                <i className="pi pi-shield text-white text-xl"></i>
+                            <div className="flex items-center justify-center w-12 h-12  rounded-lg">
+                                <Image
+                                    src="/src/logo.png"
+                                    alt="Equipotel"
+                                    width={40}
+                                    height={40}
+                                />
                             </div>
                             <span className="text-2xl font-bold text-gray-800 dark:text-white">
                                 Equipotel
                             </span>
                         </Link>
                         <p className="text-gray-600 dark:text-gray-200 mb-6 leading-relaxed">
-                            Especialistas en cajas fuertes, armarios acorazados
-                            y sistemas de seguridad en Málaga. Protegemos lo que
-                            más importa desde 2010.
+                            Especialistas en cajas fuertes, sistemas de anclaje
+                            y sistemas de seguridad en Málaga y Andalucía
+                            Oriental. y sistemas de seguridad en Málaga.
+                            Protegemos lo que más importa desde 2010.
                         </p>
                         <div className="flex space-x-4">
                             <a
@@ -56,36 +63,36 @@ export default function Footer() {
                             <li>
                                 <Link
                                     href="/"
-                                    className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 flex items-center"
+                                    className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300 flex items-center"
                                 >
-                                    <i className="pi pi-home mr-2 text-blue-500"></i>
+                                    <i className="pi pi-home mr-2 text-red-500"></i>
                                     Inicio
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href="/productos"
-                                    className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 flex items-center"
+                                    className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300 flex items-center"
                                 >
-                                    <i className="pi pi-box mr-2 text-blue-500"></i>
+                                    <i className="pi pi-box mr-2 text-red-500"></i>
                                     Productos
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href="/sobre-nosotros"
-                                    className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 flex items-center"
+                                    className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300 flex items-center"
                                 >
-                                    <i className="pi pi-users mr-2 text-blue-500"></i>
+                                    <i className="pi pi-users mr-2 text-red-500"></i>
                                     Sobre Nosotros
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href="/contacto"
-                                    className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 flex items-center"
+                                    className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300 flex items-center"
                                 >
-                                    <i className="pi pi-envelope mr-2 text-blue-500"></i>
+                                    <i className="pi pi-envelope mr-2 text-red-500"></i>
                                     Contacto
                                 </Link>
                             </li>
@@ -103,8 +110,8 @@ export default function Footer() {
                                 Cajas Fuertes
                             </li>
                             <li className="text-gray-600 dark:text-gray-200 flex items-center">
-                                <i className="pi pi-building mr-2 text-green-500"></i>
-                                Armarios Acorazados
+                                <i className="pi pi-link mr-2 text-green-500"></i>
+                                Sistemas de Seguridad
                             </li>
                             <li className="text-gray-600 dark:text-gray-200 flex items-center">
                                 <i className="pi pi-link mr-2 text-green-500"></i>
@@ -112,7 +119,7 @@ export default function Footer() {
                             </li>
                             <li className="text-gray-600 dark:text-gray-200 flex items-center">
                                 <i className="pi pi-lock mr-2 text-green-500"></i>
-                                Compartimentos de Seguridad
+                                Segunda Mano
                             </li>
                         </ul>
                     </div>
@@ -132,7 +139,7 @@ export default function Footer() {
                                         process.env.NEXT_PUBLIC_PHONE_NUMBER ||
                                         '+34 676 20 80 24'
                                     }`}
-                                    className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
+                                    className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300"
                                 >
                                     +34 676 20 80 24
                                 </a>

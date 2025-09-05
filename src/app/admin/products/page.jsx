@@ -67,15 +67,15 @@ export default function AdminProducts() {
                 {/* Product Form Dialog */}
                 <ProductForm
                     dialogVisible={dialogVisible}
-                    setDialogVisible={setDialogVisible}
-                    editingProduct={editingProduct}
-                    setEditingProduct={setEditingProduct}
+                    onHide={() => setDialogVisible(false)}
+                    product={editingProduct}
+                    onSave={saveProduct}
                     categories={categories}
                     stockOptions={stockOptions}
                     featureOptions={featureOptions}
-                    addAdditionalImage={addAdditionalImage}
-                    saveProduct={saveProduct}
-                    showToast={showToast}
+                    conditionOptions={[]}
+                    isSegundaMano={false}
+                    onRemoveImage={addAdditionalImage}
                 />
 
                 {/* Delete Confirmation Dialog */}

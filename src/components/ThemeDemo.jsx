@@ -6,7 +6,7 @@ import { Tag } from 'primereact/tag';
 import { useThemeToggle } from '@/hooks/useThemeToggle';
 
 export default function ThemeDemo() {
-    const { isDarkMode, toggleTheme, themeIcon, themeLabel } = useThemeToggle();
+    const { isDarkMode, toggleTheme, themeIcon } = useThemeToggle();
 
     return (
         <div className="p-6 space-y-6">
@@ -27,7 +27,6 @@ export default function ThemeDemo() {
                         <Button
                             icon={themeIcon}
                             onClick={toggleTheme}
-                            tooltip={themeLabel}
                             className="p-button-outlined"
                         />
                     </div>

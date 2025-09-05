@@ -67,31 +67,6 @@ export const getProductsByCategory = async (category) => {
     }
 };
 
-// Obtener productos destacados
-export const getFeaturedProducts = async () => {
-    try {
-        const q = query(
-            collection(db, 'products'),
-            where('featured', '==', true),
-            orderBy('createdAt', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const products = [];
-        querySnapshot.forEach((doc) => {
-            const productData = doc.data();
-            // Convertir URLs de Google Drive si es necesario
-            if (productData.image) {
-                productData.image = convertGoogleDriveUrl(productData.image);
-            }
-            products.push({ id: doc.id, ...productData });
-        });
-        return products;
-    } catch (error) {
-        console.error('Error getting featured products:', error);
-        throw error;
-    }
-};
-
 // Agregar un nuevo producto
 export const addProduct = async (productData) => {
     try {
@@ -107,7 +82,7 @@ export const addProduct = async (productData) => {
         };
 
         const docRef = await addDoc(collection(db, 'products'), productToSave);
-        return docRef.id;
+        return { id: docRef.id, ...productToSave };
     } catch (error) {
         console.error('Error adding product:', error);
         throw error;
@@ -123,10 +98,15 @@ export const updateProduct = async (productId, productData) => {
         }
 
         const productRef = doc(db, 'products', productId);
-        await updateDoc(productRef, {
+        const updateData = {
             ...productData,
             updatedAt: new Date(),
-        });
+        };
+
+        await updateDoc(productRef, updateData);
+
+        // Devolver el producto actualizado
+        return { id: productId, ...updateData };
     } catch (error) {
         console.error('Error updating product:', error);
         throw error;

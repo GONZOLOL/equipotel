@@ -106,7 +106,7 @@ export default function AdminAnalytics() {
                         <Button
                             label="Actualizar"
                             icon="pi pi-refresh"
-                            severity="primary"
+                            severity="danger"
                             loading={loading}
                             onClick={refreshData}
                         />

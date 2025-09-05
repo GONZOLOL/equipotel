@@ -11,7 +11,6 @@ import { getProducts, convertGoogleDriveUrl } from '@/services/productService';
 import Image from 'next/image';
 
 export default function Home() {
-    const [productosDestacados, setProductosDestacados] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const servicios = [
@@ -19,59 +18,39 @@ export default function Home() {
             icon: 'pi pi-shield',
             title: 'Cajas Fuertes',
             description:
-                'Amplia gama de cajas fuertes para hogar y oficina con diferentes niveles de seguridad.',
+                'Amplia gama de cajas fuertes para hogar, oficina y sector bancario con diferentes niveles de seguridad certificados.',
             color: 'from-blue-500 to-blue-600',
             bgColor: 'bg-blue-50',
             iconColor: 'text-blue-600',
         },
         {
-            icon: 'pi pi-building',
-            title: 'Armarios Acorazados',
+            icon: 'pi pi-link',
+            title: 'Sistemas de Anclaje',
             description:
-                'Armarios de seguridad para empresas con protección máxima contra robos.',
+                'Sistemas de anclaje certificados y homologados según normas UNE. Instalación profesional garantizada.',
             color: 'from-green-500 to-green-600',
             bgColor: 'bg-green-50',
             iconColor: 'text-green-600',
         },
         {
-            icon: 'pi pi-link',
-            title: 'Sistemas de Anclaje',
+            icon: 'pi pi-video',
+            title: 'Cámaras de Seguridad',
             description:
-                'Sistemas profesionales para fijar cajas fuertes y armarios de forma segura.',
+                'Sistemas de videovigilancia profesionales para hogar, oficina y sector bancario.',
             color: 'from-orange-500 to-orange-600',
             bgColor: 'bg-orange-50',
             iconColor: 'text-orange-600',
         },
         {
             icon: 'pi pi-lock',
-            title: 'Compartimentos de Seguridad',
+            title: 'Segunda Mano',
             description:
-                'Soluciones discretas y seguras para proteger objetos de valor.',
+                'Productos de segunda mano certificados y revisados por nuestros técnicos especializados.',
             color: 'from-purple-500 to-purple-600',
             bgColor: 'bg-purple-50',
             iconColor: 'text-purple-600',
         },
     ];
-
-    useEffect(() => {
-        const loadProductosDestacados = async () => {
-            try {
-                setLoading(true);
-                const productos = await getProducts();
-                if (productos && productos.length > 0) {
-                    // Tomar los primeros 4 productos como destacados
-                    const destacados = productos.slice(0, 4);
-                    setProductosDestacados(destacados);
-                }
-            } catch (error) {
-                console.error('Error loading featured products:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadProductosDestacados();
-    }, []);
 
     const productTemplate = (product) => {
         const mainImage = product.mainImage || product.image;
@@ -161,29 +140,41 @@ export default function Home() {
         <div className="min-h-screen ">
             <Navbar />
             {/* Hero Section */}
-
-            <section className=" overflow-hidden relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 pt-40">
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="overflow-hidden relative text-white pt-40 h-232">
+                {/* Imagen de fondo con opacidad */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: 'url(/src/mainBackground.jpg)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        opacity: 0.4,
+                    }}
+                ></div>
+                {/* Overlay para mejorar la legibilidad del texto */}
+                <div className="absolute inset-0 bg-black/40 dark:bg-black/60"></div>
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="fade-in">
-                            <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
-                                Tu Seguridad es Nuestra{' '}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                                    Prioridad
-                                </span>
+                            <h1 className="text-5xl lg:text-6xl font-bold mb-8 leading-tight">
+                                Tu Seguridad es nuestra Prioridad
                             </h1>
-                            <p className="text-xl mb-10 text-white dark:text-gray-300 leading-relaxed">
-                                Especialistas en cajas fuertes, armarios
-                                acorazados y sistemas de seguridad en Málaga.
-                                Protege lo que más importa con productos
-                                certificados y instalación profesional.
+                            <p className="text-xl mb-10 text-white leading-relaxed">
+                                Especialistas en cajas fuertes, cámaras de
+                                seguridad, sistemas de anclaje certificados y
+                                homologados según normas UNE, y técnicos de
+                                seguridad física para el sector bancario. Más de
+                                20 años en el sector protegiendo lo que más
+                                importa con productos certificados e instalación
+                                profesional.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 pb-15">
                                 <Link href="/productos">
                                     <Button
                                         label="Ver Productos"
                                         size="large"
-                                        severity="primary"
+                                        severity="danger"
                                         className="text-lg px-8 py-4 shadow-lg hover:shadow-xl"
                                     />
                                 </Link>
@@ -191,7 +182,7 @@ export default function Home() {
                                     <Button
                                         label="Contactar"
                                         size="large"
-                                        severity="secondary"
+                                        severity="danger"
                                         outlined
                                         className="text-lg px-8 py-4 border-2"
                                     />
@@ -201,16 +192,23 @@ export default function Home() {
                         <div className="hidden lg:block slide-in-right">
                             <div className=" bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
                                 <div className="text-center">
-                                    <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <i className="pi pi-shield text-white text-4xl"></i>
+                                    <div className="w-24 h-24  rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <Image
+                                            src="/src/logo.png"
+                                            alt="Seguridad Certificada"
+                                            width={96}
+                                            height={96}
+                                        />
                                     </div>
                                     <h3 className="text-2xl font-bold mb-4 text-white">
                                         Seguridad Certificada
                                     </h3>
                                     <p className="text-white leading-relaxed">
                                         Productos con certificaciones europeas
-                                        de máxima seguridad. Más de 14 años
-                                        protegiendo a nuestros clientes.
+                                        de máxima seguridad. Más de 20 años
+                                        protegiendo a nuestros clientes del
+                                        sector bancario y empresas con
+                                        instalación profesional especializada.
                                     </p>
                                 </div>
                             </div>
@@ -259,59 +257,9 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-            {/* Productos Destacados */}
-            <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
-                            Productos{' '}
-                            <span className="text-gradient">Destacados</span>
-                        </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                            Descubre nuestra selección de productos más
-                            populares y solicitados por nuestros clientes.
-                        </p>
-                    </div>
 
-                    {loading ? (
-                        <div className="flex justify-center items-center h-64">
-                            <div className="text-center">
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Cargando productos destacados...
-                                </p>
-                            </div>
-                        </div>
-                    ) : productosDestacados.length > 0 ? (
-                        <Carousel
-                            value={productosDestacados}
-                            numVisible={3}
-                            numScroll={3}
-                            itemTemplate={productTemplate}
-                            autoplayInterval={5000}
-                            circular
-                        />
-                    ) : (
-                        <div className="text-center py-12">
-                            <p className="text-gray-600 dark:text-gray-300 text-lg">
-                                No hay productos destacados disponibles
-                            </p>
-                        </div>
-                    )}
-
-                    <div className="text-center mt-12">
-                        <Link href="/productos">
-                            <Button
-                                label="Ver Todos los Productos"
-                                severity="primary"
-                                size="large"
-                                className="px-10 py-4 text-lg shadow-lg hover:shadow-xl"
-                            />
-                        </Link>
-                    </div>
-                </div>
-            </section>
             {/* Estadísticas */}
-            <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+            <section className="py-20 bg-gradient-to-r from-red-600 to-red-700 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         <div className="fade-in">
@@ -350,25 +298,38 @@ export default function Home() {
                 </div>
             </section>
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-800 dark:text-gray-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <section className="py-20 relative overflow-hidden text-white">
+                {/* Video de fondo */}
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                >
+                    <source
+                        src="/src/asesoramientoBackground.mp4"
+                        type="video/mp4"
+                    />
+                </video>
+                {/* Overlay para mejorar la legibilidad del texto */}
+                <div className="absolute inset-0 bg-black/50"></div>
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-4xl font-bold mb-6">
-                        ¿Necesitas{' '}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                            Asesoramiento
-                        </span>
-                        ?
+                        ¿Necesitas Asesoramiento?
                     </h2>
-                    <p className="text-xl mb-10 text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                        Nuestros expertos te ayudarán a elegir la mejor solución
-                        para tus necesidades. Ofrecemos asesoramiento gratuito y
-                        sin compromiso.
+                    <p className="text-xl mb-10 text-white max-w-3xl mx-auto leading-relaxed">
+                        Nuestros técnicos especializados te ayudarán a elegir la
+                        mejor solución para tus necesidades. Ofrecemos
+                        asesoramiento gratuito y sin compromiso para cajas
+                        fuertes, cámaras de seguridad, sistemas de anclaje
+                        certificados y equipos contra incendios.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                         <Button
                             label="Llamar Ahora"
                             size="large"
-                            severity="primary"
+                            severity="danger"
                             className="text-lg px-10 py-4 shadow-lg hover:shadow-xl"
                             onClick={() => {
                                 const phoneNumber =
@@ -380,7 +341,7 @@ export default function Home() {
                         <Button
                             label="Solicitar Presupuesto"
                             size="large"
-                            severity="secondary"
+                            severity="danger"
                             outlined
                             className="text-lg px-10 py-4 border-2"
                         />

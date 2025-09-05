@@ -31,13 +31,7 @@ export default function Productos() {
     const categories = [
         { label: 'Todas las categorías', value: null },
         { label: 'Cajas Fuertes', value: 'cajas-fuertes' },
-        { label: 'Armarios Acorazados', value: 'armarios-acorazados' },
         { label: 'Sistemas de Anclaje', value: 'sistemas-anclaje' },
-        {
-            label: 'Compartimentos de Seguridad',
-            value: 'compartimentos-seguridad',
-        },
-        { label: 'Segunda Mano', value: 'segunda-mano' },
     ];
 
     const sortOptions = [
@@ -59,9 +53,12 @@ export default function Productos() {
                 // Intentar cargar desde Firebase
                 const firebaseProducts = await getProducts();
                 if (firebaseProducts && firebaseProducts.length > 0) {
-                    // Ordenar productos por precio ascendente
-                    setProductos(firebaseProducts);
-                    setFilteredProductos(firebaseProducts);
+                    // Filtrar productos de segunda mano
+                    const productosNormales = firebaseProducts.filter(
+                        (producto) => producto.category !== 'segunda-mano'
+                    );
+                    setProductos(productosNormales);
+                    setFilteredProductos(productosNormales);
                 } else {
                     // Si no hay productos, mostrar array vacío
                     setProductos([]);
@@ -185,7 +182,7 @@ export default function Productos() {
                                         </h3>
                                         <Tag
                                             value={producto.categoryLabel}
-                                            severity="info"
+                                            severity="help"
                                             className="mb-3"
                                         />
                                         <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
@@ -199,7 +196,7 @@ export default function Productos() {
                                                             <Tag
                                                                 key={index}
                                                                 value={feature}
-                                                                severity="secondary"
+                                                                severity="help"
                                                                 className="text-xs"
                                                             />
                                                         )
@@ -208,13 +205,10 @@ export default function Productos() {
                                             )}
                                     </div>
                                     <div className="text-right lg:text-left">
-                                        <span className="text-2xl font-bold text-blue-600 dark:text-blue-400 block mb-3">
-                                            {producto.priceFormatted}
-                                        </span>
                                         <div className="flex gap-2">
                                             <Button
                                                 label="Ver Detalles"
-                                                severity="primary"
+                                                severity="help"
                                                 size="small"
                                                 onClick={() =>
                                                     (window.location.href = `/productos/${producto.id}`)
@@ -222,7 +216,7 @@ export default function Productos() {
                                             />
                                             <Button
                                                 label="Contactar"
-                                                severity="secondary"
+                                                severity="danger"
                                                 size="small"
                                                 outlined
                                                 onClick={() =>
@@ -260,7 +254,7 @@ export default function Productos() {
                                 <div className="flex justify-center flex-shrink-0">
                                     <Tag
                                         value={producto.categoryLabel}
-                                        severity="info"
+                                        severity="help"
                                         className="text-xs"
                                     />
                                 </div>
@@ -281,7 +275,7 @@ export default function Productos() {
                                                     <Tag
                                                         key={index}
                                                         value={feature}
-                                                        severity="secondary"
+                                                        severity="help"
                                                         className="text-xs"
                                                     />
                                                 ))}
@@ -293,18 +287,11 @@ export default function Productos() {
                                     )}
                                 </div>
 
-                                {/* Precio - altura fija */}
-                                <div className="text-center flex-shrink-0">
-                                    <p className="text-base font-bold text-blue-600 dark:text-blue-400">
-                                        {producto.priceFormatted}
-                                    </p>
-                                </div>
-
                                 {/* Botones - siempre al final */}
                                 <div className="flex gap-1 justify-center pt-2 mt-auto">
                                     <Button
                                         label="Ver"
-                                        severity="primary"
+                                        severity="danger"
                                         size="small"
                                         className="flex-1 text-xs"
                                         onClick={() =>
@@ -313,7 +300,7 @@ export default function Productos() {
                                     />
                                     <Button
                                         label="Contactar"
-                                        severity="secondary"
+                                        severity="danger"
                                         size="small"
                                         outlined
                                         className="flex-1 text-xs"
@@ -363,14 +350,14 @@ export default function Productos() {
                     <Button
                         icon="pi pi-th-large"
                         onClick={() => setLayout('grid')}
-                        severity={layout === 'grid' ? 'primary' : 'secondary'}
+                        severity={layout === 'grid' ? 'danger' : 'secondary'}
                         outlined={layout !== 'grid'}
                         className="px-2"
                     />
                     <Button
                         icon="pi pi-bars"
                         onClick={() => setLayout('list')}
-                        severity={layout === 'list' ? 'primary' : 'secondary'}
+                        severity={layout === 'list' ? 'danger' : 'secondary'}
                         outlined={layout !== 'list'}
                     />
                 </div>
@@ -383,7 +370,7 @@ export default function Productos() {
             <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-center items-center h-64">
                     <div className="text-center">
-                        <i className="pi pi-spin pi-spinner text-4xl text-blue-600 dark:text-blue-400 mb-4"></i>
+                        <i className="pi pi-spin pi-spinner text-4xl text-red-600 dark:text-red-400 mb-4"></i>
                         <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
                             Cargando...
                         </p>
@@ -394,7 +381,7 @@ export default function Productos() {
     }
 
     return (
-        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8 min-h-screen">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
                     Nuestros Productos
@@ -408,7 +395,7 @@ export default function Productos() {
             {loading ? (
                 <div className="flex justify-center items-center h-64">
                     <div className="text-center">
-                        <i className="pi pi-spin pi-spinner text-4xl text-blue-600 dark:text-blue-400 mb-4"></i>
+                        <i className="pi pi-spin pi-spinner text-4xl text-danger dark:text-danger mb-4"></i>
                         <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
                             Cargando productos...
                         </p>

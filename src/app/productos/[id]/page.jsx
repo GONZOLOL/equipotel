@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import { Divider } from 'primereact/divider';
@@ -29,7 +28,7 @@ export default function ProductDetail() {
             const products = await getProducts();
             const foundProduct = products.find((p) => p.id === params.id);
 
-            if (foundProduct) {
+            if (foundProduct && foundProduct.category !== 'segunda-mano') {
                 setProduct(foundProduct);
 
                 // Combinar imagen principal con imágenes adicionales
@@ -37,77 +36,138 @@ export default function ProductDetail() {
                 const additionalImages = foundProduct.additionalImages || [];
 
                 // Convertir todas las URLs de Google Drive
-                const convertedMainImage = mainImage
-                    ? convertGoogleDriveUrl(mainImage)
-                    : null;
-                const convertedAdditionalImages = additionalImages.map((img) =>
-                    convertGoogleDriveUrl(img)
-                );
+                const convertedMainImage =
+                    mainImage && mainImage.trim() !== ''
+                        ? convertGoogleDriveUrl(mainImage)
+                        : null;
+                const convertedAdditionalImages = additionalImages
+                    .filter((img) => img && img.trim() !== '')
+                    .map((img) => convertGoogleDriveUrl(img));
 
-                const images = convertedMainImage
-                    ? [convertedMainImage, ...convertedAdditionalImages]
-                    : convertedAdditionalImages;
+                // Crear array de imágenes válidas
+                const images = [];
+                if (convertedMainImage) {
+                    images.push(convertedMainImage);
+                }
+                images.push(...convertedAdditionalImages);
 
                 setAllImages(images);
             } else {
-                // Producto no encontrado
+                // Producto no encontrado o es de segunda mano
                 router.push('/productos');
             }
         } catch (error) {
             console.error('Error loading product:', error);
+            router.push('/productos');
         } finally {
             setLoading(false);
         }
     };
 
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('es-ES', {
-            style: 'currency',
-            currency: 'EUR',
-        }).format(price);
+    // Obtener severidad de stock para el tag
+    const getStockSeverity = (stock) => {
+        const severities = {
+            Disponible: 'success',
+            Agotado: 'danger',
+            Próximamente: 'warning',
+        };
+        return severities[stock] || 'help';
     };
 
-    const getStockSeverity = (stock) => {
-        switch (stock) {
-            case 'Disponible':
-                return 'success';
-            case 'Agotado':
-                return 'danger';
-            case 'Próximamente':
-                return 'warning';
-            default:
-                return 'info';
-        }
+    // Template para la galería de imágenes
+    const itemTemplate = (item) => {
+        return (
+            <div className="w-full h-70 sm:h-[400px] lg:h-[500px] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg shadow-md overflow-hidden flex items-center justify-center">
+                <Image
+                    src={item}
+                    alt={product?.name || 'Producto'}
+                    className="w-full h-full object-contain"
+                    width={600}
+                    height={600}
+                    onError={(e) => {
+                        console.error('Error cargando imagen:', item);
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                    }}
+                />
+                <div
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700"
+                    style={{ display: 'none' }}
+                >
+                    <div className="text-center">
+                        <i className="pi pi-image text-6xl text-gray-400 mb-4"></i>
+                        <p className="text-gray-500 dark:text-gray-400">
+                            Imagen no disponible
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const thumbnailTemplate = (item) => {
+        return (
+            <div className="w-20 h-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded border-2 border-gray-200 dark:border-gray-700 overflow-hidden flex items-center justify-center">
+                <Image
+                    src={item}
+                    alt={product?.name || 'Producto'}
+                    className="w-full h-full object-cover"
+                    width={80}
+                    height={80}
+                    onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                    }}
+                />
+                <div
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700"
+                    style={{ display: 'none' }}
+                >
+                    <i className="pi pi-image text-xl text-gray-400"></i>
+                </div>
+            </div>
+        );
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <i className="pi pi-spin pi-spinner text-4xl text-blue-600 mb-4"></i>
-                    <p className="text-gray-600">Cargando producto...</p>
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                <Navbar />
+                <div className="flex justify-center items-center h-96">
+                    <div className="text-center">
+                        <i className="pi pi-spin pi-spinner text-4xl text-gray-400 mb-4"></i>
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Cargando producto...
+                        </p>
+                    </div>
                 </div>
+                <Footer />
             </div>
         );
     }
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <i className="pi pi-exclamation-triangle text-4xl text-red-600 mb-4"></i>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                        Producto no encontrado
-                    </h2>
-                    <p className="text-gray-600 mb-4">
-                        El producto que buscas no existe o ha sido eliminado.
-                    </p>
-                    <Button
-                        label="Volver a Productos"
-                        icon="pi pi-arrow-left"
-                        onClick={() => router.push('/productos')}
-                    />
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                <Navbar />
+                <div className="flex justify-center items-center h-96">
+                    <div className="text-center">
+                        <i className="pi pi-exclamation-triangle text-4xl text-gray-400 mb-4"></i>
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                            Producto no encontrado
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-300 mb-4">
+                            El producto que buscas no existe o no está
+                            disponible.
+                        </p>
+                        <Button
+                            label="Volver a productos"
+                            severity="primary"
+                            onClick={() => router.push('/productos')}
+                        />
+                    </div>
                 </div>
+                <Footer />
             </div>
         );
     }
@@ -116,10 +176,34 @@ export default function ProductDetail() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <Navbar />
 
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-26">
+            {/* Breadcrumb */}
+            <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <nav className="flex items-center space-x-2 text-sm">
+                        <button
+                            onClick={() => router.push('/')}
+                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            Inicio
+                        </button>
+                        <i className="pi pi-chevron-right text-gray-400"></i>
+                        <button
+                            onClick={() => router.push('/productos')}
+                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            Productos
+                        </button>
+                        <i className="pi pi-chevron-right text-gray-400"></i>
+                        <span className="text-gray-900 dark:text-gray-100 font-medium">
+                            {product.name}
+                        </span>
+                    </nav>
+                </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Image Gallery */}
+                    {/* Galería de imágenes */}
                     <div className="space-y-4">
                         {allImages.length > 0 ? (
                             <div className="relative w-full">
@@ -128,114 +212,57 @@ export default function ProductDetail() {
                                     circular
                                     showItemNavigators
                                     showThumbnails={allImages.length > 1}
-                                    item={(item) => (
-                                        <div className="w-full h-70 sm:h-[400px] lg:h-[500px] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg shadow-md overflow-hidden flex items-center justify-center">
-                                            <Image
-                                                src={item}
-                                                alt={product.name}
-                                                className="w-full h-full object-contain"
-                                                width={600}
-                                                height={600}
-                                                onError={(e) => {
-                                                    console.error(
-                                                        'Error cargando imagen:',
-                                                        item
-                                                    );
-                                                    e.target.style.display =
-                                                        'none';
-                                                    e.target.nextSibling.style.display =
-                                                        'flex';
-                                                }}
-                                            />
-                                            <div
-                                                className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center"
-                                                style={{ display: 'none' }}
-                                            >
-                                                <div className="text-center">
-                                                    <i className="pi pi-image text-4xl text-gray-400 dark:text-gray-500 mb-2"></i>
-                                                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                                        Error al cargar la
-                                                        imagen
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    thumbnail={(item) => (
-                                        <div className="w-20 h-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg shadow-sm overflow-hidden">
-                                            <Image
-                                                src={item}
-                                                alt={product.name}
-                                                className="w-full h-full object-cover"
-                                                width={80}
-                                                height={80}
-                                                onError={(e) => {
-                                                    e.target.style.display =
-                                                        'none';
-                                                    e.target.nextSibling.style.display =
-                                                        'flex';
-                                                }}
-                                            />
-                                            <div
-                                                className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center"
-                                                style={{ display: 'none' }}
-                                            >
-                                                <i className="pi pi-image text-lg text-gray-400 dark:text-gray-500"></i>
-                                            </div>
-                                        </div>
-                                    )}
+                                    item={itemTemplate}
+                                    thumbnail={thumbnailTemplate}
                                 />
-
-                                {/* Featured Badge */}
-                                {product.featured && (
-                                    <div className="absolute top-4 left-4 z-10">
-                                        <Tag
-                                            value="Destacado"
-                                            severity="success"
-                                            className="text-sm font-semibold"
-                                        />
-                                    </div>
-                                )}
                             </div>
                         ) : (
-                            <div className="w-full h-96 sm:h-[500px] lg:h-[600px] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-lg shadow-md flex items-center justify-center">
-                                <i className="pi pi-image text-6xl text-gray-400 dark:text-gray-500"></i>
+                            <div className="h-96 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg flex items-center justify-center">
+                                <div className="text-center">
+                                    <i className="pi pi-image text-6xl text-gray-400 mb-4"></i>
+                                    <p className="text-gray-500 dark:text-gray-400">
+                                        Sin imágenes disponibles
+                                    </p>
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Product Info */}
+                    {/* Información del producto */}
                     <div className="space-y-6">
-                        {/* Title and Price */}
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                            {/* Categoría */}
+                            <div className="mb-3">
+                                <span className="inline-block bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-semibold px-3 py-1 rounded-full">
+                                    {product.categoryLabel || product.category}
+                                </span>
+                            </div>
+
+                            {/* Título */}
+                            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                                 {product.name}
                             </h1>
-                            <div className="flex items-center gap-4 mb-4">
-                                <span className="text-3xl font-bold text-blue-600">
-                                    {product.priceFormatted ||
-                                        formatPrice(product.price)}
-                                </span>
-                                <Tag
-                                    value={product.stock}
-                                    severity={getStockSeverity(product.stock)}
-                                />
-                            </div>
+
+                            {/* Stock */}
+                            {product.stock && (
+                                <div className="mb-4">
+                                    <Tag
+                                        value={product.stock}
+                                        severity={getStockSeverity(
+                                            product.stock
+                                        )}
+                                        className="text-sm"
+                                    />
+                                </div>
+                            )}
                         </div>
 
-                        {/* Category */}
-                        <div>
-                            <Tag
-                                value={product.categoryLabel}
-                                severity="info"
-                                className="text-sm"
-                            />
-                        </div>
+                        <Divider />
 
-                        {/* Description */}
+                        {/* Descripción */}
                         {product.description && (
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                                     Descripción
                                 </h3>
                                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -244,44 +271,57 @@ export default function ProductDetail() {
                             </div>
                         )}
 
-                        {/* Features */}
+                        {/* Características */}
                         {product.features && product.features.length > 0 && (
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                                     Características
                                 </h3>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     {product.features.map((feature, index) => (
-                                        <Tag
+                                        <div
                                             key={index}
-                                            value={feature}
-                                            severity="secondary"
-                                            className="text-sm"
-                                        />
+                                            className="flex items-center text-gray-700 dark:text-gray-300"
+                                        >
+                                            <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                            {feature}
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {/* Action Buttons */}
-                        <div className="flex flex-col space-y-2 pt-4 gap-2">
+                        <Divider />
+
+                        {/* Información adicional para productos normales */}
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <div className="flex items-start">
+                                <i className="pi pi-info-circle text-blue-600 dark:text-blue-400 mr-3 mt-1"></i>
+                                <div>
+                                    <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
+                                        Información del Producto
+                                    </h4>
+                                    <ul className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
+                                        <li>• Producto nuevo y certificado</li>
+                                        <li>
+                                            • Garantía completa del fabricante
+                                        </li>
+                                        <li>
+                                            • Instalación profesional incluida
+                                        </li>
+                                        <li>• Soporte técnico especializado</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Botones de acción */}
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
                             <Button
-                                label="Solicitar Información"
-                                icon="pi pi-envelope"
-                                severity="primary"
-                                size="medium"
-                                className="w-full"
-                                onClick={() => {
-                                    // Aquí puedes agregar la lógica para contactar
-                                    window.location.href = `mailto:info@equipotel.com?subject=Consulta sobre ${product.name}&body=Hola, me interesa obtener más información sobre el producto: ${product.name}`;
-                                }}
-                            />
-                            <Button
-                                label="Llamar Ahora"
-                                icon="pi pi-phone"
-                                outlined
-                                size="medium"
-                                className="w-full"
+                                label="Contactar para más información"
+                                severity="danger"
+                                size="large"
+                                className="flex-1"
                                 onClick={() => {
                                     const phoneNumber =
                                         process.env.NEXT_PUBLIC_PHONE_NUMBER ||
@@ -289,38 +329,35 @@ export default function ProductDetail() {
                                     window.location.href = `tel:${phoneNumber}`;
                                 }}
                             />
-                        </div>
-
-                        {/* Additional Info */}
-                        <Divider />
-                        <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-                            <p>
-                                <strong>Referencia:</strong> {product.id}
-                            </p>
-                            {product.featured && (
-                                <p className="flex items-center gap-1">
-                                    <i className="pi pi-star-fill text-yellow-500" />
-                                    <span>Producto destacado</span>
-                                </p>
-                            )}
+                            <Button
+                                label="Solicitar presupuesto"
+                                severity="secondary"
+                                size="large"
+                                outlined
+                                className="flex-1"
+                                onClick={() => router.push('/contacto')}
+                            />
                         </div>
                     </div>
                 </div>
 
-                {/* Related Products Section (placeholder) */}
+                {/* Productos relacionados */}
                 <div className="mt-16">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                        Productos Relacionados
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+                        Otros Productos
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {/* Aquí puedes agregar productos relacionados */}
-                        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-                            <i className="pi pi-box text-4xl mb-2"></i>
-                            <p>Próximamente productos relacionados</p>
-                        </div>
+                    <div className="text-center">
+                        <Button
+                            label="Ver todos los productos"
+                            severity="primary"
+                            outlined
+                            onClick={() => router.push('/productos')}
+                        />
                     </div>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }

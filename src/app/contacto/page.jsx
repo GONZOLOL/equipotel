@@ -153,7 +153,7 @@ export default function Contacto() {
             icon: 'pi pi-phone',
             title: 'Teléfono',
             content: process.env.NEXT_PUBLIC_COMPANY_PHONE,
-            description: 'Lunes a Viernes: 9:00 - 18:00',
+            description: 'Lunes a Viernes: 8:30 - 17:30',
         },
         {
             icon: 'pi pi-envelope',
@@ -164,8 +164,7 @@ export default function Contacto() {
         {
             icon: 'pi pi-clock',
             title: 'Horario',
-            content: 'Lun - Vie: 9:00 - 18:00',
-            description: 'Sábados: 9:00 - 14:00',
+            content: 'Lunes - Viernes: 8:30 - 17:30',
         },
     ];
 
@@ -185,8 +184,10 @@ export default function Contacto() {
                         Contacto
                     </h1>
                     <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                        ¿Necesitas asesoramiento sobre nuestros productos de
-                        seguridad? Estamos aquí para ayudarte.
+                        ¿Necesitas asesoramiento sobre cajas fuertes, cámaras de
+                        seguridad, sistemas de anclaje certificados o equipos
+                        contra incendios? Nuestros técnicos especializados están
+                        aquí para ayudarte.
                     </p>
                 </div>
 
@@ -204,9 +205,9 @@ export default function Contacto() {
                                         className="flex items-start space-x-4"
                                     >
                                         <div className="flex-shrink-0">
-                                            <div className="bg-blue-100 p-3 rounded-lg">
+                                            <div className="bg-red-100 p-3 rounded-lg">
                                                 <i
-                                                    className={`${info.icon} text-blue-600 text-xl`}
+                                                    className={`${info.icon} text-red-600 text-xl`}
                                                 ></i>
                                             </div>
                                         </div>
@@ -339,6 +340,7 @@ export default function Contacto() {
                                     loading={loading}
                                     className="w-full"
                                     size="large"
+                                    severity="danger"
                                 />
                             </form>
                         </Card>
@@ -366,7 +368,7 @@ export default function Contacto() {
                         <div className="absolute top-4 right-4">
                             <Button
                                 label="Ver en Google Maps"
-                                severity="secondary"
+                                severity="contrast"
                                 outlined
                                 size="small"
                                 onClick={() =>
@@ -380,17 +382,17 @@ export default function Contacto() {
                     </div>
                     <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                         <div className="flex items-center space-x-3">
-                            <i className="pi pi-map-marker text-blue-600 text-xl"></i>
+                            <i className="pi pi-map-marker text-red-600 text-xl"></i>
                             <div>
                                 <p className="font-semibold text-gray-800 dark:text-white">
                                     Equipotel - Málaga
                                 </p>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Servicio en toda la provincia de Málaga
+                                    Servicio en toda la provincia de Málaga y
+                                    Andalucía Oriental
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Horario: Lun - Vie 9:00 - 18:00, Sáb 9:00 -
-                                    14:00
+                                    Horario: Lun - Vie 8:30 - 17:30
                                 </p>
                             </div>
                         </div>
@@ -409,8 +411,8 @@ export default function Contacto() {
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300">
                                 Sí, contamos con un equipo especializado en la
-                                instalación de cajas fuertes y armarios
-                                acorazados. Ofrecemos servicio de instalación en
+                                instalación de cajas fuertes y sistemas de
+                                anclaje. Ofrecemos servicio de instalación en
                                 toda la provincia de Málaga.
                             </p>
                         </div>
@@ -420,8 +422,9 @@ export default function Contacto() {
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300">
                                 Todos nuestros productos incluyen garantía de
-                                fábrica. Las cajas fuertes certificadas incluyen
-                                garantías de 2 a 5 años según el modelo.
+                                fábrica. Las cajas fuertes y sistemas de anclaje
+                                certificados incluyen garantías de 2 a 5 años
+                                según el modelo.
                             </p>
                         </div>
                         <div>
