@@ -48,7 +48,7 @@ const ProductTable = ({
 
     const priceBodyTemplate = (rowData) => {
         return (
-            <span className="font-semibold text-blue-600">
+            <span className="font-semibold text-text-gray-900 dark:text-white">
                 {rowData.priceFormatted}
             </span>
         );
@@ -62,15 +62,6 @@ const ProductTable = ({
                 ? 'danger'
                 : 'warning';
         return <Tag value={rowData.stock} severity={severity} />;
-    };
-
-    const featuredBodyTemplate = (rowData) => {
-        return (
-            <Tag
-                value={rowData.featured ? 'Destacado' : 'Normal'}
-                severity={rowData.featured ? 'success' : 'secondary'}
-            />
-        );
     };
 
     const actionBodyTemplate = (rowData) => {
@@ -133,18 +124,10 @@ const ProductTable = ({
 
                 <div className="flex gap-2">
                     <Button
-                        label="Crear Producto de Prueba"
-                        className="h-10"
-                        icon="pi pi-star"
-                        severity="success"
-                        outlined
-                        onClick={onCreateTestProduct}
-                    />
-                    <Button
                         label="Nuevo Producto"
                         className="h-10"
                         icon="pi pi-plus"
-                        severity="primary"
+                        severity="danger"
                         onClick={onNewProduct}
                     />
                 </div>
@@ -194,12 +177,7 @@ const ProductTable = ({
                     sortable
                     filter
                 />
-                <Column
-                    field="featured"
-                    header="Destacado"
-                    body={featuredBodyTemplate}
-                    sortable
-                />
+
                 <Column
                     header="Acciones"
                     body={actionBodyTemplate}

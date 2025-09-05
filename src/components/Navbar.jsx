@@ -8,6 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +61,12 @@ export default function Navbar() {
             className: menuItemStyle,
         },
         {
+            label: 'Segunda Mano',
+            icon: 'pi pi-refresh',
+            url: '/productos-segunda-mano',
+            className: menuItemStyle,
+        },
+        {
             label: 'Contacto',
             icon: 'pi pi-envelope',
             url: '/contacto',
@@ -103,10 +110,15 @@ export default function Navbar() {
             href={isAdminZone ? '/admin/dashboard' : '/'}
             className="flex items-center space-x-2 no-underline mr-6"
         >
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg">
-                <i className="pi pi-shield text-white text-xl"></i>
+            <div className="flex items-center justify-center w-10 h-10  rounded-lg">
+                <Image
+                    src="/src/logo.png"
+                    alt="Equipotel"
+                    width={40}
+                    height={40}
+                />
             </div>
-            <span className="text-xl font-bold text-gray-800 dark:text-white hidden sm:block">
+            <span className="text-gray-600 dark:text-white text-2xl bg-clip-text">
                 {isAdminZone ? 'Equipotel Admin' : 'Equipotel'}
             </span>
         </Link>
@@ -134,7 +146,7 @@ export default function Navbar() {
                 <Button
                     label="Salir"
                     icon="pi pi-sign-out"
-                    severity="secondary"
+                    severity="danger"
                     size="small"
                     className="hidden sm:flex"
                     onClick={handleLogout}

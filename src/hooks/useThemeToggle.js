@@ -15,11 +15,5 @@ export const useThemeToggle = () => {
         switchToDark: () => theme.setTheme('dark'),
         // Icon and label helpers
         themeIcon: theme.isDarkMode ? 'pi pi-sun' : 'pi pi-moon',
-        themeLabel: theme.isDarkMode
-            ? 'Cambiar a modo claro'
-            : 'Cambiar a modo oscuro',
-        themeAriaLabel: theme.isDarkMode
-            ? 'Cambiar a modo claro'
-            : 'Cambiar a modo oscuro',
     };
 };

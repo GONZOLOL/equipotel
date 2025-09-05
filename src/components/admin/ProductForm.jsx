@@ -11,21 +11,23 @@ import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
 import { ProgressBar } from 'primereact/progressbar';
 import Image from 'next/image';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { convertGoogleDriveUrl } from '@/services/productService';
+import { useToast } from '@/contexts/ToastContext';
 
 const ProductForm = ({
     dialogVisible,
-    setDialogVisible,
-    editingProduct,
-    setEditingProduct,
+    onHide,
+    product,
+    onSave,
     categories,
     stockOptions,
     featureOptions,
-    addAdditionalImage,
-    saveProduct,
-    showToast,
+    conditionOptions,
+    isSegundaMano = false,
+    onRemoveImage,
 }) => {
+    const [productData, setProductData] = useState(product || {});
     const [uploadingMainImage, setUploadingMainImage] = useState(false);
     const [uploadingAdditionalImages, setUploadingAdditionalImages] =
         useState(false);
@@ -33,6 +35,12 @@ const ProductForm = ({
     const [additionalImagesProgress, setAdditionalImagesProgress] = useState(0);
     const mainImageFileUploadRef = useRef(null);
     const additionalImagesFileUploadRef = useRef(null);
+    const { showToast } = useToast();
+
+    // Actualizar productData cuando cambie el prop product
+    useEffect(() => {
+        setProductData(product || {});
+    }, [product]);
 
     // Función para manejar la subida de imagen principal
     const handleMainImageUpload = async (event) => {
@@ -58,22 +66,22 @@ const ProductForm = ({
             const { uploadProductImage } = await import(
                 '@/services/productService'
             );
-            const result = await uploadProductImage(file, editingProduct?.id);
+            const result = await uploadProductImage(file, productData?.id);
 
             clearInterval(progressInterval);
             setMainImageProgress(100);
 
             // Actualizar el producto con la nueva imagen
-            setEditingProduct({
-                ...editingProduct,
+            setProductData({
+                ...productData,
                 mainImage: result.url,
                 image: result.url, // Mantener compatibilidad
             });
 
-            showToast('success', 'Imagen principal subida correctamente');
+            // Toast se maneja en el componente padre
         } catch (error) {
             console.error('Error subiendo imagen principal:', error);
-            showToast('error', `Error al subir imagen: ${error.message}`);
+            showToast('error', error.message || 'Error al subir la imagen');
         } finally {
             setUploadingMainImage(false);
             setMainImageProgress(0);
@@ -108,31 +116,25 @@ const ProductForm = ({
             const { uploadMultipleImages } = await import(
                 '@/services/productService'
             );
-            const results = await uploadMultipleImages(
-                files,
-                editingProduct?.id
-            );
+            const results = await uploadMultipleImages(files, productData?.id);
 
             clearInterval(progressInterval);
             setAdditionalImagesProgress(100);
 
             // Agregar las nuevas URLs a las imágenes adicionales existentes
             const newUrls = results.map((result) => result.url);
-            const currentImages = editingProduct?.additionalImages || [];
+            const currentImages = productData?.additionalImages || [];
             const updatedImages = [...currentImages, ...newUrls];
 
-            setEditingProduct({
-                ...editingProduct,
+            setProductData({
+                ...productData,
                 additionalImages: updatedImages,
             });
 
-            showToast(
-                'success',
-                `${files.length} imagen(es) adicional(es) subida(s) correctamente`
-            );
+            // Toast se maneja en el componente padre
         } catch (error) {
             console.error('Error subiendo imágenes adicionales:', error);
-            showToast('error', `Error al subir imágenes: ${error.message}`);
+            showToast('error', error.message || 'Error al subir las imágenes');
         } finally {
             setUploadingAdditionalImages(false);
             setAdditionalImagesProgress(0);
@@ -145,11 +147,11 @@ const ProductForm = ({
 
     // Función para eliminar imagen adicional
     const removeAdditionalImage = (index) => {
-        const newImages = editingProduct.additionalImages.filter(
+        const newImages = productData.additionalImages.filter(
             (_, i) => i !== index
         );
-        setEditingProduct({
-            ...editingProduct,
+        setProductData({
+            ...productData,
             additionalImages: newImages,
         });
     };
@@ -200,34 +202,12 @@ const ProductForm = ({
     return (
         <Dialog
             visible={dialogVisible}
-            onHide={() => setDialogVisible(false)}
+            onHide={onHide}
             header={
                 <div className="flex items-center justify-between w-full">
                     <h2 className="text-xl font-semibold">
-                        {editingProduct?.id
-                            ? 'Editar Producto'
-                            : 'Nuevo Producto'}
+                        {productData?.id ? 'Editar Producto' : 'Nuevo Producto'}
                     </h2>
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                inputId="featured-header"
-                                checked={editingProduct?.featured || false}
-                                onChange={(e) =>
-                                    setEditingProduct({
-                                        ...editingProduct,
-                                        featured: e.checked,
-                                    })
-                                }
-                            />
-                            <label
-                                htmlFor="featured-header"
-                                className="text-sm font-medium text-gray-700"
-                            >
-                                Destacado
-                            </label>
-                        </div>
-                    </div>
                 </div>
             }
             modal
@@ -241,10 +221,10 @@ const ProductForm = ({
                     </label>
                     <InputText
                         id="name"
-                        value={editingProduct?.name || ''}
+                        value={productData?.name || ''}
                         onChange={(e) =>
-                            setEditingProduct({
-                                ...editingProduct,
+                            setProductData({
+                                ...productData,
                                 name: e.target.value,
                             })
                         }
@@ -264,11 +244,11 @@ const ProductForm = ({
                             </label>
                             <Dropdown
                                 id="category"
-                                value={editingProduct?.category || ''}
+                                value={productData?.category || ''}
                                 options={categories}
                                 onChange={(e) =>
-                                    setEditingProduct({
-                                        ...editingProduct,
+                                    setProductData({
+                                        ...productData,
                                         category: e.value,
                                     })
                                 }
@@ -284,11 +264,11 @@ const ProductForm = ({
                             </label>
                             <MultiSelect
                                 id="features"
-                                value={editingProduct?.features || []}
+                                value={productData?.features || []}
                                 options={featureOptions}
                                 onChange={(e) =>
-                                    setEditingProduct({
-                                        ...editingProduct,
+                                    setProductData({
+                                        ...productData,
                                         features: e.value,
                                     })
                                 }
@@ -306,11 +286,11 @@ const ProductForm = ({
                             </label>
                             <InputNumber
                                 id="price"
-                                value={editingProduct?.price || 0}
+                                value={productData?.price || 0}
                                 onValueChange={(e) =>
-                                    setEditingProduct({
-                                        ...editingProduct,
-                                        price: e.value,
+                                    setProductData({
+                                        ...productData,
+                                        price: e.value || 0,
                                     })
                                 }
                                 mode="currency"
@@ -328,16 +308,38 @@ const ProductForm = ({
                             </label>
                             <Dropdown
                                 id="stock"
-                                value={editingProduct?.stock || 'Disponible'}
+                                value={productData?.stock || 'Disponible'}
                                 options={stockOptions}
                                 onChange={(e) =>
-                                    setEditingProduct({
-                                        ...editingProduct,
+                                    setProductData({
+                                        ...productData,
                                         stock: e.value,
                                     })
                                 }
                             />
                         </div>
+                        {isSegundaMano && (
+                            <div className="lg:col-span-3">
+                                <label
+                                    htmlFor="condition"
+                                    className="font-medium mb-2 block"
+                                >
+                                    Estado *
+                                </label>
+                                <Dropdown
+                                    id="condition"
+                                    value={productData?.condition || ''}
+                                    options={conditionOptions}
+                                    onChange={(e) =>
+                                        setProductData({
+                                            ...productData,
+                                            condition: e.value,
+                                        })
+                                    }
+                                    placeholder="Selecciona el estado"
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -350,10 +352,10 @@ const ProductForm = ({
                     </label>
                     <InputTextarea
                         id="description"
-                        value={editingProduct?.description || ''}
+                        value={productData?.description || ''}
                         onChange={(e) =>
-                            setEditingProduct({
-                                ...editingProduct,
+                            setProductData({
+                                ...productData,
                                 description: e.target.value,
                             })
                         }
@@ -391,14 +393,13 @@ const ProductForm = ({
                                 )}
                             </div>
                             {/* Current Main Image Preview */}
-                            {(editingProduct?.mainImage ||
-                                editingProduct?.image) && (
+                            {(productData?.mainImage || productData?.image) && (
                                 <div className="mb-4">
                                     <div className="flex gap-4">
                                         <Image
                                             src={convertGoogleDriveUrl(
-                                                editingProduct.mainImage ||
-                                                    editingProduct.image
+                                                productData.mainImage ||
+                                                    productData.image
                                             )}
                                             alt="Producto"
                                             className="w-32 h-32 object-cover rounded-lg border"
@@ -407,8 +408,8 @@ const ProductForm = ({
                                             onError={(e) => {
                                                 console.error(
                                                     'Error cargando preview de imagen principal:',
-                                                    editingProduct.mainImage ||
-                                                        editingProduct.image
+                                                    productData.mainImage ||
+                                                        productData.image
                                                 );
                                                 e.target.style.display = 'none';
                                                 e.target.nextSibling.style.display =
@@ -452,13 +453,13 @@ const ProductForm = ({
                                 )}
                             </div>
                             {/* Current Additional Images Preview */}
-                            {editingProduct?.additionalImages &&
-                                editingProduct.additionalImages.length > 0 && (
+                            {productData?.additionalImages &&
+                                productData.additionalImages.length > 0 && (
                                     <div className="mb-4">
                                         <div className="relative">
                                             {/* Carrusel de imágenes adicionales */}
                                             <div className="flex gap-4 overflow-x-auto pb-4 pt-5">
-                                                {editingProduct.additionalImages.map(
+                                                {productData.additionalImages.map(
                                                     (img, index) => (
                                                         <div
                                                             key={index}
@@ -528,12 +529,12 @@ const ProductForm = ({
                     label="Cancelar"
                     severity="secondary"
                     outlined
-                    onClick={() => setDialogVisible(false)}
+                    onClick={onHide}
                 />
                 <Button
                     label="Guardar"
                     severity="primary"
-                    onClick={saveProduct}
+                    onClick={() => onSave(productData)}
                 />
             </div>
         </Dialog>

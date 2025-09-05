@@ -1,7 +1,7 @@
 {
   "name": "Equipotel - Cajas Fuertes y Seguridad",
   "short_name": "Equipotel",
-  "description": "Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga",
+  "description": "Especialistas en cajas fuertes, sistemas de anclaje y sistemas de seguridad en Málaga",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#3b82f6",
@@ -49,7 +49,11 @@
       "type": "image/png"
     }
   ],
-  "categories": ["business", "security", "shopping"],
+  "categories": [
+    "business",
+    "security",
+    "shopping"
+  ],
   "lang": "es",
   "dir": "ltr"
 }

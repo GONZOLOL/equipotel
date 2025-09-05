@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import {
     getProducts,
@@ -23,13 +23,15 @@ export const useProducts = () => {
 
     const categories = [
         { label: 'Cajas Fuertes', value: 'cajas-fuertes' },
-        { label: 'Armarios Acorazados', value: 'armarios-acorazados' },
+        { label: 'Cámaras de Seguridad', value: 'camaras-seguridad' },
         { label: 'Sistemas de Anclaje', value: 'sistemas-anclaje' },
+        { label: 'Equipos Contra Incendios', value: 'equipos-incendios' },
+        { label: 'Armarios', value: 'armarios' },
+        { label: 'Submostradores', value: 'submostradores' },
         {
-            label: 'Compartimentos de Seguridad',
-            value: 'compartimentos-seguridad',
+            label: 'Segunda Mano',
+            value: 'segunda-mano',
         },
-        { label: 'Segunda Mano', value: 'segunda-mano' },
     ];
 
     const stockOptions = [
@@ -42,7 +44,7 @@ export const useProducts = () => {
         { label: 'Atérmico', value: 'Atérmico' },
         { label: 'Certificado', value: 'Certificado' },
         { label: 'Electrónico', value: 'Electrónico' },
-        { label: 'Acorazado', value: 'Acorazado' },
+        { label: 'Seguridad', value: 'Seguridad' },
         { label: 'Múltiple bloqueo', value: 'Múltiple bloqueo' },
         { label: 'Empresa', value: 'Empresa' },
         { label: 'Grado III', value: 'Grado III' },
@@ -85,11 +87,7 @@ export const useProducts = () => {
         showToast('success', 'Imagen adicional agregada correctamente.');
     };
 
-    useEffect(() => {
-        loadProducts();
-    }, []);
-
-    const loadProducts = async () => {
+    const loadProducts = useCallback(async () => {
         try {
             setLoading(true);
             const productsData = await getProducts();
@@ -100,7 +98,11 @@ export const useProducts = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showToast]);
+
+    useEffect(() => {
+        loadProducts();
+    }, [loadProducts]);
 
     // Filtrar productos por categoría y búsqueda global
     const filteredProducts = products.filter((product) => {
@@ -115,7 +117,7 @@ export const useProducts = () => {
                 .includes(globalFilter.toLowerCase());
 
         const matchesCategoryFilter =
-            !categoryFilter || product.category === categoryFilter;
+            categoryFilter === '' || product.category === categoryFilter;
 
         return matchesGlobalFilter && matchesCategoryFilter;
     });
@@ -147,12 +149,12 @@ export const useProducts = () => {
         setDeleteDialogVisible(true);
     };
 
-    const saveProduct = async () => {
+    const saveProduct = async (productData) => {
         try {
             if (
-                !editingProduct.name ||
-                !editingProduct.category ||
-                !editingProduct.price
+                !productData.name ||
+                !productData.category ||
+                !productData.price
             ) {
                 showToast(
                     'error',
@@ -161,22 +163,21 @@ export const useProducts = () => {
                 return;
             }
 
-            const productData = {
-                ...editingProduct,
+            const formattedProductData = {
+                ...productData,
                 categoryLabel:
-                    categories.find(
-                        (cat) => cat.value === editingProduct.category
-                    )?.label || '',
-                priceFormatted: `${editingProduct.price}€`,
+                    categories.find((cat) => cat.value === productData.category)
+                        ?.label || '',
+                priceFormatted: `${productData.price}€`,
                 // Mantener compatibilidad con el campo image existente
-                image: editingProduct.mainImage || editingProduct.image || '',
+                image: productData.mainImage || productData.image || '',
             };
 
-            if (editingProduct.id) {
-                await updateProduct(editingProduct.id, productData);
+            if (productData.id) {
+                await updateProduct(productData.id, formattedProductData);
                 showToast('success', 'Producto actualizado correctamente');
             } else {
-                await addProduct(productData);
+                await addProduct(formattedProductData);
                 showToast('success', 'Producto creado correctamente');
             }
 

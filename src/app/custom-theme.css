@@ -1,0 +1,212 @@
+/* Custom theme overrides for gray help theme */
+
+/* Help Button Styles - Light Theme */
+.p-button.p-button-help,
+.p-button-group.p-button-help > .p-button,
+.p-splitbutton.p-button-help > .p-button,
+.p-fileupload-choose.p-button-help {
+    color: #ffffff;
+    background: #6b7280; /* Gray-500 */
+    border: 1px solid #6b7280;
+}
+
+.p-button.p-button-help:not(:disabled):hover,
+.p-button-group.p-button-help > .p-button:not(:disabled):hover,
+.p-splitbutton.p-button-help > .p-button:not(:disabled):hover,
+.p-fileupload-choose.p-button-help:not(:disabled):hover {
+    background: #4b5563; /* Gray-600 */
+    color: #ffffff;
+    border-color: #4b5563;
+}
+
+.p-button.p-button-help:not(:disabled):focus,
+.p-button-group.p-button-help > .p-button:not(:disabled):focus,
+.p-splitbutton.p-button-help > .p-button:not(:disabled):focus,
+.p-fileupload-choose.p-button-help:not(:disabled):focus {
+    box-shadow: 0 0 0 0.2rem #e5e7eb; /* Gray-200 */
+}
+
+.p-button.p-button-help:not(:disabled):active,
+.p-button-group.p-button-help > .p-button:not(:disabled):active,
+.p-splitbutton.p-button-help > .p-button:not(:disabled):active,
+.p-fileupload-choose.p-button-help:not(:disabled):active {
+    background: #374151; /* Gray-700 */
+    color: #ffffff;
+    border-color: #374151;
+}
+
+.p-button.p-button-help.p-button-outlined,
+.p-button-group.p-button-help > .p-button.p-button-outlined,
+.p-splitbutton.p-button-help > .p-button.p-button-outlined,
+.p-fileupload-choose.p-button-help.p-button-outlined {
+    background-color: transparent;
+    color: #6b7280; /* Gray-500 */
+    border: 1px solid;
+}
+
+.p-button.p-button-help.p-button-outlined:not(:disabled):hover,
+.p-button-group.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):hover,
+.p-splitbutton.p-button-help > .p-button.p-button-outlined:not(:disabled):hover,
+.p-fileupload-choose.p-button-help.p-button-outlined:not(:disabled):hover {
+    background: rgba(107, 114, 128, 0.04);
+    color: #6b7280;
+    border: 1px solid;
+}
+
+.p-button.p-button-help.p-button-outlined:not(:disabled):active,
+.p-button-group.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):active,
+.p-splitbutton.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):active,
+.p-fileupload-choose.p-button-help.p-button-outlined:not(:disabled):active {
+    background: rgba(107, 114, 128, 0.16);
+    color: #6b7280;
+    border: 1px solid;
+}
+
+.p-button.p-button-help.p-button-text,
+.p-button-group.p-button-help > .p-button.p-button-text,
+.p-splitbutton.p-button-help > .p-button.p-button-text,
+.p-fileupload-choose.p-button-help.p-button-text {
+    background-color: transparent;
+    color: #6b7280; /* Gray-500 */
+    border-color: transparent;
+}
+
+.p-button.p-button-help.p-button-text:not(:disabled):hover,
+.p-button-group.p-button-help > .p-button.p-button-text:not(:disabled):hover,
+.p-splitbutton.p-button-help > .p-button.p-button-text:not(:disabled):hover,
+.p-fileupload-choose.p-button-help.p-button-text:not(:disabled):hover {
+    background: rgba(107, 114, 128, 0.04);
+    border-color: transparent;
+    color: #6b7280;
+}
+
+.p-button.p-button-help.p-button-text:not(:disabled):active,
+.p-button-group.p-button-help > .p-button.p-button-text:not(:disabled):active,
+.p-splitbutton.p-button-help > .p-button.p-button-text:not(:disabled):active,
+.p-fileupload-choose.p-button-help.p-button-text:not(:disabled):active {
+    background: rgba(107, 114, 128, 0.16);
+    border-color: transparent;
+    color: #6b7280;
+}
+
+/* Help Button Styles - Dark Theme */
+.dark .p-button.p-button-help,
+.dark .p-button-group.p-button-help > .p-button,
+.dark .p-splitbutton.p-button-help > .p-button,
+.dark .p-fileupload-choose.p-button-help {
+    color: #ffffff;
+    background: #9ca3af; /* Gray-400 */
+    border: 1px solid #9ca3af;
+}
+
+.dark .p-button.p-button-help:not(:disabled):hover,
+.dark .p-button-group.p-button-help > .p-button:not(:disabled):hover,
+.dark .p-splitbutton.p-button-help > .p-button:not(:disabled):hover,
+.dark .p-fileupload-choose.p-button-help:not(:disabled):hover {
+    background: #d1d5db; /* Gray-300 */
+    color: #1f2937; /* Gray-800 */
+    border-color: #d1d5db;
+}
+
+.dark .p-button.p-button-help:not(:disabled):focus,
+.dark .p-button-group.p-button-help > .p-button:not(:disabled):focus,
+.dark .p-splitbutton.p-button-help > .p-button:not(:disabled):focus,
+.dark .p-fileupload-choose.p-button-help:not(:disabled):focus {
+    box-shadow: 0 0 0 1px #6b7280; /* Gray-500 */
+}
+
+.dark .p-button.p-button-help:not(:disabled):active,
+.dark .p-button-group.p-button-help > .p-button:not(:disabled):active,
+.dark .p-splitbutton.p-button-help > .p-button:not(:disabled):active,
+.dark .p-fileupload-choose.p-button-help:not(:disabled):active {
+    background: #f3f4f6; /* Gray-100 */
+    color: #1f2937; /* Gray-800 */
+    border-color: #f3f4f6;
+}
+
+.dark .p-button.p-button-help.p-button-outlined,
+.dark .p-button-group.p-button-help > .p-button.p-button-outlined,
+.dark .p-splitbutton.p-button-help > .p-button.p-button-outlined,
+.dark .p-fileupload-choose.p-button-help.p-button-outlined {
+    background-color: transparent;
+    color: #9ca3af; /* Gray-400 */
+    border: 1px solid;
+}
+
+.dark .p-button.p-button-help.p-button-outlined:not(:disabled):hover,
+.dark
+    .p-button-group.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):hover,
+.dark
+    .p-splitbutton.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):hover,
+.dark
+    .p-fileupload-choose.p-button-help.p-button-outlined:not(:disabled):hover {
+    background: rgba(156, 163, 175, 0.04);
+    color: #9ca3af;
+    border: 1px solid;
+}
+
+.dark .p-button.p-button-help.p-button-outlined:not(:disabled):active,
+.dark
+    .p-button-group.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):active,
+.dark
+    .p-splitbutton.p-button-help
+    > .p-button.p-button-outlined:not(:disabled):active,
+.dark
+    .p-fileupload-choose.p-button-help.p-button-outlined:not(:disabled):active {
+    background: rgba(156, 163, 175, 0.16);
+    color: #9ca3af;
+    border: 1px solid;
+}
+
+.dark .p-button.p-button-help.p-button-text,
+.dark .p-button-group.p-button-help > .p-button.p-button-text,
+.dark .p-splitbutton.p-button-help > .p-button.p-button-text,
+.dark .p-fileupload-choose.p-button-help.p-button-text {
+    background-color: transparent;
+    color: #9ca3af; /* Gray-400 */
+    border-color: transparent;
+}
+
+.dark .p-button.p-button-help.p-button-text:not(:disabled):hover,
+.dark
+    .p-button-group.p-button-help
+    > .p-button.p-button-text:not(:disabled):hover,
+.dark
+    .p-splitbutton.p-button-help
+    > .p-button.p-button-text:not(:disabled):hover,
+.dark .p-fileupload-choose.p-button-help.p-button-text:not(:disabled):hover {
+    background: rgba(156, 163, 175, 0.04);
+    border-color: transparent;
+    color: #9ca3af;
+}
+
+.dark .p-button.p-button-help.p-button-text:not(:disabled):active,
+.dark
+    .p-button-group.p-button-help
+    > .p-button.p-button-text:not(:disabled):active,
+.dark
+    .p-splitbutton.p-button-help
+    > .p-button.p-button-text:not(:disabled):active,
+.dark .p-fileupload-choose.p-button-help.p-button-text:not(:disabled):active {
+    background: rgba(156, 163, 175, 0.16);
+    border-color: transparent;
+    color: #9ca3af;
+}
+
+/* Tag Styles - Light Theme - Only for help severity */
+.p-tag.p-tag-help {
+    background-color: #6b7280 !important; /* Gray-500 */
+    color: #ffffff !important;
+}
+
+/* Tag Styles - Dark Theme - Only for help severity */
+.dark .p-tag.p-tag-help {
+    background-color: #9ca3af !important; /* Gray-400 */
+    color: #1f2937 !important; /* Gray-800 */
+}
