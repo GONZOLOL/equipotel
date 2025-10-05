@@ -109,3 +109,6 @@ node_modules/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Google Analytics key
+google-analytics-key.json
