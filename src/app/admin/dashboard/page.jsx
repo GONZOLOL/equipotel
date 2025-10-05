@@ -12,8 +12,10 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Message } from 'primereact/message';
+import { Dropdown } from 'primereact/dropdown';
 import { getProducts, verifyAllProductImages } from '@/services/productService';
 import { useThemeToggle } from '@/hooks/useThemeToggle';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function AdminDashboard() {
     const { user, logout } = useAuth();
@@ -23,40 +25,35 @@ export default function AdminDashboard() {
     const [imageVerification, setImageVerification] = useState(null);
     const [message, setMessage] = useState(null);
     const [mounted, setMounted] = useState(false);
+    const [timeRange, setTimeRange] = useState('7d');
 
-    // Datos de ejemplo para los gráficos
-    const chartData = {
-        visitors: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-            datasets: [
-                {
-                    label: 'Visitantes',
-                    data: [1200, 1900, 3000, 5000, 2000, 3000],
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4,
-                },
-            ],
-        },
-        conversions: {
-            labels: ['Llamadas', 'Emails', 'WhatsApp', 'Formularios'],
-            datasets: [
-                {
-                    data: [45, 25, 20, 10],
-                    backgroundColor: [
-                        '#3B82F6',
-                        '#10B981',
-                        '#F59E0B',
-                        '#EF4444',
-                    ],
-                },
-            ],
-        },
-    };
+    // Hook para obtener datos reales de analytics
+    const {
+        data,
+        loading: analyticsLoading,
+        error: analyticsError,
+        formatChartData,
+        formatBasicMetrics,
+    } = useAnalytics(timeRange);
+
+    // Obtener datos reales de analytics
+    const analyticsChartData = formatChartData();
+    const basicMetrics = formatBasicMetrics();
+
+    const timeRangeOptions = [
+        { label: 'Últimos 7 días', value: '7d' },
+        { label: 'Últimos 30 días', value: '30d' },
+        { label: 'Últimos 90 días', value: '90d' },
+        { label: 'Este año', value: '1y' },
+    ];
 
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
         plugins: {
             legend: {
                 position: 'bottom',
@@ -166,13 +163,43 @@ export default function AdminDashboard() {
                     />
                 )}
 
+                {/* Selector de rango de tiempo */}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                        Dashboard
+                    </h2>
+                    <div className="flex items-center gap-4">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Período:
+                        </label>
+                        <Dropdown
+                            value={timeRange}
+                            options={timeRangeOptions}
+                            onChange={(e) => setTimeRange(e.value)}
+                            placeholder="Seleccionar período"
+                            className="w-48"
+                        />
+                    </div>
+                </div>
+
+                {/* Error de analytics */}
+                {analyticsError && (
+                    <Message
+                        severity="error"
+                        text={`Error cargando analytics: ${analyticsError}`}
+                        className="mb-6"
+                    />
+                )}
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <Card className="dark:bg-gray-800 dark:border-gray-700">
                         <div className="text-center">
                             <i className="pi pi-users text-3xl text-blue-500 dark:text-blue-400 mb-2"></i>
                             <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-                                1,234
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.totalUsers || 0}
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400">
                                 Visitantes
@@ -183,7 +210,9 @@ export default function AdminDashboard() {
                         <div className="text-center">
                             <i className="pi pi-eye text-3xl text-green-500 dark:text-green-400 mb-2"></i>
                             <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-                                5,678
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.totalPageViews || 0}
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400">
                                 Páginas Vistas
@@ -192,12 +221,14 @@ export default function AdminDashboard() {
                     </Card>
                     <Card className="dark:bg-gray-800 dark:border-gray-700">
                         <div className="text-center">
-                            <i className="pi pi-phone text-3xl text-orange-500 dark:text-orange-400 mb-2"></i>
+                            <i className="pi pi-chart-line text-3xl text-orange-500 dark:text-orange-400 mb-2"></i>
                             <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-                                45
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.bounceRate || '0%'}
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400">
-                                Contactos
+                                Tasa de Rebote
                             </p>
                         </div>
                     </Card>
@@ -217,26 +248,46 @@ export default function AdminDashboard() {
                 {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <Card
-                        title="Tráfico de Visitantes"
+                        title="Visitantes por Día"
                         className="dark:bg-gray-800 dark:border-gray-700"
                     >
-                        <Chart
-                            type="line"
-                            data={chartData.visitors}
-                            options={chartOptions}
-                            height="300px"
-                        />
+                        {analyticsLoading ? (
+                            <div className="flex items-center justify-center h-80">
+                                <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                        ) : (
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="line"
+                                    data={analyticsChartData.visitorsData || {}}
+                                    options={chartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
+                        )}
                     </Card>
                     <Card
-                        title="Fuentes de Conversión"
+                        title="Páginas Más Visitadas"
                         className="dark:bg-gray-800 dark:border-gray-700"
                     >
-                        <Chart
-                            type="doughnut"
-                            data={chartData.conversions}
-                            options={chartOptions}
-                            height="300px"
-                        />
+                        {analyticsLoading ? (
+                            <div className="flex items-center justify-center h-80">
+                                <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                        ) : (
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="doughnut"
+                                    data={
+                                        analyticsChartData.pageViewsData || {}
+                                    }
+                                    options={chartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
+                        )}
                     </Card>
                 </div>
 

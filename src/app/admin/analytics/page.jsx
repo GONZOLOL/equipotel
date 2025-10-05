@@ -44,6 +44,12 @@ export default function AdminAnalytics() {
     }, []);
 
     const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
         plugins: {
             legend: {
                 labels: {
@@ -200,12 +206,14 @@ export default function AdminAnalytics() {
                                 <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
                             </div>
                         ) : (
-                            <Chart
-                                type="line"
-                                data={chartData.visitorsData || {}}
-                                options={chartOptions}
-                                height="300px"
-                            />
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="line"
+                                    data={chartData.visitorsData || {}}
+                                    options={chartOptions}
+                                    height="350px"
+                                />
+                            </div>
                         )}
                     </Card>
 
@@ -218,12 +226,15 @@ export default function AdminAnalytics() {
                                 <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
                             </div>
                         ) : (
-                            <Chart
-                                type="doughnut"
-                                data={chartData.pageViewsData || {}}
-                                options={pieChartOptions}
-                                height="300px"
-                            />
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="doughnut"
+                                    data={chartData.pageViewsData || {}}
+                                    options={pieChartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
                         )}
                     </Card>
                 </div>
@@ -238,12 +249,15 @@ export default function AdminAnalytics() {
                                 <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
                             </div>
                         ) : (
-                            <Chart
-                                type="bar"
-                                data={chartData.trafficData || {}}
-                                options={chartOptions}
-                                height="300px"
-                            />
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="bar"
+                                    data={chartData.trafficData || {}}
+                                    options={chartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
                         )}
                     </Card>
 
@@ -256,12 +270,15 @@ export default function AdminAnalytics() {
                                 <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
                             </div>
                         ) : (
-                            <Chart
-                                type="pie"
-                                data={chartData.deviceData || {}}
-                                options={pieChartOptions}
-                                height="300px"
-                            />
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="pie"
+                                    data={chartData.deviceData || {}}
+                                    options={pieChartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
                         )}
                     </Card>
                 </div>

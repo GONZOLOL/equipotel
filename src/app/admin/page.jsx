@@ -21,7 +21,7 @@ export default function AdminPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
                 <div className="text-center">
                     <ProgressSpinner
                         style={{ width: '50px', height: '50px' }}

@@ -9,6 +9,21 @@ import {
 import { getStorage } from 'firebase/storage';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
+// Debug: Verificar variables de entorno
+console.log('Firebase Config Debug:');
+console.log(
+    'API Key:',
+    process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Present' : 'Missing'
+);
+console.log(
+    'Auth Domain:',
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ? 'Present' : 'Missing'
+);
+console.log(
+    'Project ID:',
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? 'Present' : 'Missing'
+);
+
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

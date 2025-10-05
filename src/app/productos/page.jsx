@@ -7,12 +7,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { DataView } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
-import {
-    getProducts,
-    getProductsByCategory,
-    convertGoogleDriveUrl,
-} from '@/services/productService';
+import { getProducts, convertGoogleDriveUrl } from '@/services/productService';
 import Image from 'next/image';
+import ProductImageSkeleton from '@/components/ProductImageSkeleton';
 
 export default function Productos() {
     const [productos, setProductos] = useState([]);
@@ -25,7 +22,6 @@ export default function Productos() {
     const [sortField, setSortField] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [imageErrors, setImageErrors] = useState(new Set());
     const [carouselIndex, setCarouselIndex] = useState(0);
 
     const categories = [
@@ -129,31 +125,17 @@ export default function Productos() {
     };
 
     const renderProductImage = (producto) => {
-        const hasError = imageErrors.has(producto.id);
-        const mainImage = producto.mainImage || producto.image;
-        const hasImage = mainImage && mainImage.trim() !== '';
-
-        if (!hasImage || hasError) {
-            return (
-                <div className="bg-gray-200 dark:bg-gray-700 w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center">
-                    <i className="pi pi-image text-xl text-gray-400 dark:text-gray-500"></i>
-                </div>
-            );
-        }
-
-        // Solo mostrar la imagen principal
-        const imageUrl = convertGoogleDriveUrl(mainImage);
+        // Agregar la función convertGoogleDriveUrl al producto para el componente
+        const productoWithConverter = {
+            ...producto,
+            convertGoogleDriveUrl,
+        };
 
         return (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white dark:bg-gray-800 mx-auto">
-                <Image
-                    src={imageUrl}
-                    alt={producto.name}
-                    fill
-                    sizes="(max-width: 640px) 96px, 112px"
-                    className="object-cover"
-                />
-            </div>
+            <ProductImageSkeleton
+                producto={productoWithConverter}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white dark:bg-gray-800 mx-auto"
+            />
         );
     };
 
@@ -319,13 +301,14 @@ export default function Productos() {
         return (
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 productos-header">
                 <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
-                    <div className="relative flex-1">
+                    <div className="relative w-full md:w-64">
                         <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Buscar productos..."
                             className="w-full search-input"
+                            size="small"
                         />
                     </div>
                     <Dropdown
@@ -379,7 +362,7 @@ export default function Productos() {
     }
 
     return (
-        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8 min-h-screen">
+        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8 min-h-screen bg-white dark:bg-gray-900">
             <div className="mb-8">
                 <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
                     Nuestros Productos
@@ -443,6 +426,9 @@ export default function Productos() {
                     )}
                 </>
             )}
+
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
         </div>
     );
 }

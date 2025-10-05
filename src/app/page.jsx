@@ -9,6 +9,7 @@ import { Carousel } from 'primereact/carousel';
 import Link from 'next/link';
 import { getProducts, convertGoogleDriveUrl } from '@/services/productService';
 import Image from 'next/image';
+import ProductImageSkeleton from '@/components/ProductImageSkeleton';
 
 export default function Home() {
     const [loading, setLoading] = useState(true);
@@ -62,20 +63,14 @@ export default function Home() {
                     <div className="text-center flex flex-col h-full">
                         {/* Imagen - altura fija */}
                         <div className="h-48 mb-6 rounded-xl flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0">
-                            {hasImage ? (
-                                <Image
-                                    src={convertGoogleDriveUrl(mainImage)}
-                                    alt={product.name}
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    className="object-cover"
-                                />
-                            ) : (
-                                <>
-                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
-                                    <i className="pi pi-image text-6xl text-gray-400 relative z-10"></i>
-                                </>
-                            )}
+                            <ProductImageSkeleton
+                                producto={{
+                                    ...product,
+                                    convertGoogleDriveUrl,
+                                }}
+                                className="w-full h-full rounded-xl overflow-hidden relative bg-gradient-to-br from-gray-100 to-gray-200"
+                                showSkeleton={hasImage}
+                            />
                         </div>
 
                         {/* Categoría - altura fija */}
@@ -137,7 +132,7 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen ">
+        <div className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
             {/* Hero Section */}
             <section className="overflow-hidden relative text-white pt-40 h-232">
@@ -192,12 +187,12 @@ export default function Home() {
                         <div className="hidden lg:block slide-in-right">
                             <div className=" bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
                                 <div className="text-center">
-                                    <div className="w-24 h-24  rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <div className="w-48 h-48  rounded-full flex items-center justify-center mx-auto mb-6">
                                         <Image
-                                            src="/src/logo.png"
+                                            src="/src/logo-modelo-2.svg"
                                             alt="Seguridad Certificada"
-                                            width={96}
-                                            height={96}
+                                            width={200}
+                                            height={200}
                                         />
                                     </div>
                                     <h3 className="text-2xl font-bold mb-4 text-white">
@@ -217,7 +212,7 @@ export default function Home() {
                 </div>
             </section>
             {/* Servicios */}
-            <section className="py-20 bg-white !important dark:bg-gray-900">
+            <section className="py-20 bg-gray-50 dark:bg-gray-800">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
@@ -259,7 +254,7 @@ export default function Home() {
             </section>
 
             {/* Estadísticas */}
-            <section className="py-20 bg-gradient-to-r from-red-600 to-red-700 text-white">
+            <section className="py-20 bg-red-600 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         <div className="fade-in">
@@ -348,6 +343,9 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
         </div>
     );
 }
