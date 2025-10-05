@@ -9,6 +9,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import ProductImageSkeleton from '@/components/ProductImageSkeleton';
 
 const ProductTable = ({
     products,
@@ -26,19 +27,11 @@ const ProductTable = ({
     const router = useRouter();
 
     const imageBodyTemplate = (rowData) => {
-        const imageUrl = rowData.mainImage || rowData.image;
-        return imageUrl ? (
-            <Image
-                src={imageUrl}
-                alt={rowData.name}
-                className="w-12 h-12 object-cover rounded border"
-                width={48}
-                height={48}
+        return (
+            <ProductImageSkeleton
+                producto={rowData}
+                className="w-12 h-12 rounded border overflow-hidden relative bg-white dark:bg-gray-800"
             />
-        ) : (
-            <div className="w-12 h-12 bg-gray-200 rounded border flex items-center justify-center">
-                <i className="pi pi-image text-gray-400"></i>
-            </div>
         );
     };
 

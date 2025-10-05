@@ -141,17 +141,33 @@ export async function GET(request) {
 
         // Procesar visitantes diarios
         const dailyData =
-            dailyVisitors.rows?.map((row) => ({
-                date: row.dimensionValues?.[0]?.value || '',
-                visitors: parseInt(row.metricValues?.[0]?.value || '0'),
-            })) || [];
+            dailyVisitors.rows?.map((row) => {
+                const dateStr = row.dimensionValues?.[0]?.value || '';
+                // Convertir formato YYYYMMDD a YYYY-MM-DD
+                const formattedDate = dateStr
+                    ? `${dateStr.substring(0, 4)}-${dateStr.substring(
+                          4,
+                          6
+                      )}-${dateStr.substring(6, 8)}`
+                    : '';
+                return {
+                    date: formattedDate,
+                    visitors: parseInt(row.metricValues?.[0]?.value || '0'),
+                };
+            }) || [];
 
-        // Procesar páginas más visitadas
+        // Procesar páginas más visitadas (excluyendo páginas de admin)
         const pagesData =
-            topPages.rows?.map((row) => ({
-                path: row.dimensionValues?.[0]?.value || '',
-                views: parseInt(row.metricValues?.[0]?.value || '0'),
-            })) || [];
+            topPages.rows
+                ?.filter((row) => {
+                    const path = row.dimensionValues?.[0]?.value || '';
+                    // Excluir páginas que empiecen con /admin
+                    return !path.startsWith('/admin');
+                })
+                ?.map((row) => ({
+                    path: row.dimensionValues?.[0]?.value || '',
+                    views: parseInt(row.metricValues?.[0]?.value || '0'),
+                })) || [];
 
         // Procesar datos de dispositivos
         const devicesData =

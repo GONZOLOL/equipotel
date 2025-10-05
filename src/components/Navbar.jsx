@@ -108,14 +108,14 @@ export default function Navbar() {
     const start = (
         <Link
             href={isAdminZone ? '/admin/dashboard' : '/'}
-            className="flex items-center space-x-2 no-underline mr-6"
+            className="flex items-center space-x-1 no-underline mr-6"
         >
             <div className="flex items-center justify-center w-10 h-10  rounded-lg">
                 <Image
-                    src="/src/logo.png"
+                    src="/src/logo-castillo.svg"
                     alt="Equipotel"
-                    width={40}
-                    height={40}
+                    width={30}
+                    height={30}
                 />
             </div>
             <span className="text-gray-600 dark:text-white text-2xl bg-clip-text">

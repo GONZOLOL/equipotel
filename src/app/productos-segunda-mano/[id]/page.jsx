@@ -417,6 +417,9 @@ export default function ProductoSegundaManoDetail() {
                 </div>
             </div>
 
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
+
             <Footer />
         </div>
     );

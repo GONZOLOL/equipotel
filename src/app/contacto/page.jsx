@@ -175,7 +175,7 @@ export default function Contacto() {
         'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d102625.123456789!2d-4.4311!3d36.7213!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd72f762715d85ff%3A0x442ca611cd68b2f1!2sM%C3%A1laga%2C%20Spain!5e0!3m2!1sen!2ses!4v1234567890&style=feature:all|element:all|invert_lightness:true|saturation:-100|lightness:-50';
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-28">
@@ -440,6 +440,9 @@ export default function Contacto() {
                     </div>
                 </Card>
             </div>
+
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
         </div>
     );
 }

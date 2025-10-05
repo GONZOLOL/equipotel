@@ -2,35 +2,63 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return (
+            <footer className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 border-t border-gray-200 dark:border-gray-700">
+                <div className="max-w-7xl mx-auto px-4 py-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="lg:col-span-1">
+                            <div className="flex items-center space-x-1 mb-4">
+                                <div className="w-32 h-8 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse w-3/4"></div>
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-32 animate-pulse"></div>
+                            <div className="space-y-2">
+                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        );
+    }
     return (
-        <footer className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 border-t border-gray-200 dark:border-gray-700">
-            <div className="max-w-7xl mx-auto px-4 py-12">
+        <footer className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 border-t border-gray-200 dark:border-gray-700 mt-16">
+            <div className="max-w-7xl mx-auto px-4 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Logo y descripción */}
                     <div className="lg:col-span-1">
                         <Link
                             href="/"
-                            className="flex items-center space-x-2 mb-4 no-underline"
+                            className="flex items-center space-x-1 mb-4 no-underline"
                         >
-                            <div className="flex items-center justify-center w-12 h-12  rounded-lg">
-                                <Image
-                                    src="/src/logo.png"
-                                    alt="Equipotel"
-                                    width={40}
-                                    height={40}
-                                />
-                            </div>
-                            <span className="text-2xl font-bold text-gray-800 dark:text-white">
-                                Equipotel
-                            </span>
+                            <Image
+                                src="/src/logo-modelo-1.svg"
+                                alt="Equipotel"
+                                width={200}
+                                height={100}
+                            />
                         </Link>
                         <p className="text-gray-600 dark:text-gray-200 mb-6 leading-relaxed">
                             Especialistas en cajas fuertes, sistemas de anclaje
                             y sistemas de seguridad en Málaga y Andalucía
                             Oriental. y sistemas de seguridad en Málaga.
-                            Protegemos lo que más importa desde 2010.
                         </p>
                         <div className="flex space-x-4">
                             <a
@@ -135,10 +163,7 @@ export default function Footer() {
                                     <i className="pi pi-phone text-white text-sm"></i>
                                 </div>
                                 <a
-                                    href={`tel:${
-                                        process.env.NEXT_PUBLIC_PHONE_NUMBER ||
-                                        '+34 676 20 80 24'
-                                    }`}
+                                    href="tel:+34676208024"
                                     className="text-gray-600 dark:text-gray-200 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-300"
                                 >
                                     +34 676 20 80 24

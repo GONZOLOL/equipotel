@@ -63,7 +63,7 @@ export default function SobreNosotros() {
     ];
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-white dark:bg-gray-900">
             <Navbar />
 
             {/* Hero Section */}
@@ -239,6 +239,9 @@ export default function SobreNosotros() {
                     </Card>
                 </section>
             </div>
+
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
         </div>
     );
 }

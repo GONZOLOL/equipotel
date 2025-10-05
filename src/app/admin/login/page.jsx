@@ -62,7 +62,7 @@ export default function AdminLogin() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
+        <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-4 transition-colors duration-300">
             <div className="w-full max-w-md relative">
                 <Card className="shadow-xl dark:bg-gray-800 dark:border-gray-700">
                     <div className="text-center mb-6">
