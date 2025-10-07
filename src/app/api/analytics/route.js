@@ -6,9 +6,6 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
     credentials: process.env.GOOGLE_APPLICATION_CREDENTIALS
         ? JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)
         : undefined,
-    keyFilename:
-        process.env.GOOGLE_APPLICATION_CREDENTIALS_FILE ||
-        './google-analytics-key.json',
 });
 
 const GA_PROPERTY_ID = process.env.GA_PROPERTY_ID;
