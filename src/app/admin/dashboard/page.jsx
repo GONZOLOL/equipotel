@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminLayout from '@/components/AdminLayout';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,56 +12,78 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Message } from 'primereact/message';
+import { Dropdown } from 'primereact/dropdown';
 import { getProducts, verifyAllProductImages } from '@/services/productService';
+import { useThemeToggle } from '@/hooks/useThemeToggle';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function AdminDashboard() {
     const { user, logout } = useAuth();
     const router = useRouter();
+    const { isDarkMode } = useThemeToggle();
     const [recentProducts, setRecentProducts] = useState([]);
     const [imageVerification, setImageVerification] = useState(null);
     const [message, setMessage] = useState(null);
+    const [mounted, setMounted] = useState(false);
+    const [timeRange, setTimeRange] = useState('7d');
 
-    // Datos de ejemplo para los gráficos
-    const chartData = {
-        visitors: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-            datasets: [
-                {
-                    label: 'Visitantes',
-                    data: [1200, 1900, 3000, 5000, 2000, 3000],
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4,
-                },
-            ],
-        },
-        conversions: {
-            labels: ['Llamadas', 'Emails', 'WhatsApp', 'Formularios'],
-            datasets: [
-                {
-                    data: [45, 25, 20, 10],
-                    backgroundColor: [
-                        '#3B82F6',
-                        '#10B981',
-                        '#F59E0B',
-                        '#EF4444',
-                    ],
-                },
-            ],
-        },
-    };
+    // Hook para obtener datos reales de analytics
+    const {
+        data,
+        loading: analyticsLoading,
+        error: analyticsError,
+        formatChartData,
+        formatBasicMetrics,
+    } = useAnalytics(timeRange);
+
+    // Obtener datos reales de analytics
+    const analyticsChartData = formatChartData();
+    const basicMetrics = formatBasicMetrics();
+
+    const timeRangeOptions = [
+        { label: 'Últimos 7 días', value: '7d' },
+        { label: 'Últimos 30 días', value: '30d' },
+        { label: 'Últimos 90 días', value: '90d' },
+        { label: 'Este año', value: '1y' },
+    ];
 
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
         plugins: {
             legend: {
                 position: 'bottom',
+                labels: {
+                    color: isDarkMode ? '#e5e7eb' : '#495057',
+                },
+            },
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: isDarkMode ? '#e5e7eb' : '#495057',
+                },
+                grid: {
+                    color: isDarkMode ? '#374151' : '#ebedef',
+                },
+            },
+            y: {
+                ticks: {
+                    color: isDarkMode ? '#e5e7eb' : '#495057',
+                },
+                grid: {
+                    color: isDarkMode ? '#374151' : '#ebedef',
+                },
             },
         },
     };
 
     useEffect(() => {
+        setMounted(true);
         loadRecentProducts();
     }, []);
 
@@ -93,7 +116,11 @@ export default function AdminDashboard() {
 
     const imageUrlBodyTemplate = (rowData) => {
         if (!rowData.imageUrl) {
-            return <span className="text-gray-500">Sin imagen</span>;
+            return (
+                <span className="text-gray-500 dark:text-gray-400">
+                    Sin imagen
+                </span>
+            );
         }
 
         return (
@@ -108,177 +135,211 @@ export default function AdminDashboard() {
                     }}
                 />
                 <i
-                    className="pi pi-image text-gray-400"
+                    className="pi pi-image text-gray-400 dark:text-gray-500"
                     style={{ display: 'none' }}
                 ></i>
-                <span className="text-xs text-gray-600 truncate max-w-32">
+                <span className="text-xs text-gray-600 dark:text-gray-400 truncate max-w-32">
                     {rowData.imageUrl}
                 </span>
             </div>
         );
     };
 
+    if (!mounted) {
+        return null;
+    }
+
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-gray-50">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between items-center py-4">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-800">
-                                    Panel de Administración
-                                </h1>
-                                <p className="text-sm text-gray-600">
-                                    Bienvenido,{' '}
-                                    {user?.displayName || user?.email}
-                                </p>
-                            </div>
-                            <div className="flex gap-2">
-                                <Button
-                                    label="Productos"
-                                    icon="pi pi-box"
-                                    severity="primary"
-                                    outlined
-                                    onClick={() =>
-                                        router.push('/admin/products')
-                                    }
-                                />
-                                <Button
-                                    label="Analíticas"
-                                    icon="pi pi-chart-bar"
-                                    severity="secondary"
-                                    outlined
-                                    onClick={() =>
-                                        router.push('/admin/analytics')
-                                    }
-                                />
-                                <Button
-                                    label="Cerrar Sesión"
-                                    icon="pi pi-sign-out"
-                                    severity="danger"
-                                    outlined
-                                    onClick={logout}
-                                />
-                            </div>
-                        </div>
+            <AdminLayout
+                title="Panel de Administración"
+                subtitle={`Bienvenido, ${user?.displayName || user?.email}`}
+            >
+                {message && (
+                    <Message
+                        severity={message.severity}
+                        text={message.text}
+                        className="mb-6"
+                    />
+                )}
+
+                {/* Selector de rango de tiempo */}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                        Dashboard
+                    </h2>
+                    <div className="flex items-center gap-4">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Período:
+                        </label>
+                        <Dropdown
+                            value={timeRange}
+                            options={timeRangeOptions}
+                            onChange={(e) => setTimeRange(e.value)}
+                            placeholder="Seleccionar período"
+                            className="w-48"
+                        />
                     </div>
                 </div>
 
-                {/* Main Content */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    {message && (
-                        <Message
-                            severity={message.severity}
-                            text={message.text}
-                            className="mb-6"
-                        />
-                    )}
+                {/* Error de analytics */}
+                {analyticsError && (
+                    <Message
+                        severity="error"
+                        text={`Error cargando analytics: ${analyticsError}`}
+                        className="mb-6"
+                    />
+                )}
 
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                        <Card>
-                            <div className="text-center">
-                                <i className="pi pi-users text-3xl text-blue-500 mb-2"></i>
-                                <h3 className="text-2xl font-bold text-gray-800">
-                                    1,234
-                                </h3>
-                                <p className="text-gray-600">Visitantes</p>
-                            </div>
-                        </Card>
-                        <Card>
-                            <div className="text-center">
-                                <i className="pi pi-eye text-3xl text-green-500 mb-2"></i>
-                                <h3 className="text-2xl font-bold text-gray-800">
-                                    5,678
-                                </h3>
-                                <p className="text-gray-600">Páginas Vistas</p>
-                            </div>
-                        </Card>
-                        <Card>
-                            <div className="text-center">
-                                <i className="pi pi-phone text-3xl text-orange-500 mb-2"></i>
-                                <h3 className="text-2xl font-bold text-gray-800">
-                                    45
-                                </h3>
-                                <p className="text-gray-600">Contactos</p>
-                            </div>
-                        </Card>
-                        <Card>
-                            <div className="text-center">
-                                <i className="pi pi-box text-3xl text-purple-500 mb-2"></i>
-                                <h3 className="text-2xl font-bold text-gray-800">
-                                    {recentProducts.length}
-                                </h3>
-                                <p className="text-gray-600">Productos</p>
-                            </div>
-                        </Card>
-                    </div>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <Card className="dark:bg-gray-800 dark:border-gray-700">
+                        <div className="text-center">
+                            <i className="pi pi-users text-3xl text-blue-500 dark:text-blue-400 mb-2"></i>
+                            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.totalUsers || 0}
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Visitantes
+                            </p>
+                        </div>
+                    </Card>
+                    <Card className="dark:bg-gray-800 dark:border-gray-700">
+                        <div className="text-center">
+                            <i className="pi pi-eye text-3xl text-green-500 dark:text-green-400 mb-2"></i>
+                            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.totalPageViews || 0}
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Páginas Vistas
+                            </p>
+                        </div>
+                    </Card>
+                    <Card className="dark:bg-gray-800 dark:border-gray-700">
+                        <div className="text-center">
+                            <i className="pi pi-chart-line text-3xl text-orange-500 dark:text-orange-400 mb-2"></i>
+                            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                {analyticsLoading
+                                    ? '...'
+                                    : basicMetrics.bounceRate || '0%'}
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Tasa de Rebote
+                            </p>
+                        </div>
+                    </Card>
+                    <Card className="dark:bg-gray-800 dark:border-gray-700">
+                        <div className="text-center">
+                            <i className="pi pi-box text-3xl text-purple-500 dark:text-purple-400 mb-2"></i>
+                            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                {recentProducts.length}
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                Productos
+                            </p>
+                        </div>
+                    </Card>
+                </div>
 
-                    {/* Charts */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <Card title="Tráfico de Visitantes">
-                            <Chart
-                                type="line"
-                                data={chartData.visitors}
-                                options={chartOptions}
-                                height="300px"
-                            />
-                        </Card>
-                        <Card title="Fuentes de Conversión">
-                            <Chart
-                                type="doughnut"
-                                data={chartData.conversions}
-                                options={chartOptions}
-                                height="300px"
-                            />
-                        </Card>
-                    </div>
+                {/* Charts */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <Card
+                        title="Visitantes por Día"
+                        className="dark:bg-gray-800 dark:border-gray-700"
+                    >
+                        {analyticsLoading ? (
+                            <div className="flex items-center justify-center h-80">
+                                <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                        ) : (
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="line"
+                                    data={analyticsChartData.visitorsData || {}}
+                                    options={chartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
+                        )}
+                    </Card>
+                    <Card
+                        title="Páginas Más Visitadas"
+                        className="dark:bg-gray-800 dark:border-gray-700"
+                    >
+                        {analyticsLoading ? (
+                            <div className="flex items-center justify-center h-80">
+                                <i className="pi pi-spin pi-spinner text-2xl text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                        ) : (
+                            <div className="w-full h-80">
+                                <Chart
+                                    type="doughnut"
+                                    data={
+                                        analyticsChartData.pageViewsData || {}
+                                    }
+                                    options={chartOptions}
+                                    height="350px"
+                                    width="100%"
+                                />
+                            </div>
+                        )}
+                    </Card>
+                </div>
 
-                    {/* Recent Products */}
-                    <Card title="Productos Recientes" className="mb-8">
+                {/* Recent Products */}
+                <Card
+                    title="Productos Recientes"
+                    className="mb-8 dark:bg-gray-800 dark:border-gray-700"
+                >
+                    <DataTable
+                        value={recentProducts}
+                        paginator
+                        rows={5}
+                        className="p-datatable-sm"
+                        emptyMessage="No hay productos recientes"
+                    >
+                        <Column field="name" header="Nombre" />
+                        <Column field="categoryLabel" header="Categoría" />
+                        <Column field="priceFormatted" header="Precio" />
+                        <Column field="stock" header="Stock" />
+                    </DataTable>
+                </Card>
+
+                {/* Image Verification Results */}
+                {imageVerification && (
+                    <Card
+                        title="Verificación de Imágenes"
+                        className="mb-8 dark:bg-gray-800 dark:border-gray-700"
+                    >
                         <DataTable
-                            value={recentProducts}
+                            value={imageVerification}
                             paginator
-                            rows={5}
+                            rows={10}
                             className="p-datatable-sm"
-                            emptyMessage="No hay productos recientes"
+                            emptyMessage="No hay resultados de verificación"
                         >
-                            <Column field="name" header="Nombre" />
-                            <Column field="categoryLabel" header="Categoría" />
-                            <Column field="priceFormatted" header="Precio" />
-                            <Column field="stock" header="Stock" />
+                            <Column field="productName" header="Producto" />
+                            <Column
+                                field="imageUrl"
+                                header="URL de Imagen"
+                                body={imageUrlBodyTemplate}
+                            />
+                            <Column
+                                field="valid"
+                                header="Estado"
+                                body={imageStatusBodyTemplate}
+                            />
+                            <Column field="size" header="Tamaño" />
+                            <Column field="note" header="Nota" />
                         </DataTable>
                     </Card>
-
-                    {/* Image Verification Results */}
-                    {imageVerification && (
-                        <Card title="Verificación de Imágenes" className="mb-8">
-                            <DataTable
-                                value={imageVerification}
-                                paginator
-                                rows={10}
-                                className="p-datatable-sm"
-                                emptyMessage="No hay resultados de verificación"
-                            >
-                                <Column field="productName" header="Producto" />
-                                <Column
-                                    field="imageUrl"
-                                    header="URL de Imagen"
-                                    body={imageUrlBodyTemplate}
-                                />
-                                <Column
-                                    field="valid"
-                                    header="Estado"
-                                    body={imageStatusBodyTemplate}
-                                />
-                                <Column field="size" header="Tamaño" />
-                                <Column field="note" header="Nota" />
-                            </DataTable>
-                        </Card>
-                    )}
-                </div>
-            </div>
+                )}
+            </AdminLayout>
         </ProtectedRoute>
     );
 }

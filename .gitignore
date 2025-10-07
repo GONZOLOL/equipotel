@@ -110,5 +110,15 @@ node_modules/
 # DynamoDB Local files
 .dynamodb/
 
-# TernJS port file
-.tern-port
+# Google Analytics key
+google-analytics-key.json
+
+# Environment files with sensitive data
+.env
+.env.local
+.env.production
+.env.staging
+
+# Service account keys
+*-key.json
+service-account*.json

@@ -1,0 +1,19 @@
+import { useTheme } from '@/contexts/ThemeContext';
+
+export const useThemeToggle = () => {
+    const theme = useTheme();
+
+    return {
+        isDarkMode: theme.isDarkMode,
+        isLoaded: theme.isInitialized, // Cambiar isLoaded por isInitialized
+        toggleTheme: theme.toggleTheme,
+        setTheme: theme.setTheme,
+        theme: theme.theme,
+        // Convenience methods
+        isLightMode: !theme.isDarkMode,
+        switchToLight: () => theme.setTheme('light'),
+        switchToDark: () => theme.setTheme('dark'),
+        // Icon and label helpers
+        themeIcon: theme.isDarkMode ? 'pi pi-sun' : 'pi pi-moon',
+    };
+};

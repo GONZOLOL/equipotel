@@ -18,12 +18,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup": "node scripts/setup.js"
+    "setup": "node scripts/setup.js",
+    "setup-users": "node scripts/setup-authorized-users.js"
   },
   "dependencies": {
+    "@google-analytics/data": "^5.2.0",
     "chart.js": "^4.5.0",
     "firebase": "^12.1.0",
+    "googleapis": "^156.0.0",
     "next": "15.4.6",
+    "nodemailer": "^7.0.5",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
     "react": "19.1.0",

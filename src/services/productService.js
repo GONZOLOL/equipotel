@@ -7,7 +7,6 @@ import {
     doc,
     query,
     where,
-    orderBy,
 } from 'firebase/firestore';
 import {
     ref,
@@ -36,7 +35,6 @@ export const getProducts = async () => {
             }
             products.push({ id: doc.id, ...productData });
         });
-        console.log('Productos obtenidos de Firestore:', products);
         return products;
     } catch (error) {
         console.error('Error getting products:', error);
@@ -68,37 +66,9 @@ export const getProductsByCategory = async (category) => {
     }
 };
 
-// Obtener productos destacados
-export const getFeaturedProducts = async () => {
-    try {
-        const q = query(
-            collection(db, 'products'),
-            where('featured', '==', true),
-            orderBy('createdAt', 'desc')
-        );
-        const querySnapshot = await getDocs(q);
-        const products = [];
-        querySnapshot.forEach((doc) => {
-            const productData = doc.data();
-            // Convertir URLs de Google Drive si es necesario
-            if (productData.image) {
-                productData.image = convertGoogleDriveUrl(productData.image);
-            }
-            products.push({ id: doc.id, ...productData });
-        });
-        return products;
-    } catch (error) {
-        console.error('Error getting featured products:', error);
-        throw error;
-    }
-};
-
 // Agregar un nuevo producto
 export const addProduct = async (productData) => {
     try {
-        console.log('Agregando producto:', productData);
-        console.log('URL de imagen a guardar:', productData.image);
-
         // Convertir URL de Google Drive si es necesario
         if (productData.image) {
             productData.image = convertGoogleDriveUrl(productData.image);
@@ -110,11 +80,8 @@ export const addProduct = async (productData) => {
             updatedAt: new Date(),
         };
 
-        console.log('Producto final a guardar:', productToSave);
-
         const docRef = await addDoc(collection(db, 'products'), productToSave);
-        console.log('Producto agregado con ID:', docRef.id);
-        return docRef.id;
+        return { id: docRef.id, ...productToSave };
     } catch (error) {
         console.error('Error adding product:', error);
         throw error;
@@ -124,19 +91,21 @@ export const addProduct = async (productData) => {
 // Actualizar un producto
 export const updateProduct = async (productId, productData) => {
     try {
-        console.log('Actualizando producto:', productId, productData);
-
         // Convertir URL de Google Drive si es necesario
         if (productData.image) {
             productData.image = convertGoogleDriveUrl(productData.image);
         }
 
         const productRef = doc(db, 'products', productId);
-        await updateDoc(productRef, {
+        const updateData = {
             ...productData,
             updatedAt: new Date(),
-        });
-        console.log('Producto actualizado correctamente');
+        };
+
+        await updateDoc(productRef, updateData);
+
+        // Devolver el producto actualizado
+        return { id: productId, ...updateData };
     } catch (error) {
         console.error('Error updating product:', error);
         throw error;
@@ -153,21 +122,98 @@ export const deleteProduct = async (productId) => {
     }
 };
 
-// Subir imagen a Firebase Storage (deshabilitado temporalmente)
-export const uploadProductImage = async (file, productId) => {
-    throw new Error(
-        'Subida de imágenes deshabilitada temporalmente. Usa enlaces de Google Drive.'
-    );
+// Subir imagen a Firebase Storage
+export const uploadProductImage = async (file, productId = null) => {
+    try {
+        // Validar el archivo
+        if (!file) {
+            throw new Error('No se proporcionó ningún archivo');
+        }
+
+        // Validar tipo de archivo
+        const allowedTypes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/webp',
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            throw new Error(
+                'Tipo de archivo no permitido. Solo se permiten: JPEG, JPG, PNG, WEBP'
+            );
+        }
+
+        // Validar tamaño (máximo 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            throw new Error(
+                'El archivo es demasiado grande. Máximo 5MB permitido'
+            );
+        }
+
+        // Generar nombre único para el archivo
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(2, 15);
+        const fileExtension = file.name.split('.').pop();
+        const fileName = `products/${
+            productId || 'temp'
+        }/${timestamp}_${randomId}.${fileExtension}`;
+
+        // Crear referencia en Firebase Storage
+        const storageRef = ref(storage, fileName);
+
+        // Subir archivo
+        const snapshot = await uploadBytes(storageRef, file);
+
+        // Obtener URL de descarga
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        return {
+            url: downloadURL,
+            path: fileName,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+        };
+    } catch (error) {
+        console.error('Error subiendo imagen:', error);
+        throw error;
+    }
+};
+
+// Subir múltiples imágenes
+export const uploadMultipleImages = async (files, productId = null) => {
+    try {
+        const uploadPromises = files.map((file) =>
+            uploadProductImage(file, productId)
+        );
+        const results = await Promise.all(uploadPromises);
+        return results;
+    } catch (error) {
+        console.error('Error subiendo múltiples imágenes:', error);
+        throw error;
+    }
 };
 
 // Eliminar imagen de Firebase Storage
 export const deleteProductImage = async (imageUrl) => {
     try {
-        const imageRef = ref(storage, imageUrl);
-        await deleteObject(imageRef);
+        // Si es una URL de Firebase Storage, extraer la ruta
+        if (imageUrl.includes('firebase')) {
+            // Extraer la ruta del archivo de la URL
+            const urlParts = imageUrl.split('/');
+            const filePath = urlParts
+                .slice(urlParts.indexOf('o') + 1)
+                .join('/');
+            const decodedPath = decodeURIComponent(filePath);
+
+            const imageRef = ref(storage, decodedPath);
+            await deleteObject(imageRef);
+        } else {
+        }
     } catch (error) {
-        console.error('Error deleting image:', error);
-        throw error;
+        console.error('Error eliminando imagen:', error);
+        // No lanzar error para no interrumpir el flujo si la imagen no existe
     }
 };
 
@@ -262,7 +308,6 @@ export const verifyAllProductImages = async () => {
             }
         }
 
-        console.log('Verificación de imágenes completada:', results);
         return results;
     } catch (error) {
         console.error('Error verificando imágenes:', error);

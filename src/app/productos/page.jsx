@@ -1,52 +1,44 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { DataView } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
-import {
-    getProducts,
-    getProductsByCategory,
-    convertGoogleDriveUrl,
-} from '@/services/productService';
+import { getProducts, convertGoogleDriveUrl } from '@/services/productService';
 import Image from 'next/image';
+import ProductImageSkeleton from '@/components/ProductImageSkeleton';
 
 export default function Productos() {
     const [productos, setProductos] = useState([]);
     const [filteredProductos, setFilteredProductos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
     const [sortField, setSortField] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [imageErrors, setImageErrors] = useState(new Set());
     const [carouselIndex, setCarouselIndex] = useState(0);
 
     const categories = [
         { label: 'Todas las categorías', value: null },
         { label: 'Cajas Fuertes', value: 'cajas-fuertes' },
-        { label: 'Armarios Acorazados', value: 'armarios-acorazados' },
         { label: 'Sistemas de Anclaje', value: 'sistemas-anclaje' },
-        {
-            label: 'Compartimentos de Seguridad',
-            value: 'compartimentos-seguridad',
-        },
-        { label: 'Segunda Mano', value: 'segunda-mano' },
     ];
 
     const sortOptions = [
-        { label: 'Precio: Menor a Mayor', value: 'price-asc' },
-        { label: 'Precio: Mayor a Menor', value: 'price-desc' },
         { label: 'Nombre: A-Z', value: 'name-asc' },
         { label: 'Nombre: Z-A', value: 'name-desc' },
     ];
+
+    // Marcar como montado
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -55,32 +47,31 @@ export default function Productos() {
                 // Intentar cargar desde Firebase
                 const firebaseProducts = await getProducts();
                 if (firebaseProducts && firebaseProducts.length > 0) {
-                    console.log(
-                        'Productos cargados desde Firebase:',
-                        firebaseProducts
+                    // Filtrar productos de segunda mano
+                    const productosNormales = firebaseProducts.filter(
+                        (producto) => producto.category !== 'segunda-mano'
                     );
-                    setProductos(firebaseProducts);
-                    setFilteredProductos(firebaseProducts);
+                    setProductos(productosNormales);
+                    setFilteredProductos(productosNormales);
                 } else {
-                    console.log(
-                        'No hay productos en Firebase, usando datos de ejemplo'
-                    );
-                    // Usar datos de ejemplo si Firebase no tiene datos
-                    setProductos(productosEjemplo);
-                    setFilteredProductos(productosEjemplo);
+                    // Si no hay productos, mostrar array vacío
+                    setProductos([]);
+                    setFilteredProductos([]);
                 }
             } catch (error) {
                 console.error('Error loading products:', error);
-                // Fallback a datos de ejemplo
-                setProductos(productosEjemplo);
-                setFilteredProductos(productosEjemplo);
+                // Fallback a array vacío
+                setProductos([]);
+                setFilteredProductos([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        loadProducts();
-    }, []);
+        if (mounted) {
+            loadProducts();
+        }
+    }, [mounted]);
 
     useEffect(() => {
         let filtered = [...productos];
@@ -134,92 +125,17 @@ export default function Productos() {
     };
 
     const renderProductImage = (producto) => {
-        const hasError = imageErrors.has(producto.id);
-        const mainImage = producto.mainImage || producto.image;
-        const hasImage = mainImage && mainImage.trim() !== '';
-        const hasAdditionalImages =
-            producto.additionalImages && producto.additionalImages.length > 0;
-
-        console.log(`Renderizando imagen para ${producto.name}:`, {
-            hasImage,
-            hasError,
-            hasAdditionalImages,
-            originalImage: mainImage,
-            imageUrl: hasImage ? convertGoogleDriveUrl(mainImage) : null,
-        });
-
-        if (!hasImage || hasError) {
-            return (
-                <div className="bg-gray-200 w-32 h-32 rounded-lg flex items-center justify-center">
-                    <i className="pi pi-image text-2xl text-gray-400"></i>
-                </div>
-            );
-        }
-
-        // Si hay imágenes adicionales, mostrar carrusel
-        if (hasAdditionalImages) {
-            const allImages = [mainImage, ...producto.additionalImages];
-            const currentImage = allImages[carouselIndex % allImages.length];
-            const imageUrl = convertGoogleDriveUrl(currentImage);
-
-            return (
-                <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto group">
-                    <Image
-                        src={imageUrl}
-                        alt={producto.name}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-300"
-                    />
-
-                    {/* Carrusel Navigation */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-between p-1 opacity-0 group-hover:opacity-100">
-                        <Button
-                            icon="pi pi-chevron-left"
-                            size="small"
-                            severity="secondary"
-                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCarouselIndex((prev) =>
-                                    Math.max(0, prev - 1)
-                                );
-                            }}
-                        />
-                        <Button
-                            icon="pi pi-chevron-right"
-                            size="small"
-                            severity="secondary"
-                            className="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCarouselIndex((prev) =>
-                                    Math.min(allImages.length - 1, prev + 1)
-                                );
-                            }}
-                        />
-                    </div>
-
-                    {/* Image Counter */}
-                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {(carouselIndex % allImages.length) + 1}/
-                        {allImages.length}
-                    </div>
-                </div>
-            );
-        }
-
-        // Imagen única (sin carrusel)
-        const imageUrl = convertGoogleDriveUrl(mainImage);
+        // Agregar la función convertGoogleDriveUrl al producto para el componente
+        const productoWithConverter = {
+            ...producto,
+            convertGoogleDriveUrl,
+        };
 
         return (
-            <div className="w-32 h-32 rounded-lg overflow-hidden relative bg-white mx-auto">
-                <Image
-                    src={imageUrl}
-                    alt={producto.name}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                />
-            </div>
+            <ProductImageSkeleton
+                producto={productoWithConverter}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden relative bg-white dark:bg-gray-800 mx-auto"
+            />
         );
     };
 
@@ -231,7 +147,7 @@ export default function Productos() {
         if (layout === 'list') {
             return (
                 <div className="col-12 mb-4">
-                    <Card className="hover:shadow-lg transition-shadow duration-300">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 dark:bg-gray-800 dark:border-gray-700">
                         <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-6">
                             <div className="flex-shrink-0">
                                 <div className="w-32 h-32">
@@ -241,15 +157,15 @@ export default function Productos() {
                             <div className="flex-1">
                                 <div className="flex flex-column lg:flex-row justify-content-between align-items-start gap-4">
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                                        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                                             {producto.name}
                                         </h3>
                                         <Tag
                                             value={producto.categoryLabel}
-                                            severity="info"
+                                            severity="help"
                                             className="mb-3"
                                         />
-                                        <p className="text-gray-600 mb-3 line-clamp-3">
+                                        <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
                                             {producto.description}
                                         </p>
                                         {producto.features &&
@@ -260,7 +176,7 @@ export default function Productos() {
                                                             <Tag
                                                                 key={index}
                                                                 value={feature}
-                                                                severity="secondary"
+                                                                severity="help"
                                                                 className="text-xs"
                                                             />
                                                         )
@@ -269,13 +185,10 @@ export default function Productos() {
                                             )}
                                     </div>
                                     <div className="text-right lg:text-left">
-                                        <span className="text-2xl font-bold text-blue-600 block mb-3">
-                                            {producto.priceFormatted}
-                                        </span>
                                         <div className="flex gap-2">
                                             <Button
                                                 label="Ver Detalles"
-                                                severity="primary"
+                                                severity="help"
                                                 size="small"
                                                 onClick={() =>
                                                     (window.location.href = `/productos/${producto.id}`)
@@ -283,7 +196,7 @@ export default function Productos() {
                                             />
                                             <Button
                                                 label="Contactar"
-                                                severity="secondary"
+                                                severity="danger"
                                                 size="small"
                                                 outlined
                                                 onClick={() =>
@@ -302,64 +215,63 @@ export default function Productos() {
 
         if (layout === 'grid') {
             return (
-                <div className="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2 p-2">
-                    <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-                        <div className="p-3">
-                            {/* Imagen */}
-                            <div className="mb-3">
+                <div className="w-full h-full">
+                    <Card className="h-full hover:shadow-lg transition-shadow duration-300 flex flex-col dark:bg-gray-800 dark:border-gray-700">
+                        <div className="p-1 flex flex-col h-full">
+                            {/* Imagen - altura fija */}
+                            <div className="mb-3 flex-shrink-0">
                                 {renderProductImage(producto)}
                             </div>
 
                             {/* Contenido */}
-                            <div className="space-y-2">
-                                {/* Título */}
-                                <h3 className="text-base font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] text-center">
+                            <div className="space-y-2 flex flex-col h-full">
+                                {/* Título - altura fija */}
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 min-h-[2rem] text-center flex-shrink-0">
                                     {producto.name}
                                 </h3>
 
-                                {/* Categoría */}
-                                <div className="flex justify-center">
+                                {/* Categoría - altura fija */}
+                                <div className="flex justify-center flex-shrink-0">
                                     <Tag
                                         value={producto.categoryLabel}
-                                        severity="info"
+                                        severity="help"
                                         className="text-xs"
                                     />
                                 </div>
 
-                                {/* Descripción */}
-                                <p className="text-xs text-gray-600 line-clamp-2 min-h-[2rem] text-center">
+                                {/* Descripción - altura fija */}
+                                <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 min-h-[1.5rem] text-center flex-shrink-0">
                                     {producto.description}
                                 </p>
 
-                                {/* Características */}
-                                {producto.features &&
-                                    producto.features.length > 0 && (
+                                {/* Características - altura fija */}
+                                <div className="flex-shrink-0 min-h-[2rem]">
+                                    {producto.features &&
+                                    producto.features.length > 0 ? (
                                         <div className="flex flex-wrap gap-1 justify-center">
                                             {producto.features
-                                                .slice(0, 2)
+                                                .slice(0, 1)
                                                 .map((feature, index) => (
                                                     <Tag
                                                         key={index}
                                                         value={feature}
-                                                        severity="secondary"
+                                                        severity="help"
                                                         className="text-xs"
                                                     />
                                                 ))}
                                         </div>
+                                    ) : (
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 text-center min-h-[2rem] flex items-center justify-center">
+                                            Producto de calidad
+                                        </div>
                                     )}
-
-                                {/* Precio */}
-                                <div className="text-center">
-                                    <p className="text-lg font-bold text-blue-600">
-                                        {producto.priceFormatted}
-                                    </p>
                                 </div>
 
-                                {/* Botones */}
-                                <div className="flex gap-1 justify-center pt-1">
+                                {/* Botones - siempre al final */}
+                                <div className="flex gap-1 justify-center pt-2 mt-auto">
                                     <Button
                                         label="Ver"
-                                        severity="primary"
+                                        severity="danger"
                                         size="small"
                                         className="flex-1 text-xs"
                                         onClick={() =>
@@ -368,7 +280,7 @@ export default function Productos() {
                                     />
                                     <Button
                                         label="Contactar"
-                                        severity="secondary"
+                                        severity="danger"
                                         size="small"
                                         outlined
                                         className="flex-1 text-xs"
@@ -387,43 +299,46 @@ export default function Productos() {
 
     const header = () => {
         return (
-            <div className="flex flex-column sm:flex-row justify-content-between align-items-center gap-4 mb-6">
-                <div className="flex flex-column sm:flex-row gap-4 flex-1">
-                    <span className="p-input-icon-left">
-                        <i className="pi pi-search" />
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 productos-header">
+                <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
+                    <div className="relative w-full md:w-64">
+                        <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Buscar productos..."
-                            className="w-full sm:w-80"
+                            className="w-full search-input"
+                            size="small"
                         />
-                    </span>
+                    </div>
                     <Dropdown
                         value={selectedCategory}
                         options={categories}
                         onChange={(e) => setSelectedCategory(e.value)}
                         placeholder="Categoría"
-                        className="w-full sm:w-48"
+                        className="w-full md:w-48"
                     />
                     <Dropdown
                         value={sortKey}
                         options={sortOptions}
                         onChange={onSort}
                         placeholder="Ordenar por"
-                        className="w-full sm:w-48"
+                        className="w-full md:w-48"
                     />
                 </div>
-                <div className="flex gap-2">
+                {/* Botones de vista solo visibles en tablets y desktop */}
+                <div className="hidden sm:flex gap-2 w-full md:w-auto justify-center md:justify-end">
                     <Button
                         icon="pi pi-th-large"
                         onClick={() => setLayout('grid')}
-                        severity={layout === 'grid' ? 'primary' : 'secondary'}
+                        severity={layout === 'grid' ? 'danger' : 'secondary'}
                         outlined={layout !== 'grid'}
+                        className="px-2"
                     />
                     <Button
                         icon="pi pi-bars"
                         onClick={() => setLayout('list')}
-                        severity={layout === 'list' ? 'primary' : 'secondary'}
+                        severity={layout === 'list' ? 'danger' : 'secondary'}
                         outlined={layout !== 'list'}
                     />
                 </div>
@@ -431,34 +346,89 @@ export default function Productos() {
         );
     };
 
-    return (
-        <div className="min-h-screen">
-            <Navbar />
-
-            <div className="max-w-7xl mx-auto px-4 py-8 pt-32">
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                        Nuestros Productos
-                    </h1>
-                    <p className="text-lg text-gray-600">
-                        Descubre nuestra amplia gama de productos de seguridad
-                        para hogar y empresa
-                    </p>
+    if (!mounted) {
+        return (
+            <div className="w-full max-w-none py-8 pt-20 px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-center">
+                        <i className="pi pi-spin pi-spinner text-4xl text-red-600 dark:text-red-400 mb-4"></i>
+                        <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            Cargando...
+                        </p>
+                    </div>
                 </div>
+            </div>
+        );
+    }
 
-                <DataView
-                    value={filteredProductos}
-                    layout={layout}
-                    header={header()}
-                    itemTemplate={itemTemplate}
-                    paginator
-                    rows={12}
-                    loading={loading}
-                    emptyMessage="No se encontraron productos"
-                />
+    return (
+        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8 min-h-screen bg-white dark:bg-gray-900">
+            <div className="mb-8">
+                <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
+                    Nuestros Productos
+                </h1>
+                <p className="text-lg text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                    Descubre nuestra amplia gama de productos de seguridad para
+                    hogar y empresa
+                </p>
             </div>
 
-            <Footer />
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-center">
+                        <i className="pi pi-spin pi-spinner text-4xl text-danger dark:text-danger mb-4"></i>
+                        <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                            Cargando productos...
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {header()}
+                    {filteredProductos.length > 0 ? (
+                        <>
+                            {layout === 'grid' ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                                    {filteredProductos.map(
+                                        (producto, index) => (
+                                            <div
+                                                key={producto.id || index}
+                                                className="w-full"
+                                            >
+                                                {itemTemplate(producto, 'grid')}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {filteredProductos.map(
+                                        (producto, index) => (
+                                            <div key={producto.id || index}>
+                                                {itemTemplate(producto, 'list')}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className="text-center py-12">
+                            <i className="pi pi-box text-6xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                            <p className="text-gray-600 dark:text-gray-400 text-lg mb-4 transition-colors duration-300">
+                                No se encontraron productos
+                            </p>
+                            <p className="text-gray-500 dark:text-gray-500 text-sm transition-colors duration-300">
+                                Intenta cambiar los filtros de búsqueda o
+                                categoría
+                            </p>
+                        </div>
+                    )}
+                </>
+            )}
+
+            {/* Espaciado adicional antes del footer */}
+            <div className="py-16"></div>
         </div>
     );
 }
