@@ -1,45 +1,40 @@
 import SafeCanvas from '@/components/SafeModel';
 import Link from 'next/link';
-
-const services = [
-    {
-        title: 'Transporte de Cajas Fuertes',
-        description: 'Movimientos y traslados con medios especializados.',
-    },
-    {
-        title: 'Instalaciones Técnicas',
-        description:
-            'Anclajes certificados, configuración y verificación profesional.',
-    },
-    {
-        title: 'Sistemas de Seguridad',
-        description: 'Soluciones electrónicas conectadas y monitorizadas.',
-    },
-];
-
-const highlights = [
-    'Materiales de grado industrial y controles redundantes.',
-    'Integración con alarmas, CCTV y monitorización remota.',
-    'Auditorías periódicas y soporte especializado 24/7.',
-];
+import {
+    services,
+    highlights,
+    coverageAreas,
+    faqs,
+    structuredData,
+} from './home-content';
 
 export default function Home() {
     return (
         <div className="home-shell min-h-screen text-gray-900 transition-colors dark:text-white">
-            <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-24 pb-10 md:pt-28 md:pb-12">
+            <section className="mx-auto max-w-7xl mt-24 px-4 sm:px-6 pt-34 pb-10 md:pt-28 md:pb-12">
                 <div className="grid gap-12 md:grid-cols-2 md:items-center">
                     <div className="text-center md:text-left">
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-                            Sistemas de{' '}
-                            <span className="text-[#e11d48]">Seguridad</span>
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-foreground">
+                            Cajas fuertes en Málaga con instalación certificada
                         </h1>
                         <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg md:mx-0 text-foreground-muted">
-                            Más de 30 años garantizando la protección de tu
-                            patrimonio con ingeniería, precisión y tecnología.
-                            Especialistas en cajas fuertes, anclajes
-                            certificados y soluciones electrónicas llave en
-                            mano.
+                            Venta, traslado y mantenimiento de cajas fuertes
+                            homologadas en toda la provincia de Málaga desde
+                            1993. Equipo propio de ingenieros y cerrajeros de
+                            seguridad con tiempos de respuesta inferiores a 24
+                            h.
                         </p>
+                        <ul className="mt-5 space-y-2 text-sm sm:text-base text-foreground-muted">
+                            <li className="flex items-center justify-center gap-2 md:justify-start">
+                                <span className="h-2 w-2 rounded-full bg-[#e11d48]" />
+                                Homologaciones UNE EN-1143-1 y UNE EN-1300
+                            </li>
+                            <li className="flex items-center justify-center gap-2 md:justify-start">
+                                <span className="h-2 w-2 rounded-full bg-[#e11d48]" />
+                                Servicio urgente 24/7 en Málaga capital y Costa
+                                del Sol
+                            </li>
+                        </ul>
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
                             <a
                                 className="px-5 py-3 rounded-xl bg-[#e11d48] text-white hover:opacity-90 transition text-center"
@@ -91,6 +86,51 @@ export default function Home() {
             </section>
 
             <section
+                id="cobertura"
+                className="border-t border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"
+            >
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-16">
+                    <div className="mb-10 text-center md:text-left">
+                        <h2 className="text-3xl font-bold">
+                            Cobertura integral en Málaga y provincia
+                        </h2>
+                        <p className="mt-3 max-w-3xl text-foreground-muted">
+                            Nos desplazamos con medios propios y autorizaciones
+                            municipales para manipular cajas fuertes de gran
+                            tonelaje en cualquier punto de la Costa del Sol y el
+                            interior.
+                        </p>
+                    </div>
+                    <div className="grid gap-6 md:grid-cols-3">
+                        {coverageAreas.map(({ name, detail }) => (
+                            <div
+                                key={name}
+                                className="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5"
+                            >
+                                <h3 className="text-xl font-semibold text-foreground dark:text-white">
+                                    {name}
+                                </h3>
+                                <p className="mt-3 text-foreground-muted">
+                                    {detail}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mt-10 rounded-2xl border border-dashed border-[#e11d48]/50 bg-white/60 p-6 text-foreground-muted dark:bg-white/5">
+                        <strong className="text-foreground dark:text-white">
+                            Base logística en el Polígono Guadalhorce
+                        </strong>
+                        <p className="mt-2">
+                            Coordinamos permisos de carga y descarga, accesos a
+                            parkings subterráneos y elevación mediante grúa o
+                            plataformas para instalaciones complejas en
+                            edificios residenciales y oficinas.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section
                 id="tecnologia"
                 className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"
             >
@@ -115,6 +155,37 @@ export default function Home() {
                             </li>
                         ))}
                     </ul>
+                </div>
+            </section>
+
+            <section
+                id="faq"
+                className="border-t border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"
+            >
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 py-14 sm:py-16">
+                    <h2 className="text-3xl font-bold text-center md:text-left">
+                        Preguntas frecuentes sobre cajas fuertes en Málaga
+                    </h2>
+                    <div className="mt-10 space-y-6">
+                        {faqs.map(({ question, answer }) => (
+                            <details
+                                key={question}
+                                className="group rounded-2xl border border-slate-200 bg-white p-6 transition dark:border-white/10 dark:bg-white/5"
+                            >
+                                <summary className="cursor-pointer list-none text-lg font-semibold text-foreground dark:text-white">
+                                    <span className="flex items-center justify-between gap-4">
+                                        {question}
+                                        <span className="text-[#e11d48] transition group-open:rotate-45">
+                                            +
+                                        </span>
+                                    </span>
+                                </summary>
+                                <p className="mt-3 text-foreground-muted">
+                                    {answer}
+                                </p>
+                            </details>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -151,6 +222,13 @@ export default function Home() {
                     </a>
                 </div>
             </section>
+
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(structuredData),
+                }}
+            />
         </div>
     );
 }

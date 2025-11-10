@@ -12,11 +12,11 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-    title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+    title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes',
     description:
-        'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga. Protegemos lo que más importa desde 2010.',
+        'Venta, instalación, traslado y mantenimiento de cajas fuertes homologadas en Málaga, Costa del Sol y provincia. Servicio urgente 24/7 con técnicos certificados.',
     keywords:
-        'cajas fuertes, armarios acorazados, seguridad, Málaga, equipotel, sistemas de anclaje',
+        'cajas fuertes málaga, instalación cajas fuertes, traslado cajas fuertes, mantenimiento cajas fuertes, aperturas urgentes cajas fuertes, costa del sol, equipotel',
     authors: [{ name: 'Equipotel' }],
     creator: 'Equipotel',
     publisher: 'Equipotel',
@@ -30,9 +30,9 @@ export const metadata = {
         canonical: '/',
     },
     openGraph: {
-        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+        title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes homologadas',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+            'Especialistas en cajas fuertes certificadas, anclajes UNE, aperturas urgentes y mantenimiento en Málaga y la Costa del Sol.',
         url: 'https://equipotel.es',
         siteName: 'Equipotel',
         images: [
@@ -48,9 +48,9 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+        title: 'Equipotel Málaga | Cajas Fuertes homologadas',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+            'Venta, instalación y traslado de cajas fuertes en Málaga con servicio técnico 24/7.',
         images: ['/og-image.jpg'],
     },
     robots: {
