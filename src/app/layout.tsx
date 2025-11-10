@@ -12,11 +12,11 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-    title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+    title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes',
     description:
-        'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga. Protegemos lo que más importa desde 2010.',
+        'Venta, instalación, traslado y mantenimiento de cajas fuertes homologadas en Málaga, Costa del Sol y provincia con técnicos certificados y planificación a medida.',
     keywords:
-        'cajas fuertes, armarios acorazados, seguridad, Málaga, equipotel, sistemas de anclaje',
+        'cajas fuertes málaga, instalación cajas fuertes, traslado cajas fuertes, mantenimiento cajas fuertes, seguridad física málaga, costa del sol, equipotel',
     authors: [{ name: 'Equipotel' }],
     creator: 'Equipotel',
     publisher: 'Equipotel',
@@ -30,9 +30,9 @@ export const metadata = {
         canonical: '/',
     },
     openGraph: {
-        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+        title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes homologadas',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+            'Especialistas en cajas fuertes certificadas, anclajes UNE y mantenimiento profesional en Málaga y la Costa del Sol.',
         url: 'https://equipotel.es',
         siteName: 'Equipotel',
         images: [
@@ -48,9 +48,9 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Equipotel - Cajas Fuertes y Sistemas de Seguridad en Málaga',
+        title: 'Equipotel Málaga | Cajas Fuertes homologadas',
         description:
-            'Especialistas en cajas fuertes, armarios acorazados y sistemas de seguridad en Málaga.',
+            'Venta, instalación y traslado de cajas fuertes en Málaga con planificación técnica personalizada.',
         images: ['/og-image.jpg'],
     },
     robots: {
@@ -163,10 +163,16 @@ export default function RootLayout({
                                         html.classList.add('dark');
                                         body.classList.add('dark');
                                         html.style.colorScheme = 'dark';
+                                        html.style.setProperty('--background-start-rgb', '17, 24, 39');
+                                        html.style.setProperty('--background-end-rgb', '31, 41, 55');
+                                        html.style.setProperty('--foreground-rgb', '255, 255, 255');
                                     } else {
                                         html.classList.remove('dark');
                                         body.classList.remove('dark');
                                         html.style.colorScheme = 'light';
+                                        html.style.setProperty('--background-start-rgb', '255, 255, 255');
+                                        html.style.setProperty('--background-end-rgb', '249, 250, 251');
+                                        html.style.setProperty('--foreground-rgb', '17, 24, 39');
                                     }
                                     
                                     // Marcar como tema aplicado inmediatamente

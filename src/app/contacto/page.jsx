@@ -389,10 +389,10 @@ export default function Contacto() {
                                 </p>
                                 <p className="text-gray-600 dark:text-gray-300">
                                     Servicio en toda la provincia de Málaga y
-                                    Andalucía Oriental
+                                    Andalucía
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Horario: Lun - Vie 8:30 - 17:30
+                                    Horario: Lun - Vie 10:00 - 18:00
                                 </p>
                             </div>
                         </div>

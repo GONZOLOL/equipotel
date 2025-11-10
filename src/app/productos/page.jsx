@@ -297,54 +297,56 @@ export default function Productos() {
         }
     };
 
-    const header = () => {
-        return (
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 productos-header">
-                <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
+    const renderControls = () => (
+        <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/10">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="flex w-full flex-wrap items-center gap-3">
                     <div className="relative w-full md:w-64">
-                        <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" />
                         <InputText
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Buscar productos..."
-                            className="w-full search-input"
-                            size="small"
+                            placeholder="Buscar..."
+                            className="p-inputtext-sm w-full pl-9"
                         />
+                        <i className="pi pi-search pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                     </div>
                     <Dropdown
                         value={selectedCategory}
                         options={categories}
                         onChange={(e) => setSelectedCategory(e.value)}
                         placeholder="Categoría"
-                        className="w-full md:w-48"
+                        showClear
+                        className="w-full md:w-48 text-sm"
+                        panelClassName="text-sm"
                     />
                     <Dropdown
                         value={sortKey}
                         options={sortOptions}
                         onChange={onSort}
                         placeholder="Ordenar por"
-                        className="w-full md:w-48"
+                        className="w-full md:w-48 text-sm"
+                        panelClassName="text-sm"
                     />
                 </div>
-                {/* Botones de vista solo visibles en tablets y desktop */}
-                <div className="hidden sm:flex gap-2 w-full md:w-auto justify-center md:justify-end">
+                <div className="flex gap-2 justify-end">
                     <Button
                         icon="pi pi-th-large"
                         onClick={() => setLayout('grid')}
                         severity={layout === 'grid' ? 'danger' : 'secondary'}
                         outlined={layout !== 'grid'}
-                        className="px-2"
+                        className="px-2 py-2 text-sm"
                     />
                     <Button
                         icon="pi pi-bars"
                         onClick={() => setLayout('list')}
                         severity={layout === 'list' ? 'danger' : 'secondary'}
                         outlined={layout !== 'list'}
+                        className="px-2 py-2 text-sm"
                     />
                 </div>
             </div>
-        );
-    };
+        </div>
+    );
 
     if (!mounted) {
         return (
@@ -362,16 +364,8 @@ export default function Productos() {
     }
 
     return (
-        <div className="w-full max-w-none py-8 pt-28 px-4 sm:px-6 lg:px-8 min-h-screen bg-white dark:bg-gray-900">
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">
-                    Nuestros Productos
-                </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-400 transition-colors duration-300">
-                    Descubre nuestra amplia gama de productos de seguridad para
-                    hogar y empresa
-                </p>
-            </div>
+        <div className="w-full max-w-none py-8 pt-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-white dark:bg-gray-900">
+            <div className="mx-auto mb-6 max-w-7xl">{renderControls()}</div>
 
             {loading ? (
                 <div className="flex justify-center items-center h-64">
@@ -384,11 +378,10 @@ export default function Productos() {
                 </div>
             ) : (
                 <>
-                    {header()}
                     {filteredProductos.length > 0 ? (
                         <>
                             {layout === 'grid' ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                                <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                                     {filteredProductos.map(
                                         (producto, index) => (
                                             <div

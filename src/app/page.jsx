@@ -1,351 +1,248 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
-import { Carousel } from 'primereact/carousel';
+import SafeCanvas from '@/components/SafeModel';
 import Link from 'next/link';
-import { getProducts, convertGoogleDriveUrl } from '@/services/productService';
-import Image from 'next/image';
-import ProductImageSkeleton from '@/components/ProductImageSkeleton';
+import {
+    services,
+    highlights,
+    coverageAreas,
+    faqs,
+    structuredData,
+} from './home-content';
 
 export default function Home() {
-    const [loading, setLoading] = useState(true);
-
-    const servicios = [
-        {
-            icon: 'pi pi-shield',
-            title: 'Cajas Fuertes',
-            description:
-                'Amplia gama de cajas fuertes para hogar, oficina y sector bancario con diferentes niveles de seguridad certificados.',
-            color: 'from-blue-500 to-blue-600',
-            bgColor: 'bg-blue-50',
-            iconColor: 'text-blue-600',
-        },
-        {
-            icon: 'pi pi-link',
-            title: 'Sistemas de Anclaje',
-            description:
-                'Sistemas de anclaje certificados y homologados según normas UNE. Instalación profesional garantizada.',
-            color: 'from-green-500 to-green-600',
-            bgColor: 'bg-green-50',
-            iconColor: 'text-green-600',
-        },
-        {
-            icon: 'pi pi-video',
-            title: 'Cámaras de Seguridad',
-            description:
-                'Sistemas de videovigilancia profesionales para hogar, oficina y sector bancario.',
-            color: 'from-orange-500 to-orange-600',
-            bgColor: 'bg-orange-50',
-            iconColor: 'text-orange-600',
-        },
-        {
-            icon: 'pi pi-lock',
-            title: 'Segunda Mano',
-            description:
-                'Productos de segunda mano certificados y revisados por nuestros técnicos especializados.',
-            color: 'from-purple-500 to-purple-600',
-            bgColor: 'bg-purple-50',
-            iconColor: 'text-purple-600',
-        },
-    ];
-
-    const productTemplate = (product) => {
-        const mainImage = product.mainImage || product.image;
-        const hasImage = mainImage && mainImage.trim() !== '';
-
-        return (
-            <div className="p-4 h-full">
-                <Card className="h-full hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col">
-                    <div className="text-center flex flex-col h-full">
-                        {/* Imagen - altura fija */}
-                        <div className="h-48 mb-6 rounded-xl flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0">
-                            <ProductImageSkeleton
-                                producto={{
-                                    ...product,
-                                    convertGoogleDriveUrl,
-                                }}
-                                className="w-full h-full rounded-xl overflow-hidden relative bg-gradient-to-br from-gray-100 to-gray-200"
-                                showSkeleton={hasImage}
-                            />
-                        </div>
-
-                        {/* Categoría - altura fija */}
-                        <div className="mb-4 flex-shrink-0">
-                            <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
-                                {product.categoryLabel || product.category}
-                            </span>
-                        </div>
-
-                        {/* Título - altura fija */}
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3 line-clamp-2 min-h-[3rem] flex-shrink-0">
-                            {product.name}
-                        </h3>
-
-                        {/* Precio - altura fija */}
-                        <p className="text-2xl font-bold text-blue-600 mb-4 flex-shrink-0">
-                            {product.priceFormatted || product.price}
+    return (
+        <div className="home-shell min-h-screen text-gray-900 transition-colors dark:text-white">
+            <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-36 pb-10 md:pt-28 md:pb-12">
+                <div className="grid gap-12 md:grid-cols-2 md:items-center">
+                    <div className="text-center md:text-left pt-15 pb-15">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-foreground">
+                            Cajas fuertes en Málaga con instalación certificada
+                        </h1>
+                        <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg md:mx-0 text-foreground-muted">
+                            Venta, traslado y mantenimiento de cajas fuertes
+                            homologadas con base en Málaga y cobertura en toda
+                            Andalucía. Desde 1980 planificamos cada proyecto con
+                            estudio técnico, presupuesto detallado y equipo
+                            propio especializado.
                         </p>
-
-                        {/* Características - altura fija */}
-                        <div className="mb-4 flex-shrink-0 min-h-[4.5rem]">
-                            {product.features && product.features.length > 0 ? (
-                                <div className="space-y-1">
-                                    {product.features
-                                        .slice(0, 3)
-                                        .map((feature, index) => (
-                                            <div
-                                                key={index}
-                                                className="flex items-center justify-center text-sm text-gray-600 dark:text-gray-300"
-                                            >
-                                                <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                                {feature}
-                                            </div>
-                                        ))}
-                                </div>
-                            ) : (
-                                <div className="text-sm text-gray-500 dark:text-gray-400 min-h-[4.5rem] flex items-center justify-center">
-                                    Producto de alta calidad
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Botón - siempre al final */}
-                        <div className="mt-auto pt-4">
-                            <Button
-                                label="Ver Detalles"
-                                severity="primary"
-                                size="small"
-                                className="w-full"
-                                onClick={() =>
-                                    (window.location.href = `/productos/${product.id}`)
-                                }
-                            />
+                        <ul className="mt-5 space-y-2 text-sm sm:text-base text-foreground-muted">
+                            <li className="flex items-center justify-center gap-2 md:justify-start">
+                                <span className="h-2 w-2 rounded-full bg-[#e11d48]" />
+                                Homologaciones UNE EN-1143-1 y UNE EN-1300
+                            </li>
+                            <li className="flex items-center justify-center gap-2 md:justify-start">
+                                <span className="h-2 w-2 rounded-full bg-[#e11d48]" />
+                                Coordinación técnica completa en Málaga y
+                                provincias andaluzas
+                            </li>
+                        </ul>
+                        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
+                            <a
+                                className="px-5 py-3 rounded-xl bg-[#e11d48] text-white hover:opacity-90 transition text-center"
+                                href="#contacto"
+                            >
+                                Solicitar asesoramiento
+                            </a>
+                            <a
+                                className="px-5 py-3 rounded-xl bg-slate-900/5 text-foreground transition hover:bg-slate-900/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 text-center"
+                                href="#servicios"
+                            >
+                                Ver soluciones
+                            </a>
                         </div>
                     </div>
-                </Card>
-            </div>
-        );
-    };
 
-    return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
-            <Navbar />
-            {/* Hero Section */}
-            <section className="overflow-hidden relative text-white pt-40 h-232">
-                {/* Imagen de fondo con opacidad */}
-                <div
-                    className="absolute inset-0"
-                    style={{
-                        backgroundImage: 'url(/src/mainBackground.jpg)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        opacity: 0.4,
-                    }}
-                ></div>
-                {/* Overlay para mejorar la legibilidad del texto */}
-                <div className="absolute inset-0 bg-black/40 dark:bg-black/60"></div>
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div className="fade-in">
-                            <h1 className="text-5xl lg:text-6xl font-bold mb-8 leading-tight">
-                                Tu Seguridad es nuestra Prioridad
-                            </h1>
-                            <p className="text-xl mb-10 text-white leading-relaxed">
-                                Especialistas en cajas fuertes, cámaras de
-                                seguridad, sistemas de anclaje certificados y
-                                homologados según normas UNE, y técnicos de
-                                seguridad física para el sector bancario. Más de
-                                20 años en el sector protegiendo lo que más
-                                importa con productos certificados e instalación
-                                profesional.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 pb-15">
-                                <Link href="/productos">
-                                    <Button
-                                        label="Ver Productos"
-                                        size="large"
-                                        severity="danger"
-                                        className="text-lg px-8 py-4 shadow-lg hover:shadow-xl"
-                                    />
-                                </Link>
-                                <Link href="/contacto">
-                                    <Button
-                                        label="Contactar"
-                                        size="large"
-                                        severity="danger"
-                                        outlined
-                                        className="text-lg px-8 py-4 border-2"
-                                    />
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="hidden lg:block slide-in-right">
-                            <div className=" bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
-                                <div className="text-center">
-                                    <div className="w-48 h-48  rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <Image
-                                            src="/src/logo-modelo-2.svg"
-                                            alt="Seguridad Certificada"
-                                            width={200}
-                                            height={200}
-                                        />
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-white">
-                                        Seguridad Certificada
-                                    </h3>
-                                    <p className="text-white leading-relaxed">
-                                        Productos con certificaciones europeas
-                                        de máxima seguridad. Más de 20 años
-                                        protegiendo a nuestros clientes del
-                                        sector bancario y empresas con
-                                        instalación profesional especializada.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="mx-auto w-full max-w-lg md:max-w-xl">
+                        <SafeCanvas />
                     </div>
                 </div>
             </section>
-            {/* Servicios */}
-            <section className="py-20 bg-gray-50 dark:bg-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
-                            Nuestros{' '}
-                            <span className="text-gradient">Servicios</span>
+
+            <section
+                id="servicios"
+                className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-20"
+            >
+                <div className="mb-8 text-center md:text-left">
+                    <h2 className="text-3xl font-bold">Servicios</h2>
+                    <p className="mt-3 text-base text-foreground-muted md:max-w-2xl">
+                        Acompañamos cada fase del proyecto con ingeniería
+                        propia, logística especializada y soporte cercano.
+                    </p>
+                </div>
+                <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {services.map(({ title, description, url }) => (
+                        <li
+                            key={title}
+                            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
+                        >
+                            <h3 className="text-xl font-semibold text-foreground dark:text-white">
+                                <Link
+                                    href={url}
+                                    className="hover:underline decoration-[#e11d48]"
+                                >
+                                    {title}
+                                </Link>
+                            </h3>
+                            <p className="mt-3 text-foreground-muted">
+                                {description}
+                            </p>
+                            <Link
+                                href={url}
+                                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#e11d48] hover:opacity-85"
+                            >
+                                Ver detalle
+                                <span aria-hidden="true">→</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+
+            <section
+                id="cobertura"
+                className="border-t border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"
+            >
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-16">
+                    <div className="mb-10 text-center md:text-left">
+                        <h2 className="text-3xl font-bold">
+                            Cobertura integral en Málaga y provincia
                         </h2>
-                        <p className="text-xl dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                            Ofrecemos soluciones completas de seguridad para
-                            hogares y empresas, con productos certificados e
-                            instalación profesional.
+                        <p className="mt-3 max-w-3xl text-foreground-muted">
+                            Nos desplazamos con medios propios y autorizaciones
+                            municipales para manipular cajas fuertes de gran
+                            tonelaje en cualquier punto de la Costa del Sol, el
+                            interior de Málaga y el resto de Andalucía, siempre
+                            tras una valoración técnica y la aceptación del
+                            presupuesto correspondiente.
                         </p>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {servicios.map((servicio, index) => (
-                            <Card
-                                key={index}
-                                className={`${servicio.bgColor} dark:bg-gray-800 dark:border-gray-700 border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2`}
+                    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                        {coverageAreas.map(({ name, detail }) => (
+                            <div
+                                key={name}
+                                className="flex h-full flex-col gap-3 rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/10"
                             >
-                                <div className="text-center">
-                                    <div
-                                        className={`w-16 h-16 bg-gradient-to-r ${servicio.color} rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg`}
-                                    >
-                                        <i
-                                            className={`${servicio.icon} text-white text-2xl`}
-                                        ></i>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-                                        {servicio.title}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                        {servicio.description}
-                                    </p>
+                                <h3 className="text-lg font-semibold text-foreground dark:text-white">
+                                    {name}
+                                </h3>
+                                <p className="mt-3 text-foreground-muted">
+                                    {detail}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="mt-10 rounded-2xl border border-dashed border-[#e11d48]/50 bg-white/60 p-6 text-foreground-muted dark:bg-white/5">
+                        Cada intervención incluye planificación logística
+                        (accesos, permisos, medios de elevación) coordinada con
+                        tu comunidad o empresa para garantizar un servicio
+                        profesional y discreto.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="tecnologia"
+                className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"
+            >
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-16">
+                    <h2 className="text-3xl font-bold mb-8 text-center md:text-left">
+                        Ingeniería y confianza
+                    </h2>
+                    <div className="grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:items-start">
+                        <p className="text-foreground-muted">
+                            Materiales de grado industrial, controles
+                            redundantes y auditorías periódicas. Integramos
+                            soluciones con sistemas de alarma, CCTV y
+                            monitorización remota para garantizar continuidad y
+                            respuesta inmediata, adaptando cada proyecto a los
+                            requisitos normativos de Andalucía.
+                        </p>
+                        <ul className="space-y-4">
+                            {highlights.map((item) => (
+                                <li
+                                    key={item}
+                                    className="flex items-start gap-3 rounded-2xl border border-slate-200/60 bg-white/70 p-4 text-foreground-muted shadow-sm dark:border-white/10 dark:bg-white/5"
+                                >
+                                    <span className="mt-1 h-2 w-2 flex-none rounded-full bg-[#e11d48]" />
+                                    <span>{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="faq"
+                className="border-t border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"
+            >
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 py-14 sm:py-16">
+                    <h2 className="text-3xl font-bold text-center md:text-left">
+                        Preguntas frecuentes sobre cajas fuertes en Málaga
+                    </h2>
+                    <div className="mt-10 space-y-6">
+                        {faqs.map(({ question, answer }) => (
+                            <details
+                                key={question}
+                                className="group rounded-2xl border border-slate-200 bg-white transition dark:border-white/10 dark:bg-white/5"
+                            >
+                                <summary className="cursor-pointer list-none p-6 text-lg font-semibold text-foreground dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48]/70">
+                                    <span className="flex items-center justify-between gap-4">
+                                        {question}
+                                        <span className="rounded-full bg-[#e11d48]/10 px-2 py-1 text-sm text-[#e11d48] transition group-open:rotate-45">
+                                            +
+                                        </span>
+                                    </span>
+                                </summary>
+                                <div className="px-6 pb-6 text-foreground-muted">
+                                    {answer}
                                 </div>
-                            </Card>
+                            </details>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Estadísticas */}
-            <section className="py-20 bg-red-600 text-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        <div className="fade-in">
-                            <div className="text-4xl md:text-5xl font-bold mb-2">
-                                14+
-                            </div>
-                            <div className="text-blue-100 text-lg">
-                                Años de Experiencia
-                            </div>
-                        </div>
-                        <div className="fade-in">
-                            <div className="text-4xl md:text-5xl font-bold mb-2">
-                                1000+
-                            </div>
-                            <div className="text-blue-100 text-lg">
-                                Clientes Satisfechos
-                            </div>
-                        </div>
-                        <div className="fade-in">
-                            <div className="text-4xl md:text-5xl font-bold mb-2">
-                                500+
-                            </div>
-                            <div className="text-blue-100 text-lg">
-                                Instalaciones Realizadas
-                            </div>
-                        </div>
-                        <div className="fade-in">
-                            <div className="text-4xl md:text-5xl font-bold mb-2">
-                                24/7
-                            </div>
-                            <div className="text-blue-100 text-lg">
-                                Soporte Técnico
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            {/* CTA Section */}
-            <section className="py-20 relative overflow-hidden text-white">
-                {/* Video de fondo */}
-                <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                >
-                    <source
-                        src="/src/asesoramientoBackground.mp4"
-                        type="video/mp4"
-                    />
-                </video>
-                {/* Overlay para mejorar la legibilidad del texto */}
-                <div className="absolute inset-0 bg-black/50"></div>
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-4xl font-bold mb-6">
-                        ¿Necesitas Asesoramiento?
-                    </h2>
-                    <p className="text-xl mb-10 text-white max-w-3xl mx-auto leading-relaxed">
-                        Nuestros técnicos especializados te ayudarán a elegir la
-                        mejor solución para tus necesidades. Ofrecemos
-                        asesoramiento gratuito y sin compromiso para cajas
-                        fuertes, cámaras de seguridad, sistemas de anclaje
-                        certificados y equipos contra incendios.
+            <section
+                id="contacto"
+                className="mx-auto max-w-7xl px-4 sm:px-6 py-16"
+            >
+                <div className="text-center md:text-left">
+                    <h2 className="text-3xl font-bold mb-4">Contacto</h2>
+                    <p className="mx-auto max-w-2xl text-foreground-muted md:mx-0">
+                        Te asesoramos sin compromiso mediante cita previa.
+                        Escríbenos o agenda una llamada con nuestro equipo
+                        técnico para preparar un plan de seguridad a medida y
+                        coordinar la visita en tus instalaciones.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <Button
-                            label="Llamar Ahora"
-                            size="large"
-                            severity="danger"
-                            className="text-lg px-10 py-4 shadow-lg hover:shadow-xl"
-                            onClick={() => {
-                                const phoneNumber =
-                                    process.env.NEXT_PUBLIC_PHONE_NUMBER ||
-                                    '+34 676 20 80 24';
-                                window.location.href = `tel:${phoneNumber}`;
-                            }}
-                        />
-                        <Button
-                            label="Solicitar Presupuesto"
-                            size="large"
-                            severity="danger"
-                            outlined
-                            className="text-lg px-10 py-4 border-2"
-                        />
-                    </div>
+                </div>
+                <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
+                    <Link
+                        href="/contacto"
+                        className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-slate-100 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+                    >
+                        Formulario de contacto
+                    </Link>
+                    <a
+                        href="tel:+34676208024"
+                        className="inline-flex items-center justify-center rounded-xl bg-[#e11d48] px-5 py-3 text-sm font-semibold text-white hover:opacity-90 transition"
+                    >
+                        Llamar +34 676 20 80 24
+                    </a>
+                    <a
+                        href="mailto:info@equipotel.es"
+                        className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-slate-100 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+                    >
+                        info@equipotel.es
+                    </a>
                 </div>
             </section>
 
-            {/* Espaciado adicional antes del footer */}
-            <div className="py-16"></div>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(structuredData),
+                }}
+            />
         </div>
     );
 }
