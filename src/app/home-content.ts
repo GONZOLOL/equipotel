@@ -1,4 +1,4 @@
-const siteUrl = 'http://localhost:3000';
+const siteUrl = 'https://equipotel.es';
 
 export const services = [
     {
