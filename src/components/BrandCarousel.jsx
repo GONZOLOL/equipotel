@@ -23,7 +23,7 @@ export default function BrandCarousel() {
     return (
         <section
             aria-label="Marcas de cajas fuertes con las que trabajamos"
-            className="border-t border-slate-200 bg-white py-12 dark:border-white/10 dark:bg-white/30"
+            className="border-t border-slate-200 bg-white py-12 dark:border-white/10 dark:bg-gray-900"
         >
             <div className="mx-auto max-w-8xl px-4 sm:px-6">
                 <h2 className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-foreground-muted">
@@ -37,7 +37,7 @@ export default function BrandCarousel() {
                         {repeatedBrands.map((brand, index) => (
                             <figure
                                 key={`${brand.name}-${index}`}
-                                className="relative h-16 w-40 flex-none"
+                                className="relative flex h-16 w-40 flex-none items-center justify-center rounded-2xl bg-white/90 px-6 py-4 shadow-sm backdrop-blur dark:bg-white"
                             >
                                 <Image
                                     src={brand.image}
