@@ -1,4 +1,4 @@
-const siteUrl = 'https://equipotel.es';
+const siteUrl = 'https://www.equipotel.es';
 
 export const services = [
     {
