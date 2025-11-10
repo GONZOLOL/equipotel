@@ -163,10 +163,16 @@ export default function RootLayout({
                                         html.classList.add('dark');
                                         body.classList.add('dark');
                                         html.style.colorScheme = 'dark';
+                                        html.style.setProperty('--background-start-rgb', '17, 24, 39');
+                                        html.style.setProperty('--background-end-rgb', '31, 41, 55');
+                                        html.style.setProperty('--foreground-rgb', '255, 255, 255');
                                     } else {
                                         html.classList.remove('dark');
                                         body.classList.remove('dark');
                                         html.style.colorScheme = 'light';
+                                        html.style.setProperty('--background-start-rgb', '255, 255, 255');
+                                        html.style.setProperty('--background-end-rgb', '249, 250, 251');
+                                        html.style.setProperty('--foreground-rgb', '17, 24, 39');
                                     }
                                     
                                     // Marcar como tema aplicado inmediatamente

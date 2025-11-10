@@ -47,6 +47,24 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.home-shell {
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+        )
+        rgb(var(--background-start-rgb));
+    color: rgb(var(--foreground-rgb));
+}
+
+.text-foreground {
+    color: rgb(var(--foreground-rgb));
+}
+
+.text-foreground-muted {
+    color: rgba(var(--foreground-rgb), 0.78);
+}
+
 /* ===== FORZAR ESTILOS LIGHT/DARK ===== */
 html:not(.dark) .dark\:text-white {
     color: #111827 !important;

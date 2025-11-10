@@ -71,10 +71,20 @@ export const ThemeProvider = ({ children }) => {
             root.classList.add('dark');
             body.classList.add('dark');
             root.style.colorScheme = 'dark';
+            root.style.setProperty('--background-start-rgb', '17, 24, 39');
+            root.style.setProperty('--background-end-rgb', '31, 41, 55');
+            root.style.setProperty('--foreground-rgb', '255, 255, 255');
+            body.style.background =
+                'linear-gradient(to bottom, transparent, rgb(31, 41, 55)) rgb(17, 24, 39)';
         } else {
             root.classList.remove('dark');
             body.classList.remove('dark');
             root.style.colorScheme = 'light';
+            root.style.setProperty('--background-start-rgb', '255, 255, 255');
+            root.style.setProperty('--background-end-rgb', '249, 250, 251');
+            root.style.setProperty('--foreground-rgb', '17, 24, 39');
+            body.style.background =
+                'linear-gradient(to bottom, transparent, rgb(249, 250, 251)) rgb(255, 255, 255)';
         }
 
         // Aplicar PrimeReact theme
