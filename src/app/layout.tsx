@@ -25,7 +25,7 @@ export const metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://equipotel.es'),
+    metadataBase: new URL('https://www.equipotel.es'),
     alternates: {
         canonical: '/',
     },
@@ -33,7 +33,7 @@ export const metadata = {
         title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes homologadas',
         description:
             'Especialistas en cajas fuertes certificadas, anclajes UNE y mantenimiento profesional en Málaga y la Costa del Sol.',
-        url: 'https://equipotel.es',
+        url: 'https://www.equipotel.es',
         siteName: 'Equipotel',
         images: [
             {

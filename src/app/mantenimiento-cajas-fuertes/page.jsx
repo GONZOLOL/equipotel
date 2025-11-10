@@ -10,13 +10,13 @@ const structuredData = {
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Inicio',
-                    item: 'https://equipotel.es/',
+                    item: 'https://www.equipotel.es/',
                 },
                 {
                     '@type': 'ListItem',
                     position: 2,
                     name: 'Mantenimiento de cajas fuertes',
-                    item: 'https://equipotel.es/mantenimiento-cajas-fuertes',
+                    item: 'https://www.equipotel.es/mantenimiento-cajas-fuertes',
                 },
             ],
         },
@@ -28,7 +28,7 @@ const structuredData = {
             provider: {
                 '@type': 'Organization',
                 name: 'Equipotel Málaga',
-                url: 'https://equipotel.es/',
+                url: 'https://www.equipotel.es/',
             },
             areaServed: {
                 '@type': 'State',
