@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const brands = [
     { name: 'Ollé', image: '/src/brands/logo-1.png' },
@@ -20,12 +23,14 @@ const marqueeStyle = {
 };
 
 export default function BrandCarousel() {
+    const { isDarkMode } = useTheme();
+
     return (
         <section
             aria-label="Marcas de cajas fuertes con las que trabajamos"
             className="border-t border-slate-200 bg-white py-12 dark:border-white/10 dark:bg-gray-900"
         >
-            <div className="mx-auto max-w-8xl px-4 sm:px-6">
+            <div className="mx-auto w-full px-4 sm:px-6">
                 <h2 className="text-center text-sm font-semibold uppercase tracking-[0.4em] text-foreground-muted">
                     Marcas homologadas
                 </h2>
@@ -37,14 +42,22 @@ export default function BrandCarousel() {
                         {repeatedBrands.map((brand, index) => (
                             <figure
                                 key={`${brand.name}-${index}`}
-                                className="relative flex h-16 w-40 flex-none items-center justify-center rounded-2xl bg-white/90 px-6 py-4 shadow-sm backdrop-blur dark:bg-white"
+                                className={`relative flex h-16 w-40 flex-none items-center justify-center rounded-2xl px-6 py-4 transition-all duration-300 ring-0 ${
+                                    isDarkMode
+                                        ? 'bg-white/90 shadow-lg ring-1 ring-white/20 hover:bg-white'
+                                        : 'hover:bg-white'
+                                }`}
                             >
                                 <Image
                                     src={brand.image}
                                     alt={`Logo ${brand.name}`}
                                     fill
                                     sizes="(max-width: 640px) 120px, 160px"
-                                    className="object-contain"
+                                    className={`object-contain drop-shadow-sm ${
+                                        isDarkMode
+                                            ? 'opacity-100'
+                                            : 'opacity-95'
+                                    }`}
                                 />
                                 <figcaption className="sr-only">
                                     {brand.name}
