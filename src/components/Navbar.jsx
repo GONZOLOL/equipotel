@@ -53,8 +53,7 @@ export default function Navbar() {
 
     const baseLinkClasses =
         'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 md:text-base';
-    const activeLinkClasses =
-        'bg-[#e11d48]/15 text-[#e11d48] shadow-sm dark:bg-rose-500/20 dark:text-rose-100';
+    const activeLinkClasses = 'bg-[#e11d48] text-white shadow-sm';
     const inactiveLinkClasses =
         'text-gray-700 hover:bg-slate-200/60 hover:text-[#e11d48] dark:text-gray-200 dark:hover:bg-white/10';
 

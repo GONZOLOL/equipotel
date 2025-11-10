@@ -1,4 +1,5 @@
 import SafeCanvas from '@/components/SafeModel';
+import BrandCarousel from '@/components/BrandCarousel';
 import Link from 'next/link';
 import {
     services,
@@ -56,6 +57,8 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <BrandCarousel />
 
             <section
                 id="servicios"

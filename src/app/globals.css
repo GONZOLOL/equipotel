@@ -55,6 +55,24 @@ body {
     color: rgba(var(--foreground-rgb), 0.78);
 }
 
+@keyframes brand-marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-1 * var(--marquee-shift, 50%)));
+    }
+}
+
+.brand-marquee {
+    animation: brand-marquee var(--marquee-duration, 24s) linear infinite;
+    will-change: transform;
+}
+
+.brand-marquee > * {
+    flex: none;
+}
+
 /* ===== FORZAR ESTILOS LIGHT/DARK ===== */
 html:not(.dark) .dark\:text-white {
     color: #111827 !important;
