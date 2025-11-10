@@ -14,9 +14,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
     title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes',
     description:
-        'Venta, instalación, traslado y mantenimiento de cajas fuertes homologadas en Málaga, Costa del Sol y provincia. Servicio urgente 24/7 con técnicos certificados.',
+        'Venta, instalación, traslado y mantenimiento de cajas fuertes homologadas en Málaga, Costa del Sol y provincia con técnicos certificados y planificación a medida.',
     keywords:
-        'cajas fuertes málaga, instalación cajas fuertes, traslado cajas fuertes, mantenimiento cajas fuertes, aperturas urgentes cajas fuertes, costa del sol, equipotel',
+        'cajas fuertes málaga, instalación cajas fuertes, traslado cajas fuertes, mantenimiento cajas fuertes, seguridad física málaga, costa del sol, equipotel',
     authors: [{ name: 'Equipotel' }],
     creator: 'Equipotel',
     publisher: 'Equipotel',
@@ -32,7 +32,7 @@ export const metadata = {
     openGraph: {
         title: 'Equipotel Málaga | Venta e Instalación de Cajas Fuertes homologadas',
         description:
-            'Especialistas en cajas fuertes certificadas, anclajes UNE, aperturas urgentes y mantenimiento en Málaga y la Costa del Sol.',
+            'Especialistas en cajas fuertes certificadas, anclajes UNE y mantenimiento profesional en Málaga y la Costa del Sol.',
         url: 'https://equipotel.es',
         siteName: 'Equipotel',
         images: [
@@ -50,7 +50,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Equipotel Málaga | Cajas Fuertes homologadas',
         description:
-            'Venta, instalación y traslado de cajas fuertes en Málaga con servicio técnico 24/7.',
+            'Venta, instalación y traslado de cajas fuertes en Málaga con planificación técnica personalizada.',
         images: ['/og-image.jpg'],
     },
     robots: {

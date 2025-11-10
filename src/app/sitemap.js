@@ -32,6 +32,18 @@ export default function sitemap() {
             changeFrequency: 'weekly',
             priority: 0.8,
         },
+        {
+            url: `${baseUrl}/cajas-fuertes-malaga`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
+        {
+            url: `${baseUrl}/mantenimiento-cajas-fuertes`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
 
         {
             url: `${baseUrl}/productos/sistemas-anclaje`,

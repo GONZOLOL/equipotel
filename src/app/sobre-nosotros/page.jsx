@@ -89,7 +89,7 @@ export default function SobreNosotros() {
                         </span>
                     </h1>
                     <p className="text-xl mb-8 text-white max-w-3xl mx-auto">
-                        Más de 20 años protegiendo lo que más importa. Somos
+                        Más de 45 años protegiendo lo que más importa. Somos
                         especialistas en cajas fuertes, sistenas de anclaje y
                         sistemas de seguridad en Málaga y Andalucía Oriental.
                     </p>
@@ -119,7 +119,7 @@ export default function SobreNosotros() {
                                 productos certificados y de la más alta calidad.
                             </p>
                             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                                Con más de 20 años de experiencia en el sector,
+                                Con más de 45 años de experiencia en el sector,
                                 hemos ayudado a miles de clientes a proteger sus
                                 bienes más valiosos, construyendo una reputación
                                 basada en la confianza, la profesionalidad y el

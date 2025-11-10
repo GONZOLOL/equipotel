@@ -44,62 +44,73 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const menuItemStyle = 'text-xl font-bold text-gray-800 dark:text-white p-2';
+    const normalizePath = (path) => {
+        if (!path) return '';
+        if (path === '/') return '/';
+        const trimmed = path.replace(/\/+$/, '');
+        return trimmed.toLowerCase();
+    };
+
+    const baseLinkClasses =
+        'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 md:text-base';
+    const activeLinkClasses =
+        'bg-[#e11d48]/15 text-[#e11d48] shadow-sm dark:bg-rose-500/20 dark:text-rose-100';
+    const inactiveLinkClasses =
+        'text-gray-700 hover:bg-slate-200/60 hover:text-[#e11d48] dark:text-gray-200 dark:hover:bg-white/10';
+
+    const isPathActive = (url) => {
+        if (!pathname) return false;
+        const currentPath = normalizePath(pathname);
+        const targetPath = normalizePath(url);
+
+        return (
+            currentPath === targetPath ||
+            (targetPath !== '/' && currentPath.startsWith(`${targetPath}/`))
+        );
+    };
+
+    const renderMenuLink = ({ label, icon, url }) => {
+        const isActive = isPathActive(url);
+
+        return (
+            <Link
+                href={url}
+                className={`${baseLinkClasses} ${
+                    isActive ? activeLinkClasses : inactiveLinkClasses
+                }`}
+            >
+                <i className={`${icon} text-sm`} />
+                <span>{label}</span>
+            </Link>
+        );
+    };
+
+    const createMenuItem = (label, icon, url) => ({
+        label,
+        icon,
+        url,
+        command: () => router.push(url),
+        template: () => renderMenuLink({ label, icon, url }),
+    });
 
     // Items de navegación para la zona pública
     const publicItems = [
-        {
-            label: 'Inicio',
-            icon: 'pi pi-home',
-            url: '/',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Productos',
-            icon: 'pi pi-box',
-            url: '/productos',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Segunda Mano',
-            icon: 'pi pi-refresh',
-            url: '/productos-segunda-mano',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Contacto',
-            icon: 'pi pi-envelope',
-            url: '/contacto',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Sobre Nosotros',
-            icon: 'pi pi-users',
-            url: '/sobre-nosotros',
-            className: menuItemStyle,
-        },
+        createMenuItem('Inicio', 'pi pi-home', '/'),
+        createMenuItem('Productos', 'pi pi-box', '/productos'),
+        createMenuItem(
+            'Segunda Mano',
+            'pi pi-refresh',
+            '/productos-segunda-mano'
+        ),
+        createMenuItem('Contacto', 'pi pi-envelope', '/contacto'),
+        createMenuItem('Sobre Nosotros', 'pi pi-users', '/sobre-nosotros'),
     ];
 
     // Items de navegación para la zona admin
     const adminItems = [
-        {
-            label: 'Dashboard',
-            icon: 'pi pi-home',
-            url: '/admin/dashboard',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Productos',
-            icon: 'pi pi-box',
-            url: '/admin/products',
-            className: menuItemStyle,
-        },
-        {
-            label: 'Analíticas',
-            icon: 'pi pi-chart-bar',
-            url: '/admin/analytics',
-            className: menuItemStyle,
-        },
+        createMenuItem('Dashboard', 'pi pi-home', '/admin/dashboard'),
+        createMenuItem('Productos', 'pi pi-box', '/admin/products'),
+        createMenuItem('Analíticas', 'pi pi-chart-bar', '/admin/analytics'),
     ];
 
     // Usar items según la zona
